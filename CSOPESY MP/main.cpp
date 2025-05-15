@@ -45,7 +45,7 @@ int main() {
 
         istringstream iss(line);
         string token, flag, command;
-        iss >> token >> flag >> command;
+        iss >> token >> flag >> command; // separates user input into three variables 1) token 2) flag 3) command
 
         if (token != "screen" || flag != "-s") {
             cout << "You must start with 'screen -s' to run a command." << endl;
