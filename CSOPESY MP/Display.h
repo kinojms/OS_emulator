@@ -9,7 +9,8 @@ void intro() {
 /\  ___\   /\  ___\   /\  __ \   /\  == \ /\  ___\   /\  ___\   /\ \_\ \   
 \ \ \____  \ \___  \  \ \ \/\ \  \ \  _-/ \ \  __\   \ \___  \  \ \____ \  
  \ \_____\  \/\_____\  \ \_____\  \ \_\    \ \_____\  \/\_____\  \/\_____\ 
-  \/_____/   \/_____/   \/_____/   \/_/     \/_____/   \/_____/   \/_____/ 
+  \/_____/   \/_____/   \/_____/   \/_/     \/_____/   \/_____/   \/_____/
+ 
 )" << _END_COLOR << '\n'
 << _GREEN << "Hello, welcome to CSOPESY command line!" << _END_COLOR << '\n'
 << _YELLOW << "Type 'exit' to quit, 'clear' to clear the screen, 'command' to show all commands" << _END_COLOR << '\n';
