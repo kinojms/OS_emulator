@@ -1,0 +1,16 @@
+﻿Changelog
+
+
+Version 1.1 (updated from the one Rizza Chan sent)
+* Separated it into a file structure
+* Accepts the initial operators in homework 2
+* Has some weird jank specific to VS code where clear would not work properly works when using .exe file
+* Implemented code command so we can see current functions
+
+
+Version 1.2
+* Now uses fgets and strcmp to compare inputs
+* Exit clear and initialize are the only ones that work until initialize is triggered
+* Inputs are made into tokens (essentially just parsing it by space divider)
+* Now checks for screen -s before accepting a input note that command still needs screen -s to work
+* To run commands just do screen -s <operation>
