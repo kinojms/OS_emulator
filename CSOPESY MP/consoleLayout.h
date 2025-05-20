@@ -28,12 +28,9 @@ private:
 		system_clock::time_point timeCreated;
 	};
 
-	void handleCommand(const string& command);
 	void createProcess(const string& name);
 	void displayProcessInfo(const string& name) const;
 
-	string formatTimestamp(const system_clock::time_point& time) const;
-	bool parseCommand(const string& input, string& command, string& argument) const;
 
 	unordered_map<string, ProcessInfo> processes;
 	bool running;

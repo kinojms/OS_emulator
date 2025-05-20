@@ -105,7 +105,15 @@ void consoleLayout::run() // replicates the main function in main.cpp; this is w
 
 void consoleLayout::createProcess(const string& name)
 {
-
+	// TODO: implement process creation logic
 }
 
+void consoleLayout::displayProcessInfo(const string& name) const
+{
+	// TODO: implement creation of new screen session (maybe in a different method?)
+    // and the process info display logic
+}
 
+// maybe add a new method to handle the creation of new screen sesh...
+
+// add deconstructors to clean memory?
