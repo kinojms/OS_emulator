@@ -30,6 +30,7 @@ private:
 
 	void createProcess(const string& name);
 	void displayProcessInfo(const string& name) const;
+	string formatTimestamp(const system_clock::time_point& time) const;
 
 
 	unordered_map<string, ProcessInfo> processes;
