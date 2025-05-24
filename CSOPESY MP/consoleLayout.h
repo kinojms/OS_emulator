@@ -2,6 +2,7 @@
 #include <unordered_map>
 #include <chrono>
 #include <iostream>
+#include <conio.h>
 
 #define _CYAN "\033[36m"
 #define _GREEN "\033[32m"

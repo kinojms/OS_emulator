@@ -72,10 +72,15 @@ void consoleLayout::run() {
             if (command.empty()) {
                 cout << "You must specify a process to resume using 'screen -r'." << endl;
             }
+			else if (processes.find(command) == processes.end()) {
+				cout << "Process not found: " << command << endl;
+                continue;
+			}
             else {
                 system("cls");
                 /*displayIntro();*/
                 while (true) {
+                    system("cls");
                     displayProcessInfo(command);
 					cout << "Enter command: ";
 					getline(cin, line);
@@ -83,6 +88,12 @@ void consoleLayout::run() {
                         system("cls");
                         displayIntro();
                         break;
+                    }
+                    else {
+                        cout << "Please exit first before entering a new command" << endl;
+                        cout << "Press any key to continue..." << endl;
+                        _getch();
+                        continue;
                     }
                 }
             }
