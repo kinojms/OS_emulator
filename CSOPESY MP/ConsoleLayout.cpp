@@ -1,13 +1,13 @@
 #include "ConsoleLayout.h"
 #include <algorithm>
 
-consoleLayout::consoleLayout()
+ConsoleLayout::ConsoleLayout()
     : running(true)
 {
     // initialize any other members if needed
 }
 
-void consoleLayout::displayIntro()
+void ConsoleLayout::displayIntro()
 {
     std::cout << _CYAN << R"(
  ______     ______     ______     ______   ______     ______     __  __    
@@ -21,7 +21,7 @@ void consoleLayout::displayIntro()
 << _YELLOW << "Type 'exit' to quit, 'clear' to clear the screen, 'command' to show all commands" << _END_COLOR << '\n';
 }
 
-void consoleLayout::displayCommands()
+void ConsoleLayout::displayCommands()
 {
     std::cout 
         << " (1) initialize\n"
@@ -33,7 +33,7 @@ void consoleLayout::displayCommands()
         << " (7) exit\n";
 }
 
-void consoleLayout::run() {
+void ConsoleLayout::run() {
     string line;
     bool isInitialized = false;
 
@@ -138,23 +138,19 @@ void consoleLayout::run() {
 }
 
 
-void consoleLayout::createProcess(const string& name)
+void ConsoleLayout::createProcess(const string& name)
 {
-	// TODO: implement process creation logic
-	// For now, just simulate process creation
 	ProcessInfo info;
 	info.name = name;
 	info.currentLine = 0;
-	info.totalLines = 100; // example total lines
+	info.totalLines = 100;
 	info.timeCreated = system_clock::now();
 	processes[name] = info;
 	cout << "Process " << name << " created." << endl;
 }
 
-void consoleLayout::displayProcessInfo(const string& name) const
+void ConsoleLayout::displayProcessInfo(const string& name) const
 {
-	// TODO: implement creation of new screen session (maybe in a different method?)
-    // and the process info display logic
 	auto it = processes.find(name);
 	if (it != processes.end()) {
 		const ProcessInfo& info = it->second;
@@ -168,11 +164,11 @@ void consoleLayout::displayProcessInfo(const string& name) const
 	}
 }
 
-string consoleLayout::formatTimestamp(const system_clock::time_point& time) const
+string ConsoleLayout::formatTimestamp(const system_clock::time_point& time) const
 {
     auto time_t = system_clock::to_time_t(time);
     struct tm localTime;
-    localtime_s(&localTime, &time_t); // Use localtime_s instead of localtime
+    localtime_s(&localTime, &time_t);
     stringstream ss;
     ss << put_time(&localTime, "%Y-%m-%d %H:%M:%S");
     return ss.str();

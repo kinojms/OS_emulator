@@ -12,11 +12,10 @@
 using namespace std;
 using namespace std::chrono;
 
-class consoleLayout
+class ConsoleLayout
 {
 public:
-	// TODO: define the console layout here
-	consoleLayout();
+	ConsoleLayout();
 	void displayIntro();
 	void displayCommands();
 	void run();
