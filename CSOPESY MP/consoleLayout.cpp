@@ -119,7 +119,7 @@ void consoleLayout::run() {
             {"report-util", "report-util command recognized. Doing something."}
         };
 
-        // Handle recognized commands
+        // Handle recognized screen -s commands
         if (command == "command") {
             displayCommands();
         }
@@ -127,8 +127,12 @@ void consoleLayout::run() {
             cout << actions.at(command) << endl;
         }
         else {
-            // Default: create the process
-            createProcess(command);
+            // Prevent creating duplicate processes
+            if (processes.find(command) != processes.end()) {
+                cout << "Process '" << command << "' already exists. Duplicate processes are not allowed." << endl;
+            } else {
+                createProcess(command);
+            }
         }
     }
 }
