@@ -1,4 +1,4 @@
-#include "consoleLayout.h"
+#include "ConsoleLayout.h"
 #include <algorithm>
 
 consoleLayout::consoleLayout()
