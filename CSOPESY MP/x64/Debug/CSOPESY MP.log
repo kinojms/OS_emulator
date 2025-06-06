@@ -1,4 +1,5 @@
-﻿  ConsoleLayout.cpp
-  main.cpp
+﻿  Functions.cpp
+  Process.cpp
+  consoleLayout.cpp
   Generating Code...
-  CSOPESY MP.vcxproj -> C:\Users\Justin Sacdalan\Documents\College Files\3rd Year\3rd Sem\CSOPESY\OS_Emulator_MP\x64\Debug\CSOPESY MP.exe
+  CSOPESY MP.vcxproj -> D:\CSOPESY\Os-Emulator\x64\Debug\CSOPESY MP.exe

@@ -4,14 +4,21 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include "ConsoleLayout.h"
+#include "consoleLayout.h"
+#include "Display.h"
+#include "gFunctions.h"
 
+gFunctions gF;
+Display disp;
 using namespace std;
 
 int main() {
-    consoleLayout cli;
-    cli.run();
+	consoleLayout layout;
 
-    cout << "Code End" << endl;
-    return 0;
+    std::string initializer = "notinitialized";
+	std::string start = "true";
+	int clearlater = 0;
+
+	layout.controller(initializer);
+
 }
