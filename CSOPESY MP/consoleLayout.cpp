@@ -17,7 +17,7 @@ bool firstRun = true;
 bool running = true;
 
 void consoleLayout::controller(std::string initializer) {
-    std::string line;  
+    std::string line;
 
     dp.displayIntro();
     std::cout << "\nEnter a command: ";
@@ -46,7 +46,7 @@ void consoleLayout::controller(std::string initializer) {
             //clear the screen
             if (token == "clear") {
                 genFun.clearScreen();
-				dp.displayIntro();
+                dp.displayIntro();
                 continue;
             }
 
@@ -57,7 +57,7 @@ void consoleLayout::controller(std::string initializer) {
 
             //Display known commands
             if (token == "command") {
-				dp.displayCommands();
+                dp.displayCommands();
             }
 
 
@@ -70,7 +70,7 @@ void consoleLayout::controller(std::string initializer) {
                         continue;
                     }
                     else p.displayProcessInfo(command);
-                   
+
                 }//end for -r
 
                 //check for -s
@@ -79,16 +79,16 @@ void consoleLayout::controller(std::string initializer) {
                         std::cout << "You must specify a process to resume using 'screen -s'." << std::endl;
                     }
                     if (command == "screen") {
-						fun.screen();
+                        fun.screen();
                     }
                     if (command == "scheduler-test") {
-						fun.schedulerTest();
+                        fun.schedulerTest();
                     }
                     if (command == "scheduler-stop") {
-						fun.schedulerStop();
+                        fun.schedulerStop();
                     }
                     if (command == "report-util") {
-						fun.reportUtil();
+                        fun.reportUtil();
                     }
                     if (command == "NivadaDummy") {
                         dp.nivadaDummy();
@@ -96,17 +96,16 @@ void consoleLayout::controller(std::string initializer) {
                     else {
                         p.createProcess(command);
                     }
-				}
-                if (flag != "-s" && flag !="-r") std::cout << "You must use '-r' or '-s' and input a command to continue" << std::endl;
-            }else std::cout << "unknown command" << std::endl;//checker for screen commands
+                }
+                if (flag != "-s" && flag != "-r") std::cout << "You must use '-r' or '-s' and input a command to continue" << std::endl;
+            }
+            else std::cout << "unknown command" << std::endl;//checker for screen commands
         }//checker to ensure initilize is active
-    } //while loop to keep code going
+        if (initializer != "initialize") {
+            std::cout << "You must initialize before using other commands." << std::endl;
+            std::cout << "\nEnter a command: ";
+            std::getline(std::cin, initializer);
+        } //while loop to keep code going
+    }
 
-    // force restart if initialize not stated
-    if (initializer != "initialize") {
-        std::cout << "You must initialize before using other commands." << std::endl;
-        std::cout << "\nEnter a command: ";
-        std::getline(std::cin, initializer);
-    };
 }
-
