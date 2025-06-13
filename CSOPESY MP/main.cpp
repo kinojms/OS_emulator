@@ -6,9 +6,7 @@
 
 #include "consoleLayout.h"
 #include "Display.h"
-#include "gFunctions.h"
 
-gFunctions gF;
 Display disp;
 using namespace std;
 

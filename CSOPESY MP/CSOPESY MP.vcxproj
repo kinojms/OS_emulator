@@ -128,19 +128,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="consoleLayout.cpp" />
-    <ClCompile Include="Display.cpp" />
+    <ClCompile Include="CPUCore.cpp" />
     <ClCompile Include="Functions.cpp" />
-    <ClCompile Include="gFunctions.cpp" />
+    <ClCompile Include="MainConsole.cpp" />
+    <ClCompile Include="Display.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Process.cpp" />
+    <ClCompile Include="Scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="consoleLayout.h" />
+    <ClInclude Include="CPUCore.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Functions.h" />
-    <ClInclude Include="gFunctions.h" />
     <ClInclude Include="Process.h" />
+    <ClInclude Include="Scheduler.h" />
     <ClInclude Include="windows_console_minimal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

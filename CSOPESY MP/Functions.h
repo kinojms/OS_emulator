@@ -1,10 +1,25 @@
-#pragma once
-class Functions
-{
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
+
+#include <vector>
+#include <memory>
+#include <thread>
+#include <atomic>
+#include "Scheduler.h"
+#include "Process.h"
+
+class Functions {
+private:
+    std::vector<std::shared_ptr<Process>> allProcesses;
+    std::shared_ptr<Scheduler> scheduler;
+    std::thread schedulerThread;
+    std::atomic<bool> schedulerRunning = false;
+
 public:
-	int screen();
-	int schedulerTest();
-	int schedulerStop();
-	int reportUtil();
+    void schedulerTest();
+    void schedulerStop();
+    void screen();         // show all processes status
+    void reportUtil();     // optional: show CPU utilization
 };
 
+#endif
