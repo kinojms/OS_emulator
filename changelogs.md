@@ -1,9 +1,9 @@
 # Code Explanation
 To make it simple, here's an analogy:
-Process = Jobs
-CPUCores = Workers
-Scheduler = Manager
-Functions = Supervisor
+- Process = Jobs
+- CPUCores = Workers
+- Scheduler = Manager
+- Functions = Supervisor
 
 ## Process.cpp (Job)
 - is a "job" with a unique id (`pid`) and a list of instructions (100 print statements)
