@@ -18,6 +18,7 @@ private:
     std::thread processGenThread; // Thread for random process generation
     std::atomic<bool> schedulerRunning = false;
     std::atomic<bool> processGenRunning = false; // Control flag for process generation
+    std::atomic<bool> schedulerStopRequested = false; // New flag to request scheduler stop
 
 public:
     // Schedulers

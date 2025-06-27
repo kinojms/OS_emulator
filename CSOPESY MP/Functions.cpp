@@ -18,6 +18,10 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
         for (int i = 0; i < num_cpu; ++i) {
             scheduler->cores.push_back(std::make_shared<CPUCore>(i));
         }
+    } else {
+        // Clear queues if scheduler already exists (for restart)
+        while (!scheduler->processQueue.empty()) scheduler->processQueue.pop();
+        while (!scheduler->runningQueue.empty()) scheduler->runningQueue.pop();
     }
 
     // Always ensure there are at least 10 processes
@@ -41,25 +45,50 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
     }
 
     schedulerRunning = true;
+    schedulerStopRequested = false;
     startProcessGenerator(max_ins);
 
     schedulerThread = std::thread([this]() {
-        while (!scheduler->processQueue.empty()) {
-            auto process = scheduler->processQueue.front();
-            scheduler->processQueue.pop();
-
-            // Find an available core
-            bool assigned = false;
-            while (!assigned) {
-                for (auto& core : scheduler->cores) {
-                    if (!core->isBusy) {
-                        core->assignProcess(process);
-                        assigned = true;
+        while (schedulerRunning || schedulerStopRequested) {
+            std::shared_ptr<Process> process = nullptr;
+            {
+                std::lock_guard<std::mutex> lock(scheduler->queueMutex);
+                if (!scheduler->processQueue.empty()) {
+                    process = scheduler->processQueue.front();
+                    scheduler->processQueue.pop();
+                }
+            }
+            if (process) {
+                // assign to core as before
+                bool assigned = false;
+                while (!assigned) {
+                    for (auto& core : scheduler->cores) {
+                        if (!core->isBusy) {
+                            core->assignProcess(process);
+                            assigned = true;
+                            break;
+                        }
+                    }
+                    if (!assigned) {
+                        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                    }
+                }
+            } else {
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+            // Only exit if stop requested and all processes are finished and the queue is empty
+            if (schedulerStopRequested) {
+                bool allDone = true;
+                for (const auto& p : allProcesses) {
+                    if (!p->isFinished) {
+                        allDone = false;
                         break;
                     }
                 }
-                if (!assigned) {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                std::lock_guard<std::mutex> lock(scheduler->queueMutex);
+                if (allDone && scheduler->processQueue.empty()) {
+                    schedulerRunning = false;
+                    break;
                 }
             }
         }
@@ -75,7 +104,6 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
             }
             if (anyBusy) std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        schedulerRunning = false;
     });
 
     schedulerThread.detach();
@@ -92,6 +120,10 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins) {
         for (int i = 0; i < num_cpu; ++i) {
             scheduler->cores.push_back(std::make_shared<CPUCore>(i));
         }
+    } else {
+        // Clear queues if scheduler already exists (for restart)
+        while (!scheduler->processQueue.empty()) scheduler->processQueue.pop();
+        while (!scheduler->runningQueue.empty()) scheduler->runningQueue.pop();
     }
 
     // Always ensure there are at least 10 processes
@@ -116,15 +148,21 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins) {
 
     scheduler->runningFlag = true;
     schedulerRunning = true;
+    schedulerStopRequested = false;
     startProcessGenerator(max_ins);
 
     schedulerThread = std::thread([this, quantum_Cycles]() {
         const int timePerCycleMs = 10;
-        while (scheduler->runningFlag) {
-            if (!scheduler->runningQueue.empty()) {
-                auto process = scheduler->runningQueue.front();
-                scheduler->runningQueue.pop();
-
+        while (scheduler->runningFlag || schedulerStopRequested) {
+            std::shared_ptr<Process> process = nullptr;
+            {
+                std::lock_guard<std::mutex> lock(scheduler->queueMutex);
+                if (!scheduler->runningQueue.empty()) {
+                    process = scheduler->runningQueue.front();
+                    scheduler->runningQueue.pop();
+                }
+            }
+            if (process) {
                 // Find an available core
                 bool assigned = false;
                 while (!assigned) {
@@ -148,25 +186,41 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins) {
                 }
                 std::this_thread::sleep_for(std::chrono::milliseconds(quantum_Cycles * timePerCycleMs));
                 if (!process->isFinished) {
+                    std::lock_guard<std::mutex> lock(scheduler->queueMutex);
                     scheduler->runningQueue.push(process);
                 }
             } else {
-                // check if all processes are finished
-                bool allDone = true;
-                for (const auto& p : allProcesses) {
-                    if (!p->isFinished) {
-                        allDone = false;
+                // Only exit if stop requested and all processes are finished and the queue is empty
+                if (schedulerStopRequested) {
+                    bool allDone = true;
+                    for (const auto& p : allProcesses) {
+                        if (!p->isFinished) {
+                            allDone = false;
+                            break;
+                        }
+                    }
+                    std::lock_guard<std::mutex> lock(scheduler->queueMutex);
+                    if (allDone && scheduler->runningQueue.empty()) {
+                        scheduler->runningFlag = false;
+                        schedulerRunning = false;
+                        std::cout << "Round Robin scheduler finished.\n";
                         break;
                     }
                 }
-                if (allDone) {
-                    scheduler->runningFlag = false;
-                    schedulerRunning = false;
-                    std::cout << "Round Robin scheduler finished.\n";
-                    break;
-                }
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
+        }
+        // Wait for all cores to finish
+        bool anyBusy = true;
+        while (anyBusy) {
+            anyBusy = false;
+            for (auto& core : scheduler->cores) {
+                if (core->isBusy) {
+                    anyBusy = true;
+                    break;
+                }
+            }
+            if (anyBusy) std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     });
     schedulerThread.detach();
@@ -187,12 +241,9 @@ void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int
 }
 
 void Functions::schedulerStop() {
-    if (scheduler) {
-        scheduler->runningFlag = false;
-    }
-    schedulerRunning = false;
-    stopProcessGenerator();
-    std::cout << "Scheduler stopped.\n";
+    schedulerStopRequested = true; // Request scheduler to stop after finishing all current processes
+    stopProcessGenerator(); // Stop generating new processes
+    std::cout << "Scheduler stop requested. Waiting for all processes to finish...\n";
 }
 
 void Functions::screen() {
@@ -334,7 +385,7 @@ void Functions::startProcessGenerator(int max_ins) {
                 p->instructionQueue.push(instructionID);
             }
             allProcesses.push_back(p);
-            if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
+            if (scheduler) {
                 scheduler->addProcess(p);
             }
             // std::cout << "[Process Generator] New random process created: " << p->processName << std::endl;
