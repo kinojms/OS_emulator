@@ -6,6 +6,7 @@
 #include "Display.h"
 #include "Process.h"
 #include "Functions.h"
+#include <fstream>
 
 Display dp;
 Functions fun;
@@ -87,7 +88,7 @@ void consoleLayout::controller(std::string initializer) {
                 
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles);
+                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins);
                     continue;
                 }
 

@@ -1,21 +1,16 @@
 #include "Process.h"
 #include <iostream>
+#include <fstream>
 #include <thread>
+#include <chrono>
+#include <ctime>
+#include <sstream>
 #include <random>
+#include <algorithm>
 
-void Process::InstructionCode(int pid) {  
-    this->pid = pid;  
-    filename = "process_" + std::to_string(pid) + ".txt";  
-    instructionMap = {  
-        {1, [this](int x) { this->generatePrintCommands(x); }},  
-        {2, [this](int x) { this->declare(x); }},  
-        {3, [this](int x) { this->Add(x, x, x); }},  
-        {4, [this](int x) { this->Subtract(x, x, x); }},  
-        {5, [this](int x) { this->Sleep(x); }},  
-        {6, [this](int x) { this->FOR(instructionMap, 1, x); }}  
-    };  
+Process::Process(int pid) : pid(pid) {
+    filename = "process_" + std::to_string(pid) + ".txt";
 }
-
 
 void Process::generatePrintCommands(int count) {
     for (int i = 1; i <= count; ++i) {
@@ -23,42 +18,80 @@ void Process::generatePrintCommands(int count) {
     }
 }
 
-uint16_t Process::declare(int var) {
-    uint16_t var1 = var;
-    return var1;
+void Process::PRINT(const std::string& msg) {
+    printCommands.push(msg);
 }
 
-int Process::Add(int var1, int var2, int var3) {
-	var1 += var2 + var3;
-    return var1;
+uint16_t Process::DECLARE(const std::string& var, uint16_t value) {
+    memory[var] = value;
+    return value;
 }
 
-int Process::Subtract(int var, int var2, int var3) {
-    var -= var2 + var3;
-    return var;
+uint16_t Process::ADD(const std::string& dest, const std::string& src1, const std::string& src2) {
+    uint16_t val1 = memory.count(src1) ? memory[src1] : 0;
+    uint16_t val2 = memory.count(src2) ? memory[src2] : 0;
+    uint16_t result = std::clamp<uint32_t>(val1 + val2, 0, UINT16_MAX);
+    memory[dest] = result;
+    return result;
 }
 
-void Process::Sleep(int x) {
-    int sleep_global = x;
+uint16_t Process::SUBTRACT(const std::string& dest, const std::string& src1, const std::string& src2) {
+    uint16_t val1 = memory.count(src1) ? memory[src1] : 0;
+    uint16_t val2 = memory.count(src2) ? memory[src2] : 0;
+    int32_t result = static_cast<int32_t>(val1) - static_cast<int32_t>(val2);
+    result = std::clamp(result, 0, static_cast<int32_t>(UINT16_MAX));
+    memory[dest] = static_cast<uint16_t>(result);
+    return static_cast<uint16_t>(result);
 }
 
-void Process::FOR(const std::unordered_map<int, std::function<void(int)>> &instructionMap,  
-                  int instructionID, int repeats) {  
-    auto it = instructionMap.find(instructionID);  
-    if (it == instructionMap.end()) {  
-        std::cerr << "Instruction " << instructionID << " not found!\n";  
-        return;  
-    }  
-
-    for (int i = 0; i < repeats; ++i) {  
-        it->second(i); // Call the function with index i  
-    }  
+void Process::SLEEP(int ticks) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(ticks * 10));
 }
 
-// fix this by making an ordered map of functions and sending it to this 
+void Process::FOR(const std::unordered_map<int, std::function<void(int)>>& instructions, int instructionID, int repeats) {
+    static thread_local int depth = 0;
+    if (depth >= 3) {
+        printCommands.push("Max FOR nesting reached.");
+        return;
+    }
+    ++depth;
+    for (int i = 0; i < repeats; ++i) {
+        auto it = instructions.find(instructionID);
+        if (it != instructions.end()) {
+            it->second(0);
+        }
+    }
+    --depth;
+}
 
-Process::Process(int pid) : pid(pid) {
-    filename = "process_" + std::to_string(pid) + ".txt";
+void Process::InstructionCode(int pid) {  
+    this->pid = pid;  
+    filename = "process_" + std::to_string(pid) + ".txt";  
+
+    instructionMap = {  
+        {1, [this](int) {  
+            PRINT("Hello world from process_" + std::to_string(this->pid) + "!");  
+        }},  
+        {2, [this](int) {  
+            DECLARE("x", 42);  
+            PRINT("Declared x = 42");  
+        }},  
+        {3, [this](int) {  
+            ADD("y", "x", "x");  
+            PRINT("y = x + x");  
+        }},  
+        {4, [this](int) {  
+            SUBTRACT("z", "y", "x");  
+            PRINT("z = y - x");  
+        }},  
+        {5, [this](int) {  
+            PRINT("Sleeping for 2 ticks...");  
+            SLEEP(2);  
+        }},  
+        {6, [this](int) {  
+            FOR(instructionMap, 1, 3);  
+        }}  
+    };  
 }
 
 void Process::execute() {
@@ -68,51 +101,32 @@ void Process::execute() {
         return;
     }
 
-    while (!printCommands.empty()) {
-        std::string command = printCommands.front();
-        printCommands.pop();
+    while (!instructionQueue.empty()) {
+        int instructionID = instructionQueue.front();
+        instructionQueue.pop();
 
-        auto now = std::chrono::system_clock::now();
-        std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
-        char timestamp[26];
-        ctime_s(timestamp, sizeof(timestamp), &timeNow);
-        std::string timestampStr(timestamp);
-        timestampStr.pop_back(); // Remove trailing newline
+        auto it = instructionMap.find(instructionID);
+        if (it != instructionMap.end()) {
+            it->second(0);
+        }
 
-        file << "[" << timestampStr << "] " << command << "\n";
+        while (!printCommands.empty()) {
+            std::string command = printCommands.front();
+            printCommands.pop();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Simulate workload
+            auto now = std::chrono::system_clock::now();
+            std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
+            char timestamp[26];
+            ctime_s(timestamp, sizeof(timestamp), &timeNow);
+            std::string timestampStr(timestamp);
+            timestampStr.pop_back();
+
+            file << "[" << timestampStr << "] " << command << "\n";
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     file.close();
     isFinished = true;
-
-
-
-    /* attempted code to use queue instructions 
-std::uniform_int_distribution<int> dist(1, 6);
-std::mt19937 gen(std::random_device{}());
-
-for (int i = 0; i < 10; ++i) {
-    int randomInstruction = dist(gen);
-    instructionQueue.push(randomInstruction);
-    std::cout << i << std::endl;
-}
-
-// Process the queue
-while (!instructionQueue.empty()) {
-    int instructionID = instructionQueue.front();
-    instructionQueue.pop();
-    // Use the instructionMap to call the function
-    auto it = instructionMap.find(instructionID);
-    if (it != instructionMap.end()) {
-        it->second(5); // Pass an
-
-        std::cout << "Executing instruction " << instructionID << " for Process " << pid << "\n";
-        std::ofstream file(filename, std::ios::out);
-        if (!file.is_open()) {
-            std::cerr << "Failed to open file for Process " << pid << "\n";
-            return;
-        }
-        */
 }

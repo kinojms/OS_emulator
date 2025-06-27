@@ -5,9 +5,10 @@
 #include <memory>
 #include <thread>
 #include <atomic>
+#include <string>
 #include "CPUCore.h"
 #include "Scheduler.h"
-
+#include "Process.h"
 
 class Functions {
 private:
@@ -17,12 +18,12 @@ private:
     std::atomic<bool> schedulerRunning = false;
 
 public:
-    void FCFS(int num_cpu, int qunatum_Cycles);
-    void RR(int num_cpu, int qunatum_Cycles);
-    void schedulerTest(int num_cpu, std::string scheduler, int quantum_Cycles);
+    void FCFS(int num_cpu, int quantum_Cycles, int max_ins);
+    void RR(int num_cpu, int quantum_Cycles, int max_ins);
+    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins);
     void schedulerStop();
-    void screen();         // show all processes status
-    void reportUtil();     // optional: show CPU utilization
+    void screen();
+    void reportUtil();
 };
 
 #endif

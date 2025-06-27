@@ -1,49 +1,37 @@
-#ifndef PROCESS_H  
-#define PROCESS_H  
+#ifndef PROCESS_H
+#define PROCESS_H
 
-#include <string>  
-#include <queue>  
-#include <mutex>  
-#include <fstream>  
-#include <chrono>  
-#include <ctime>  
-#include <sstream>  
+#include <string>
+#include <queue>
+#include <unordered_map>
+#include <functional>
+#include <cstdint>
 
-#include <queue> // Add this include for std::queue  
-#include <unordered_map>  
-#include <functional>  
-#include <iostream>
+class Process {
+private:
+    std::string filename;
+    std::unordered_map<std::string, uint16_t> memory;
 
-class Process {  
-public:  
-    int pid;  
-    std::string filename;  
-    std::queue<std::string> printCommands;  
-    std::queue<int> instructionQueue; // Add this field to define instructionQueue  
-    bool isFinished = false;  
-    std::mutex fileMutex;  
-    std::unordered_map<int, std::function<void(int)>> instructionMap;  
-    void generatePrintCommands(int count);  
-    uint16_t declare(int var);  
-    int Add(int var1, int var2, int var3);  
-    int Subtract(int var, int var2, int var3);  
-    void Sleep(int x);  
-    void FOR(const std::unordered_map<int, std::function<void(int)>>& instructionMap, int instructionID, int repeats);  
-    void execute();  
-    void InstructionCode(int pid);
+public:
+    int pid;
+    std::queue<std::string> printCommands;
+    std::unordered_map<int, std::function<void(int)>> instructionMap;
+    std::queue<int> instructionQueue;
+    bool isFinished = false;
+
     Process(int pid);
 
+    void generatePrintCommands(int count);
+    void InstructionCode(int pid);
+    void execute();
 
-    /*void executeTimeSlice(int cycles) {
-        while (cycles-- > 0 && !printCommands.empty()) {
-            //std::cout << "PID " << pid << ": " << printCommands.front() << std::endl;
-            //printCommands.pop();
-        };
-        if (printCommands.empty()) {
-            //isFinished = true;
-        }
-    }*/
-};  
-
+    // Instruction implementations
+    void PRINT(const std::string& msg);
+    uint16_t DECLARE(const std::string& var, uint16_t value);
+    uint16_t ADD(const std::string& dest, const std::string& src1, const std::string& src2);
+    uint16_t SUBTRACT(const std::string& dest, const std::string& src1, const std::string& src2);
+    void SLEEP(int ticks);
+    void FOR(const std::unordered_map<int, std::function<void(int)>>& instructions, int instructionID, int repeats);
+};
 
 #endif // PROCESS_H

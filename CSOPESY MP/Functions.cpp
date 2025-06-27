@@ -1,8 +1,8 @@
 #include "Functions.h"
 #include <iostream>
-#include <algorithm>
+#include <random>
 
-void Functions::FCFS(int num_cpu, int qunatum_Cycles) {
+void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
     if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
@@ -10,47 +10,52 @@ void Functions::FCFS(int num_cpu, int qunatum_Cycles) {
 
     if (!scheduler) {
         scheduler = std::make_shared<Scheduler>();
-        // Create 4 CPU cores
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < num_cpu; ++i) {
             scheduler->cores.push_back(std::make_shared<CPUCore>(i));
         }
     }
 
-    // Only create processes if allProcesses is empty
     if (allProcesses.empty()) {
         for (int i = 0; i < 10; ++i) {
             auto p = std::make_shared<Process>(i);
-            p->generatePrintCommands(100);
+            p->InstructionCode(i);
+            for (int j = 0; j < 100; ++j) {
+                int instructionID = rand() % 6 + 1;
+                p->instructionQueue.push(instructionID);
+            }
             allProcesses.push_back(p);
         }
     }
 
-    // Add only unfinished processes to the scheduler
     for (auto& p : allProcesses) {
         if (!p->isFinished) {
             scheduler->addProcess(p);
         }
     }
 
-    scheduler->runningFlag = true;
     schedulerRunning = true;
 
     schedulerThread = std::thread([this]() {
-        scheduler->start();
+        while (!scheduler->processQueue.empty()) {
+            auto process = scheduler->processQueue.front();
+            scheduler->processQueue.pop();
+
+            if (!process->isFinished) {
+                process->execute();
+            }
+        }
         schedulerRunning = false;
         });
 
     schedulerThread.detach();
-
-    std::cout << "Scheduler started.\n";
 }
 
-void Functions::RR(int num_cpu, int quantum_Cycles) {
+void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins) {
     if (schedulerRunning) {
+        std::cout << "Scheduler already running.\n";
         return;
     }
 
-    // Initialize the scheduler and CPU cores if not already done
     if (!scheduler) {
         scheduler = std::make_shared<Scheduler>();
         for (int i = 0; i < num_cpu; ++i) {
@@ -58,26 +63,26 @@ void Functions::RR(int num_cpu, int quantum_Cycles) {
         }
     }
 
-    // Only create processes if allProcesses is empty
     if (allProcesses.empty()) {
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 100; ++i) {
             auto p = std::make_shared<Process>(i);
-            p->generatePrintCommands(100); // give 100 tasks per process
+            p->InstructionCode(i);
+            for (int j = 0; j < 10; ++j) {
+                int instructionID = rand() % 6 + 1;
+                p->instructionQueue.push(instructionID);
+            }
             allProcesses.push_back(p);
         }
     }
 
-    // Add only unfinished processes to the scheduler queue
     for (auto& p : allProcesses) {
         if (!p->isFinished) {
-            scheduler->runningQueue.push(p);
+            scheduler->addProcess(p);
         }
     }
 
-    scheduler->runningFlag = true;
     schedulerRunning = true;
 
-    // Launch scheduler loop in a separate thread
     schedulerThread = std::thread([this, quantum_Cycles]() {
         const int timePerCycleMs = 10;
 
@@ -86,8 +91,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles) {
             scheduler->runningQueue.pop();
 
             if (!process->isFinished) {
-                //process->executeTimeSlice(quantum_Cycles);
-
+                process->execute();
                 if (!process->isFinished) {
                     scheduler->runningQueue.push(process);
                 }
@@ -96,65 +100,40 @@ void Functions::RR(int num_cpu, int quantum_Cycles) {
             std::this_thread::sleep_for(std::chrono::milliseconds(quantum_Cycles * timePerCycleMs));
         }
 
-        scheduler->runningFlag = false;
         schedulerRunning = false;
-    });
+        });
 
     schedulerThread.detach();
 }
 
-
-void Functions::schedulerTest(int num_cpu, std::string scheduler1, int quantum_Cycles) {
-    // Convert input to lowercase
-    std::transform(scheduler1.begin(), scheduler1.end(), scheduler1.begin(), ::tolower);
-
-    if (scheduler1 == "fcfs") {
-        FCFS(num_cpu, quantum_Cycles);
-        std::cout << "Scheduler started (FCFS).\n";
+void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins) {
+    if (schedulerType == "fcfs") {
+        FCFS(num_cpu, quantum_Cycles, max_ins);
     }
-    else if (scheduler1 == "rr") {
-        RR(num_cpu, quantum_Cycles);
-        std::cout << "Scheduler started (Round Robin).\n";
+    else if (schedulerType == "rr") {
+        RR(num_cpu, quantum_Cycles, max_ins);
     }
     else {
-        std::cout << "Unknown scheduler type: " << scheduler1 << "\n";
+        std::cout << "Unknown scheduler type: " << schedulerType << "\n";
     }
+
+    std::cout << "Scheduler started.\n";
 }
 
-
 void Functions::schedulerStop() {
-    if (!schedulerRunning) {
-        std::cout << "Scheduler is not running.\n";
-        return;
+    if (scheduler) {
+        scheduler->runningFlag = false;
     }
-
-    std::cout << "Stopping scheduler...\n";
-    scheduler->runningFlag = false;
     schedulerRunning = false;
+    std::cout << "Scheduler stopped.\n";
 }
 
 void Functions::screen() {
-    std::cout << "Running/Waiting processes:\n";
-    for (auto& proc : allProcesses) {
-        if (!proc->isFinished) {
-            std::cout << "  Process " << proc->pid << "\n";
-        }
+    for (const auto& p : allProcesses) {
+        std::cout << "Process " << p->pid << " - Finished: " << (p->isFinished ? "Yes" : "No") << "\n";
     }
-
-    std::cout << "Finished processes:\n";
-    for (auto& proc : allProcesses) {
-        if (proc->isFinished) {
-            std::cout << "  Process " << proc->pid << "\n";
-        }
-    }
-
 }
 
-
 void Functions::reportUtil() {
-    std::cout << "CPU Utilization Report (simulated)...\n";
-    for (int i = 0; i < scheduler->cores.size(); ++i) {
-        std::cout << "Core " << i << " - "
-            << (scheduler->cores[i]->isBusy ? "Busy" : "Idle") << "\n";
-    }
+    std::cout << "CPU Utilization report not implemented.\n";
 }
