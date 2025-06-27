@@ -156,5 +156,55 @@ void Functions::screen() {
 }
 
 void Functions::reportUtil() {
-    std::cout << "CPU Utilization report not implemented.\n";
+    if (!scheduler || scheduler->cores.empty()) {
+        std::cout << "Scheduler not running or no cores available.\n";
+        return;
+    }
+
+    int totalCores = static_cast<int>(scheduler->cores.size());
+    int usedCores = 0;
+    for (const auto& core : scheduler->cores) {
+        if (core->isBusy) usedCores++;
+    }
+    int availableCores = totalCores - usedCores;
+    double utilization = (totalCores > 0) ? (static_cast<double>(usedCores) / totalCores) * 100.0 : 0.0;
+
+    std::ofstream logFile("csopesy-log.txt");
+    if (!logFile) {
+        std::cout << "Failed to write report to C:/csopesy-log.txt!\n";
+        return;
+    }
+
+    logFile << "CPU utilization: " << static_cast<int>(utilization) << "%\n";
+    logFile << "Cores used: " << usedCores << "\n";
+    logFile << "Cores available: " << availableCores << "\n";
+    logFile << "-------------------------\n";
+    logFile << "Running processes:\n";
+    for (const auto& proc : allProcesses) {
+        if (!proc->isFinished) {
+            std::string name = std::string("process") + (proc->pid < 10 ? "0" : "") + std::to_string(proc->pid);
+            std::string datetime = getCurrentDateTime();
+            int coreId = getAssignedCore(proc, scheduler->cores);
+            int currentInst = getCurrentInstruction(proc);
+            int totalInst = getTotalInstructions(proc);
+            logFile << "  " << name << "   (" << datetime << ")   Core: ";
+            if (coreId >= 0) logFile << coreId;
+            else logFile << "N/A";
+            logFile << "      " << currentInst << "/" << totalInst << "\n";
+        }
+    }
+    logFile << "Finished processes:\n";
+    for (const auto& proc : allProcesses) {
+        if (proc->isFinished) {
+            std::string name = std::string("process") + (proc->pid < 10 ? "0" : "") + std::to_string(proc->pid);
+            std::string datetime = getCurrentDateTime();
+            int totalInst = getTotalInstructions(proc);
+            logFile << "  " << name << "   (" << datetime << ")   Finished      " << totalInst << "/" << totalInst << "\n";
+        }
+    }
+    logFile << "---------------------\n";
+    logFile.close();
+
+    std::cout << "Report generated at C:/csopesy-log.txt!\n";
 }
+
