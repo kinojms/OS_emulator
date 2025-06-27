@@ -1,0 +1,17 @@
+CPU utilization: 0%
+Cores used: 0
+Cores available: 1
+-------------------------
+Running processes:
+  process00   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process01   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process02   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process03   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process04   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process05   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process06   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process07   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process08   (2025-06-27 14:13:22)   Core: N/A      100/100
+  process09   (2025-06-27 14:13:22)   Core: N/A      100/100
+Finished processes:
+---------------------
