@@ -1,5 +1,9 @@
 #include "Functions.h"
 #include <iostream>
+#include <algorithm>
+#include <iomanip>
+#include <ctime>
+#include <fstream>
 #include <random>
 
 void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
@@ -153,6 +157,30 @@ void Functions::screen() {
     for (const auto& p : allProcesses) {
         std::cout << "Process " << p->pid << " - Finished: " << (p->isFinished ? "Yes" : "No") << "\n";
     }
+}
+
+std::string getCurrentDateTime() {
+    std::time_t now = std::time(nullptr);
+    std::tm local_tm;
+#ifdef _WIN32
+    localtime_s(&local_tm, &now);
+#else
+    local_tm = *std::localtime(&now);
+#endif
+    char buf[32];
+    std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", &local_tm);
+    return buf;
+}
+int getCurrentInstruction(const std::shared_ptr<Process>& proc) {
+    //Add get current instruction logic here
+    return 1000;
+}
+int getTotalInstructions(const std::shared_ptr<Process>& proc) {
+    return 1000; // Add get total instruction logic here
+}
+int getAssignedCore(const std::shared_ptr<Process>& proc, const std::vector<std::shared_ptr<CPUCore>>& cores) {
+    // For now, return -1 (unknown)
+    return -1;
 }
 
 void Functions::reportUtil() {
