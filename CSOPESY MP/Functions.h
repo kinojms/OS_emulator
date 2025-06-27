@@ -15,7 +15,9 @@ private:
     std::vector<std::shared_ptr<Process>> allProcesses;
     std::shared_ptr<Scheduler> scheduler;
     std::thread schedulerThread;
+    std::thread processGenThread; // Thread for random process generation
     std::atomic<bool> schedulerRunning = false;
+    std::atomic<bool> processGenRunning = false; // Control flag for process generation
 
 public:
     // Schedulers
@@ -25,10 +27,17 @@ public:
 
     // Control
     void schedulerStop();
+    void startProcessGenerator(int max_ins); // Start background process generator
+    void stopProcessGenerator(); // Stop background process generator
 
     // Monitoring
     void screen();
     void reportUtil();
+
+    // Process management for screen -s and -r
+    std::shared_ptr<Process> createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec);
+    std::shared_ptr<Process> getProcessByName(const std::string& name);
+    void switchScreen(const std::string& name);
 };
 
 #endif

@@ -1,0 +1,980 @@
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:43 2025] y = x + x
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] y = x + x
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] y = x + x
+[Sat Jun 28 00:16:43 2025] y = x + x
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:43 2025] y = x + x
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] y = x + x
+[Sat Jun 28 00:16:43 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:43 2025] Declared x = 42
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] Hello world from process_1!
+[Sat Jun 28 00:16:43 2025] z = y - x
+[Sat Jun 28 00:16:44 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:44 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] z = y - x
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] z = y - x
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] y = x + x
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] z = y - x
+[Sat Jun 28 00:16:44 2025] Hello world from process_1!
+[Sat Jun 28 00:16:44 2025] Declared x = 42
+[Sat Jun 28 00:16:44 2025] z = y - x
+[Sat Jun 28 00:16:44 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] z = y - x
+[Sat Jun 28 00:16:45 2025] Declared x = 42
+[Sat Jun 28 00:16:45 2025] y = x + x
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:45 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] z = y - x
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] z = y - x
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:46 2025] z = y - x
+[Sat Jun 28 00:16:46 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:46 2025] z = y - x
+[Sat Jun 28 00:16:46 2025] z = y - x
+[Sat Jun 28 00:16:46 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:46 2025] Declared x = 42
+[Sat Jun 28 00:16:46 2025] z = y - x
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] z = y - x
+[Sat Jun 28 00:16:46 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] Hello world from process_1!
+[Sat Jun 28 00:16:46 2025] y = x + x
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] y = x + x
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] z = y - x
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Declared x = 42
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Hello world from process_1!
+[Sat Jun 28 00:16:47 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] Declared x = 42
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] Declared x = 42
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Declared x = 42
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] Declared x = 42
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Declared x = 42
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Declared x = 42
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] Hello world from process_1!
+[Sat Jun 28 00:16:48 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] y = x + x
+[Sat Jun 28 00:16:48 2025] Declared x = 42
+[Sat Jun 28 00:16:48 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:48 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] y = x + x
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Declared x = 42
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Declared x = 42
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] y = x + x
+[Sat Jun 28 00:16:49 2025] y = x + x
+[Sat Jun 28 00:16:49 2025] y = x + x
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] y = x + x
+[Sat Jun 28 00:16:49 2025] y = x + x
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] Declared x = 42
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Declared x = 42
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] Declared x = 42
+[Sat Jun 28 00:16:49 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:49 2025] Hello world from process_1!
+[Sat Jun 28 00:16:49 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] Declared x = 42
+[Sat Jun 28 00:16:50 2025] Declared x = 42
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Declared x = 42
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] Declared x = 42
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] Declared x = 42
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] Hello world from process_1!
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:50 2025] y = x + x
+[Sat Jun 28 00:16:50 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] Declared x = 42
+[Sat Jun 28 00:16:51 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] y = x + x
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] y = x + x
+[Sat Jun 28 00:16:51 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Declared x = 42
+[Sat Jun 28 00:16:51 2025] y = x + x
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Declared x = 42
+[Sat Jun 28 00:16:51 2025] Declared x = 42
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] y = x + x
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] y = x + x
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:51 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:51 2025] z = y - x
+[Sat Jun 28 00:16:51 2025] Declared x = 42
+[Sat Jun 28 00:16:51 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Declared x = 42
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Declared x = 42
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Declared x = 42
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:52 2025] Declared x = 42
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Declared x = 42
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Declared x = 42
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] z = y - x
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] y = x + x
+[Sat Jun 28 00:16:52 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Hello world from process_1!
+[Sat Jun 28 00:16:52 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] y = x + x
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] y = x + x
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] y = x + x
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] y = x + x
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] y = x + x
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] Declared x = 42
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] y = x + x
+[Sat Jun 28 00:16:53 2025] Hello world from process_1!
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] z = y - x
+[Sat Jun 28 00:16:53 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] y = x + x
+[Sat Jun 28 00:16:54 2025] y = x + x
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Declared x = 42
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Declared x = 42
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Declared x = 42
+[Sat Jun 28 00:16:54 2025] z = y - x
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:54 2025] y = x + x
+[Sat Jun 28 00:16:54 2025] Hello world from process_1!
+[Sat Jun 28 00:16:54 2025] Declared x = 42
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Declared x = 42
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] z = y - x
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] Declared x = 42
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] z = y - x
+[Sat Jun 28 00:16:55 2025] z = y - x
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Declared x = 42
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] Declared x = 42
+[Sat Jun 28 00:16:55 2025] z = y - x
+[Sat Jun 28 00:16:55 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:55 2025] z = y - x
+[Sat Jun 28 00:16:55 2025] Hello world from process_1!
+[Sat Jun 28 00:16:55 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Declared x = 42
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] Declared x = 42
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] Declared x = 42
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] Declared x = 42
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] y = x + x
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] z = y - x
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Hello world from process_1!
+[Sat Jun 28 00:16:56 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:57 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] Declared x = 42
+[Sat Jun 28 00:16:57 2025] y = x + x
+[Sat Jun 28 00:16:57 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:57 2025] Hello world from process_1!
+[Sat Jun 28 00:16:57 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] y = x + x
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] y = x + x
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Declared x = 42
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] y = x + x
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] Hello world from process_1!
+[Sat Jun 28 00:16:58 2025] z = y - x
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:58 2025] y = x + x
+[Sat Jun 28 00:16:59 2025] Sleeping for 2 ticks...
+[Sat Jun 28 00:16:59 2025] Declared x = 42
+[Sat Jun 28 00:16:59 2025] y = x + x
+[Sat Jun 28 00:16:59 2025] Hello world from process_1!
+[Sat Jun 28 00:16:59 2025] Hello world from process_1!
+[Sat Jun 28 00:16:59 2025] Declared x = 42

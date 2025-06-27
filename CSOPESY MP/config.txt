@@ -1,7 +1,7 @@
-num-cpu = 1
-scheduler = rr
+num-cpu = 4
+scheduler = fcfs
 quantum-cycles = 100
 batch-process-freq = 5
 min-ins = 1
-max-ins = 50
+max-ins = 1000
 delay-per-exec = 0.25
