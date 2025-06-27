@@ -176,14 +176,13 @@ std::string getCurrentDateTime() {
     return buf;
 }
 int getCurrentInstruction(const std::shared_ptr<Process>& proc) {
-    // Example: return total - remaining
-    return 100 - static_cast<int>(proc->instructionQueue.size());
+    //Add get current instruction logic here
+    return 1000;
 }
 int getTotalInstructions(const std::shared_ptr<Process>& proc) {
-    return 100; // Replace with actual total if available
+    return 1000; // Add get total instruction logic here
 }
 int getAssignedCore(const std::shared_ptr<Process>& proc, const std::vector<std::shared_ptr<CPUCore>>& cores) {
-    // If you track which core runs which process, implement here
     // For now, return -1 (unknown)
     return -1;
 }
