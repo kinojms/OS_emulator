@@ -25,9 +25,9 @@ private:
 
 public:
     // Schedulers
-    void FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq = 1);
-    void RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq = 1);
-    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq = 1);
+    void FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
+    void RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
+    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
 
     // Control
     void schedulerStop();

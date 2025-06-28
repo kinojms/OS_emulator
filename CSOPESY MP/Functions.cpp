@@ -11,7 +11,7 @@
 
 std::shared_ptr<Clock> globalClock = nullptr;
 
-void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq) {
+void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
     if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
@@ -24,7 +24,8 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
         for (int i = 0; i < num_cpu; ++i) {
             scheduler->cores.push_back(std::make_shared<CPUCore>(i, globalClock));
         }
-    } else {
+    }
+    else {
         // Clear queues if scheduler already exists (for restart)
         while (!scheduler->processQueue.empty()) scheduler->processQueue.pop();
         while (!scheduler->runningQueue.empty()) scheduler->runningQueue.pop();
@@ -48,7 +49,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
             if (globalClock) globalClock->advance();
         }
         if (globalClock) globalClock->stop();
-    }).detach();
+        }).detach();
 
     // Start the scheduler thread
     schedulerThread = std::thread([this]() {
@@ -76,7 +77,8 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
                         std::this_thread::sleep_for(std::chrono::milliseconds(10));
                     }
                 }
-            } else {
+            }
+            else {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
             // Only exit if stop requested and all processes are finished and the queue is empty
@@ -107,12 +109,12 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
             }
             if (anyBusy) std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-    });
+        });
 
     schedulerThread.detach();
 }
 
-void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq) {
+void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
     if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
@@ -153,8 +155,8 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
         }).detach();
 
     // Start scheduler thread
-    schedulerThread = std::thread([this, quantum_Cycles]() {
-        const int timePerCycleMs = 10;
+    schedulerThread = std::thread([this, quantum_Cycles, delay_Per_Exec]() {
+        const int timePerCycleMs = delay_Per_Exec;
 
         while (scheduler->runningFlag || schedulerStopRequested) {
             std::shared_ptr<Process> process = nullptr;
@@ -237,12 +239,12 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
     // schedulerThread.detach();
 }
 
-void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq) {
+void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
     if (schedulerType == "fcfs") {
-        FCFS(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq);
+        FCFS(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq, delay_Per_Exec);
     }
     else if (schedulerType == "rr") {
-        RR(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq);
+        RR(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq, delay_Per_Exec);
     }
     else {
         std::cout << "Unknown scheduler type: " << schedulerType << "\n";
@@ -279,7 +281,7 @@ void Functions::writeScreenReport(std::ostream& out) {
             std::string timestamp = "-";
             if (!p->logs.empty()) {
                 size_t l = p->logs.back().find("]");
-                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l+1);
+                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
             }
             out << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
                 << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
@@ -291,7 +293,7 @@ void Functions::writeScreenReport(std::ostream& out) {
             std::string timestamp = "-";
             if (!p->logs.empty()) {
                 size_t l = p->logs.back().find("]");
-                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l+1);
+                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
             }
             out << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
                 << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
@@ -314,7 +316,8 @@ void Functions::reportUtil() {
         writeScreenReport(cpuReportFile);
         cpuReportFile.close();
         std::cout << "CPU utilization and process summary written to cpu_report.txt\n";
-    } else {
+    }
+    else {
         std::cerr << "Failed to write cpu_report.txt\n";
     }
     std::cout << "Process logs have been written to their respective .txt files.\n";
@@ -362,7 +365,8 @@ void Functions::switchScreen(const std::string& name) {
         for (const auto& log : proc->logs) {
             std::cout << log << "\n";
         }
-    } else {
+    }
+    else {
         std::cout << "No logs found for this process.\n";
     }
     std::string cmd;
@@ -384,13 +388,15 @@ void Functions::switchScreen(const std::string& name) {
                 for (const auto& log : proc->logs) {
                     std::cout << log << "\n";
                 }
-            } else {
+            }
+            else {
                 std::cout << "No logs found for this process.\n";
             }
             if (proc->isFinished) {
                 std::cout << "Finished!\n";
             }
-        } else {
+        }
+        else {
             std::cout << "Unknown command. Type 'process-smi' or 'exit'.\n";
         }
     }
@@ -425,7 +431,7 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             }
             // std::cout << "[Process Generator] New random process created: " << p->processName << std::endl;
         }
-    });
+        });
 }
 
 void Functions::stopProcessGenerator() {

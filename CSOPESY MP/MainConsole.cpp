@@ -45,19 +45,25 @@ void consoleLayout::controller(std::string initializer) {
                     if (iss >> key >> eq) {
                         if (key == "num-cpu" && eq == "=") {
                             iss >> num_cpu;
-                        } else if (key == "scheduler" && eq == "=") {
+                        }
+                        else if (key == "scheduler" && eq == "=") {
                             iss >> scheduler;
-                        } else if (key == "quantum-cycles" && eq == "=") {
+                        }
+                        else if (key == "quantum-cycles" && eq == "=") {
                             iss >> quantum_Cycles;
-                        } else if (key == "batch-process-freq" && eq == "=") {
+                        }
+                        else if (key == "batch-process-freq" && eq == "=") {
                             iss >> batch_Process_Freq;
-                        } else if (key == "min-ins" && eq == "=") {
+                        }
+                        else if (key == "min-ins" && eq == "=") {
                             iss >> min_ins;
-                        } else if (key == "max-ins" && eq == "=") {
+                        }
+                        else if (key == "max-ins" && eq == "=") {
                             iss >> max_ins;
-                        } else if (key == "delay-per-exec" && eq == "=") {
+                        }
+                        else if (key == "delay-per-exec" && eq == "=") {
                             iss >> delay_Per_Exec;
-						}
+                        }
                     }
                 }
                 firstRun = false;
@@ -85,10 +91,10 @@ void consoleLayout::controller(std::string initializer) {
                     dp.displayCommands();
                     continue;
                 }
-                
+
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins, batch_Process_Freq);
+                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec);
                     continue;
                 }
 
@@ -98,7 +104,7 @@ void consoleLayout::controller(std::string initializer) {
                 }
 
                 if (token == "report-util") {
-					fun.reportUtil();
+                    fun.reportUtil();
                     continue;
                 }
 
@@ -132,9 +138,9 @@ void consoleLayout::controller(std::string initializer) {
                     }
 
                     if (flag == "-ls") {
-						std::cout << "Listing all processes...\n";
-						fun.screen(); // Assuming this lists all processes
-						continue;
+                        std::cout << "Listing all processes...\n";
+                        fun.screen(); // Assuming this lists all processes
+                        continue;
                     }
 
                 }
