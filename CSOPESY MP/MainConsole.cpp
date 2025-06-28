@@ -88,7 +88,7 @@ void consoleLayout::controller(std::string initializer) {
                 
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins);
+                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins, min_ins);
                     continue;
                 }
 
@@ -114,8 +114,7 @@ void consoleLayout::controller(std::string initializer) {
                             std::cout << "You must specify a process to resume using 'screen -r'.\n";
                         }
                         else {
-                            // p.displayProcessInfo(command); // or implement as needed
-							std::cout << "Reading process...";
+                            fun.switchScreen(command);
                         }
                         continue;
                     }
@@ -126,9 +125,9 @@ void consoleLayout::controller(std::string initializer) {
                             continue;
                         }
                         else {
-                            std::cout << "This command is not supported.\n";
+                            auto proc = fun.createProcess(command, min_ins, max_ins, delay_Per_Exec);
+                            fun.switchScreen(command);
                         }
-						// when creating a new process send min_ins, max_ins, and delay_Per_Exec
                         continue;
                     }
 
