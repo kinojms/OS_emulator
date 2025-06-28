@@ -21,6 +21,8 @@ private:
     std::atomic<bool> processGenRunning = false; // Control flag for process generation
     std::atomic<bool> schedulerStopRequested = false; // New flag to request scheduler stop
 
+    void writeScreenReport(std::ostream& out); // Helper for screen/reportUtil
+
 public:
     // Schedulers
     void FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq = 1);

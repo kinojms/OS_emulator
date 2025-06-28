@@ -7,6 +7,7 @@
 #include <iomanip>
 #include <ctime>
 #include <Windows.h>
+#include <sstream>
 
 std::shared_ptr<Clock> globalClock = nullptr;
 
@@ -256,9 +257,9 @@ void Functions::schedulerStop() {
     std::cout << "Scheduler stop requested. Waiting for all processes to finish...\n";
 }
 
-void Functions::screen() {
+void Functions::writeScreenReport(std::ostream& out) {
     if (!scheduler) {
-        std::cout << "No scheduler initialized.\n";
+        out << "No scheduler initialized.\n";
         return;
     }
     int totalCores = static_cast<int>(scheduler->cores.size());
@@ -266,23 +267,25 @@ void Functions::screen() {
     for (const auto& core : scheduler->cores) {
         if (!core->isBusy) availableCores++;
     }
-    std::cout << "Cores used: " << (totalCores - availableCores) << "\n";
-    std::cout << "Cores available: " << availableCores << "\n";
-    std::cout << "\n--------------------------------------------------------\n";
-    std::cout << "Running processes:\n";
+    int usedCores = totalCores - availableCores;
+    double cpuUtilization = totalCores > 0 ? (static_cast<double>(usedCores) / totalCores) : 0.0;
+    out << "CPU Utilization: " << std::fixed << std::setprecision(2) << (cpuUtilization * 100) << "%\n";
+    out << "Cores used: " << usedCores << "\n";
+    out << "Cores available: " << availableCores << "\n";
+    out << "\n--------------------------------------------------------\n";
+    out << "Running processes:\n";
     for (const auto& p : allProcesses) {
-        // Only show processes that are not finished and have started execution (currentInstruction > 0)
         if (!p->isFinished && p->currentInstruction > 0) {
             std::string timestamp = "-";
             if (!p->logs.empty()) {
                 size_t l = p->logs.back().find("]");
                 if (l != std::string::npos) timestamp = p->logs.back().substr(0, l+1);
             }
-            std::cout << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
+            out << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
                 << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
         }
     }
-    std::cout << "\nFinished processes:\n";
+    out << "\nFinished processes:\n";
     for (const auto& p : allProcesses) {
         if (p->isFinished) {
             std::string timestamp = "-";
@@ -290,16 +293,29 @@ void Functions::screen() {
                 size_t l = p->logs.back().find("]");
                 if (l != std::string::npos) timestamp = p->logs.back().substr(0, l+1);
             }
-            std::cout << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
+            out << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
                 << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
         }
     }
+}
+
+void Functions::screen() {
+    writeScreenReport(std::cout);
 }
 
 void Functions::reportUtil() {
     // Write logs to file for all processes
     for (const auto& p : allProcesses) {
         p->writeLogsToFile();
+    }
+    // Write the screen summary to cpu_report.txt
+    std::ofstream cpuReportFile("cpu_report.txt", std::ios::out);
+    if (cpuReportFile.is_open()) {
+        writeScreenReport(cpuReportFile);
+        cpuReportFile.close();
+        std::cout << "CPU utilization and process summary written to cpu_report.txt\n";
+    } else {
+        std::cerr << "Failed to write cpu_report.txt\n";
     }
     std::cout << "Process logs have been written to their respective .txt files.\n";
 }
