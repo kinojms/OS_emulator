@@ -63,6 +63,9 @@ void consoleLayout::controller(std::string initializer) {
                 firstRun = false;
             }
 
+			// start the scheduler with the loaded configuration
+            fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins, batch_Process_Freq);
+
             while (running) {
                 std::cout << "\nEnter a command: ";
                 std::getline(std::cin, line);
@@ -88,7 +91,7 @@ void consoleLayout::controller(std::string initializer) {
                 
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins, batch_Process_Freq);
+					fun.startProcessGenerator(min_ins, max_ins, batch_Process_Freq);
                     continue;
                 }
 

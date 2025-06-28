@@ -39,7 +39,6 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
 
     schedulerRunning = true;
     schedulerStopRequested = false;
-    startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     // Start the clock thread
     std::thread([this]() {
@@ -140,8 +139,6 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
     scheduler->runningFlag = true;
     schedulerRunning = true;
     schedulerStopRequested = false;
-
-    startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     // Start the clock thread
     std::thread([this]() {
@@ -326,11 +323,18 @@ std::shared_ptr<Process> Functions::createProcess(const std::string& name, int m
     p->InstructionCode(pid);
     int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
     for (int j = 0; j < num_instructions; ++j) {
-        int instructionID = rand() % 6 + 1;
-        p->instructionQueue.push(instructionID);
+        if (j % 2 == 0) {
+            // if even: PRINT
+            p->instructionQueue.push(1);
+        } 
+        else {
+            // if odd: ADD with param random number (from 1-10)
+            int n = 1 + (rand() % 10);
+            p->instructionQueue.push((2 << 8) | n); // High byte 2 = ADD, low byte n
+        }
     }
     allProcesses.push_back(p);
-    // Add to scheduler if running
+    // add to scheduler if running
     if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
         scheduler->addProcess(p);
     }
@@ -416,14 +420,17 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             p->InstructionCode(pid);
             int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
             for (int j = 0; j < num_instructions; ++j) {
-                int instructionID = rand() % 6 + 1;
-                p->instructionQueue.push(instructionID);
+                if (j % 2 == 0) {
+                    p->instructionQueue.push(1);
+                } else {
+                    int n = 1 + (rand() % 10);
+                    p->instructionQueue.push((2 << 8) | n);
+                }
             }
             allProcesses.push_back(p);
             if (scheduler) {
                 scheduler->addProcess(p);
             }
-            // std::cout << "[Process Generator] New random process created: " << p->processName << std::endl;
         }
     });
 }

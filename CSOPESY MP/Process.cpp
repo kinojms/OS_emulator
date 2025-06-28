@@ -13,6 +13,7 @@ Process::Process(int pid, const std::string& name) : pid(pid), processName(name)
     if (processName.empty())
         processName = "process_" + std::to_string(pid);
     filename = processName + ".txt";
+    memory["x"] = 0; // Always initialize x to 0
 }
 
 void Process::generatePrintCommands(int count) {
@@ -85,82 +86,19 @@ void Process::InstructionCode(int pid) {
     this->pid = pid;
     filename = "process_" + std::to_string(pid) + ".txt";
 
+    // Only two instructions: 1 = PRINT x, 2 = ADD x, x, N (N in arg)
     instructionMap = {
         {1, [this](int) {
-            // Default message unless overridden in a test case
-            std::string msg = "Hello world from process_" + std::to_string(this->pid) + "!";
-
-            // Example of test-case-specified print with variable
-            bool customTestCase = false; // Set to true in test scenario if needed
-
-            if (customTestCase) {
-                std::string base = "Value from: ";
-                std::string var = "x";  // Variable to print
-                uint16_t value = memory.count(var) ? memory[var] : 0;
-                msg = base + std::to_string(value);
-            }
-
-            PRINT(msg);
+            uint16_t value = memory.count("x") ? memory["x"] : 0;
+            PRINT("Value from: " + std::to_string(value));
         }},
-        {2, [this](int) {
-            uint16_t randX = 1 + (rand() % 100);
-            DECLARE("x", randX);
-			PRINT("Declared variable 'x' with random value: " + std::to_string(randX));
+        {2, [this](int n) {
+            // n is the value to add (1-10)
+            uint16_t result = memory["x"] + n;
+            if (result > UINT16_MAX) result = UINT16_MAX;
+            memory["x"] = result;
+            PRINT("x = x + " + std::to_string(n) + " = " + std::to_string(result));
         }},
-        {3, [this](int) {
-            // Ensure 'x' is declared
-            if (memory.find("x") == memory.end()) {
-                uint16_t randX = 1 + (rand() % 100);
-                DECLARE("x", randX);
-                PRINT("x was undeclared. Assigned random x = " + std::to_string(randX));
-            }
-
-            // Always assign a random value to 'z'
-            uint16_t randZ = 1 + (rand() % 100);
-            DECLARE("z", randZ);
-
-
-            // Perform y = x + z
-            ADD("y", "x", "z");
-
-            // Show result
-            uint16_t resultY = memory["y"];
-            PRINT("y = x + z = " + std::to_string(resultY));
-        }},
-        {4, [this](int) {
-            // Check if y and x exist; fallback handled inside SUBTRACT already
-            uint16_t resultZ = SUBTRACT("z", "y", "x");
-
-            // Print result
-            PRINT("z = y - x = " + std::to_string(resultZ));
-        }},
-        {5, [this](int) {
-            PRINT("Sleeping for 2 ticks...");
-            SLEEP(2);
-        }},
-        {6, [this](int) {
-            static thread_local int for6_count = 0; // local to thread, persists across calls
-
-            int randomID = 1 + (rand() % 6); // random number from 1 to 6
-
-            // Limit recursive FOR instruction (ID 6) to max 3 times
-                if (randomID == 6) {
-                if (for6_count >= 3) {
-                    PRINT("Max recursive FOR(6) use reached. Skipping.");
-                    return;
-                    }
-                ++for6_count;
-                }
-
-                int repeatCount = 1 + (rand() % 3);
-                PRINT("FOR loop repeating instruction " + std::to_string(randomID) + " " + std::to_string(repeatCount) + " times.");
-                FOR(instructionMap, randomID, repeatCount);
-
-                // Decrease counter after FOR completes
-                    if (randomID == 6) {
-                    --for6_count;
-                    }
-                }}
     };
 }
 
@@ -171,9 +109,15 @@ void Process::execute() {
         int instructionID = instructionQueue.front();
         instructionQueue.pop();
         currentInstruction++;
-        auto it = instructionMap.find(instructionID);
-        if (it != instructionMap.end()) {
-            it->second(0);
+        if (instructionID == 1) {
+            // PRINT
+            auto it = instructionMap.find(1);
+            if (it != instructionMap.end()) it->second(0);
+        } else if ((instructionID >> 8) == 2) {
+            // ADD, extract N
+            int n = instructionID & 0xFF;
+            auto it = instructionMap.find(2);
+            if (it != instructionMap.end()) it->second(n);
         }
         while (!printCommands.empty()) {
             std::string command = printCommands.front();
@@ -198,9 +142,15 @@ void Process::executeTimeSlice(int instructionLimit) {
         int instructionID = instructionQueue.front();
         instructionQueue.pop();
         currentInstruction++;
-        auto it = instructionMap.find(instructionID);
-        if (it != instructionMap.end()) {
-            it->second(0);
+        if (instructionID == 1) {
+            // PRINT
+            auto it = instructionMap.find(1);
+            if (it != instructionMap.end()) it->second(0);
+        } else if ((instructionID >> 8) == 2) {
+            // ADD, extract N
+            int n = instructionID & 0xFF;
+            auto it = instructionMap.find(2);
+            if (it != instructionMap.end()) it->second(n);
         }
         while (!printCommands.empty()) {
             std::string command = printCommands.front();
