@@ -1,5 +1,6 @@
 #include "Functions.h"
 #include "Display.h"
+#include "Clock.h"
 #include <iostream>
 #include <random>
 #include <fstream>
@@ -7,16 +8,20 @@
 #include <ctime>
 #include <Windows.h>
 
-void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
+std::shared_ptr<Clock> globalClock = nullptr;
+
+void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq) {
     if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
     }
 
+    if (!globalClock) globalClock = std::make_shared<Clock>();
+
     if (!scheduler) {
         scheduler = std::make_shared<Scheduler>();
         for (int i = 0; i < num_cpu; ++i) {
-            scheduler->cores.push_back(std::make_shared<CPUCore>(i));
+            scheduler->cores.push_back(std::make_shared<CPUCore>(i, globalClock));
         }
     } else {
         // Clear queues if scheduler already exists (for restart)
@@ -24,20 +29,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
         while (!scheduler->runningQueue.empty()) scheduler->runningQueue.pop();
     }
 
-    // Always ensure there are at least 10 processes
-    int existing = static_cast<int>(allProcesses.size());
-    for (int i = existing; i < 10; ++i) {
-        auto p = std::make_shared<Process>(i);
-        p->InstructionCode(i);
-        int num_instructions = 1 + (rand() % max_ins);
-        if (max_ins > 1) num_instructions = 1 + (rand() % max_ins);
-        for (int j = 0; j < num_instructions; ++j) {
-            int instructionID = rand() % 6 + 1;
-            p->instructionQueue.push(instructionID);
-        }
-        allProcesses.push_back(p);
-    }
-
+    // Ensure all processes are added to the scheduler
     for (auto& p : allProcesses) {
         if (!p->isFinished) {
             scheduler->addProcess(p);
@@ -46,8 +38,18 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
 
     schedulerRunning = true;
     schedulerStopRequested = false;
-    startProcessGenerator(max_ins);
+    startProcessGenerator(max_ins, batch_process_freq);
 
+    // Start the clock thread
+    std::thread([this]() {
+        while (schedulerRunning || schedulerStopRequested) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 1 cycle = 100ms
+            if (globalClock) globalClock->advance();
+        }
+        if (globalClock) globalClock->stop();
+    }).detach();
+
+    // Start the scheduler thread
     schedulerThread = std::thread([this]() {
         while (schedulerRunning || schedulerStopRequested) {
             std::shared_ptr<Process> process = nullptr;
@@ -109,35 +111,23 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins) {
     schedulerThread.detach();
 }
 
-void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins) {
+void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq) {
     if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
     }
 
+    if (!globalClock) globalClock = std::make_shared<Clock>();
+
     if (!scheduler) {
         scheduler = std::make_shared<Scheduler>();
         for (int i = 0; i < num_cpu; ++i) {
-            scheduler->cores.push_back(std::make_shared<CPUCore>(i));
+            scheduler->cores.push_back(std::make_shared<CPUCore>(i, globalClock));
         }
     } else {
         // Clear queues if scheduler already exists (for restart)
         while (!scheduler->processQueue.empty()) scheduler->processQueue.pop();
         while (!scheduler->runningQueue.empty()) scheduler->runningQueue.pop();
-    }
-
-    // Always ensure there are at least 10 processes
-    int existing = static_cast<int>(allProcesses.size());
-    for (int i = existing; i < 10; ++i) {
-        auto p = std::make_shared<Process>(i);
-        p->InstructionCode(i);
-        int min_ins = 1;
-        int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
-        for (int j = 0; j < num_instructions; ++j) {
-            int instructionID = rand() % 6 + 1;
-            p->instructionQueue.push(instructionID);
-        }
-        allProcesses.push_back(p);
     }
 
     for (auto& p : allProcesses) {
@@ -149,7 +139,16 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins) {
     scheduler->runningFlag = true;
     schedulerRunning = true;
     schedulerStopRequested = false;
-    startProcessGenerator(max_ins);
+    startProcessGenerator(max_ins, batch_process_freq);
+
+    // Start the clock thread
+    std::thread([this]() {
+        while (schedulerRunning || schedulerStopRequested) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 1 cycle = 100ms
+            if (globalClock) globalClock->advance();
+        }
+        if (globalClock) globalClock->stop();
+    }).detach();
 
     schedulerThread = std::thread([this, quantum_Cycles]() {
         const int timePerCycleMs = 10;
@@ -226,12 +225,12 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins) {
     schedulerThread.detach();
 }
 
-void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins) {
+void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins, int batch_process_freq) {
     if (schedulerType == "fcfs") {
-        FCFS(num_cpu, quantum_Cycles, max_ins);
+        FCFS(num_cpu, quantum_Cycles, max_ins, batch_process_freq);
     }
     else if (schedulerType == "rr") {
-        RR(num_cpu, quantum_Cycles, max_ins);
+        RR(num_cpu, quantum_Cycles, max_ins, batch_process_freq);
     }
     else {
         std::cout << "Unknown scheduler type: " << schedulerType << "\n";
@@ -369,12 +368,20 @@ void Functions::switchScreen(const std::string& name) {
     }
 }
 
-void Functions::startProcessGenerator(int max_ins) {
+void Functions::startProcessGenerator(int max_ins, int batch_process_freq) {
     processGenRunning = true;
-    processGenThread = std::thread([this, max_ins]() {
+    processGenThread = std::thread([this, max_ins, batch_process_freq]() {
+        int lastCycle = globalClock ? globalClock->cycle.load() : 0;
         while (processGenRunning) {
-            // Generate a new random process every 2 seconds
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            if (!globalClock) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                continue;
+            }
+            // Wait for batch_process_freq cycles
+            for (int i = 0; i < batch_process_freq && processGenRunning; ++i) {
+                globalClock->waitForNextCycle(lastCycle);
+                lastCycle = globalClock->cycle.load();
+            }
             if (!processGenRunning) break;
             int pid = static_cast<int>(allProcesses.size());
             auto p = std::make_shared<Process>(pid);

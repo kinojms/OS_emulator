@@ -88,7 +88,7 @@ void consoleLayout::controller(std::string initializer) {
                 
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins);
+                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, max_ins, batch_Process_Freq);
                     continue;
                 }
 

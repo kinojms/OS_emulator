@@ -137,7 +137,7 @@
     <ClCompile Include="Scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="consoleLayout.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="CPUCore.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Functions.h" />

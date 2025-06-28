@@ -6,6 +6,7 @@
 #include <memory>
 #include <mutex>
 #include "Process.h"
+#include "Clock.h"
 
 class CPUCore {
 public:
@@ -13,8 +14,9 @@ public:
     std::atomic<bool> isBusy;
     std::thread workerThread;
     std::mutex coreMutex;
+    std::shared_ptr<Clock> clock; // Add this
 
-    CPUCore(int id);
+    CPUCore(int id, std::shared_ptr<Clock> clock);
     void assignProcess(std::shared_ptr<Process> process);
 };
 

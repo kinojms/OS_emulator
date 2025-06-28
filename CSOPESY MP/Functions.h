@@ -9,6 +9,7 @@
 #include "CPUCore.h"
 #include "Scheduler.h"
 #include "Process.h"
+#include "Clock.h"
 
 class Functions {
 private:
@@ -22,13 +23,13 @@ private:
 
 public:
     // Schedulers
-    void FCFS(int num_cpu, int quantum_Cycles, int max_ins);
-    void RR(int num_cpu, int quantum_Cycles, int max_ins);
-    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins);
+    void FCFS(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq = 1);
+    void RR(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq = 1);
+    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins, int batch_process_freq = 1);
 
     // Control
     void schedulerStop();
-    void startProcessGenerator(int max_ins); // Start background process generator
+    void startProcessGenerator(int max_ins, int batch_process_freq = 1); // Start background process generator
     void stopProcessGenerator(); // Stop background process generator
 
     // Monitoring
@@ -40,5 +41,7 @@ public:
     std::shared_ptr<Process> getProcessByName(const std::string& name);
     void switchScreen(const std::string& name);
 };
+
+extern std::shared_ptr<Clock> globalClock;
 
 #endif
