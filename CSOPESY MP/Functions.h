@@ -23,13 +23,13 @@ private:
 
 public:
     // Schedulers
-    void FCFS(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq = 1);
-    void RR(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq = 1);
-    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins, int batch_process_freq = 1);
+    void FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq = 1);
+    void RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq = 1);
+    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq = 1);
 
     // Control
     void schedulerStop();
-    void startProcessGenerator(int max_ins, int batch_process_freq = 1); // Start background process generator
+    void startProcessGenerator(int min_ins, int max_ins, int batch_process_freq = 1); // Start background process generator
     void stopProcessGenerator(); // Stop background process generator
 
     // Monitoring

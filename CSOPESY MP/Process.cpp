@@ -52,19 +52,33 @@ void Process::SLEEP(int ticks) {
 }
 
 void Process::FOR(const std::unordered_map<int, std::function<void(int)>>& instructions, int instructionID, int repeats) {
-    static thread_local int depth = 0;
-    if (depth >= 3) {
-        printCommands.push("Max FOR nesting reached.");
+    // Enforce max FOR nesting using member variable
+    if (forNestingLevel >= MAX_FOR_NESTING) {
+        logs.push_back("[ERROR] Maximum FOR nesting level (" + std::to_string(MAX_FOR_NESTING) + ") reached. Skipping FOR.");
         return;
     }
-    ++depth;
+    forNestingLevel++;
+    forInstructionCountStack.push(0);
+
     for (int i = 0; i < repeats; ++i) {
         auto it = instructions.find(instructionID);
         if (it != instructions.end()) {
             it->second(0);
+            // Count this instruction inside the FOR
+            if (!forInstructionCountStack.empty()) {
+                forInstructionCountStack.top()++;
+            }
         }
     }
-    --depth;
+
+    // After FOR loop ends
+    int instructionsInThisFor = 0;
+    if (!forInstructionCountStack.empty()) {
+        instructionsInThisFor = forInstructionCountStack.top();
+        forInstructionCountStack.pop();
+    }
+    logs.push_back("[INFO] FOR loop executed with " + std::to_string(instructionsInThisFor) + " instructions inside. Nesting level was " + std::to_string(forNestingLevel) + ".");
+    forNestingLevel--;
 }
 
 void Process::InstructionCode(int pid) {
@@ -73,27 +87,80 @@ void Process::InstructionCode(int pid) {
 
     instructionMap = {
         {1, [this](int) {
-            PRINT("Hello world from process_" + std::to_string(this ->pid) + "!");
+            // Default message unless overridden in a test case
+            std::string msg = "Hello world from process_" + std::to_string(this->pid) + "!";
+
+            // Example of test-case-specified print with variable
+            bool customTestCase = false; // Set to true in test scenario if needed
+
+            if (customTestCase) {
+                std::string base = "Value from: ";
+                std::string var = "x";  // Variable to print
+                uint16_t value = memory.count(var) ? memory[var] : 0;
+                msg = base + std::to_string(value);
+            }
+
+            PRINT(msg);
         }},
         {2, [this](int) {
-            DECLARE("x", 42);
-            PRINT("Declared x = 42");
+            uint16_t randX = 1 + (rand() % 100);
+            DECLARE("x", randX);
+			PRINT("Declared variable 'x' with random value: " + std::to_string(randX));
         }},
         {3, [this](int) {
-            ADD("y", "x", "x");
-            PRINT("y = x + x");
+            // Ensure 'x' is declared
+            if (memory.find("x") == memory.end()) {
+                uint16_t randX = 1 + (rand() % 100);
+                DECLARE("x", randX);
+                PRINT("x was undeclared. Assigned random x = " + std::to_string(randX));
+            }
+
+            // Always assign a random value to 'z'
+            uint16_t randZ = 1 + (rand() % 100);
+            DECLARE("z", randZ);
+
+
+            // Perform y = x + z
+            ADD("y", "x", "z");
+
+            // Show result
+            uint16_t resultY = memory["y"];
+            PRINT("y = x + z = " + std::to_string(resultY));
         }},
         {4, [this](int) {
-            SUBTRACT("z", "y", "x");
-            PRINT("z = y - x");
+            // Check if y and x exist; fallback handled inside SUBTRACT already
+            uint16_t resultZ = SUBTRACT("z", "y", "x");
+
+            // Print result
+            PRINT("z = y - x = " + std::to_string(resultZ));
         }},
         {5, [this](int) {
             PRINT("Sleeping for 2 ticks...");
             SLEEP(2);
         }},
         {6, [this](int) {
-            FOR(instructionMap, 1, 3);
-        }}
+            static thread_local int for6_count = 0; // local to thread, persists across calls
+
+            int randomID = 1 + (rand() % 6); // random number from 1 to 6
+
+            // Limit recursive FOR instruction (ID 6) to max 3 times
+                if (randomID == 6) {
+                if (for6_count >= 3) {
+                    PRINT("Max recursive FOR(6) use reached. Skipping.");
+                    return;
+                    }
+                ++for6_count;
+                }
+
+                int repeatCount = 1 + (rand() % 3);
+                PRINT("FOR loop repeating instruction " + std::to_string(randomID) + " " + std::to_string(repeatCount) + " times.");
+                FOR(instructionMap, randomID, repeatCount);
+
+                // Decrease counter after FOR completes
+                    if (randomID == 6) {
+                    --for6_count;
+                    }
+                }}
     };
 }
 

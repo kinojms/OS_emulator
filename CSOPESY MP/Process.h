@@ -7,11 +7,16 @@
 #include <functional>
 #include <cstdint>
 #include <vector>
+#include <stack> // For FOR loop tracking
 
 class Process {
 private:
     std::string filename;
     std::unordered_map<std::string, uint16_t> memory;
+    // FOR loop tracking
+    std::stack<int> forInstructionCountStack; // Tracks instruction count per FOR
+    int forNestingLevel = 0; // Current FOR nesting level
+    static constexpr int MAX_FOR_NESTING = 3;
 
 public:
     int pid;

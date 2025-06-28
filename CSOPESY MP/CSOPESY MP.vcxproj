@@ -145,6 +145,9 @@
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="windows_console_minimal.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="process_logs\process_0.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

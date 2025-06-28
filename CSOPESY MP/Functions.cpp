@@ -10,7 +10,7 @@
 
 std::shared_ptr<Clock> globalClock = nullptr;
 
-void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq) {
+void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq) {
     if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
@@ -38,7 +38,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins, int batch_pro
 
     schedulerRunning = true;
     schedulerStopRequested = false;
-    startProcessGenerator(max_ins, batch_process_freq);
+    startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     // Start the clock thread
     std::thread([this]() {
@@ -111,7 +111,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int max_ins, int batch_pro
     schedulerThread.detach();
 }
 
-void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins, int batch_process_freq) {
+void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq) {
     if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
@@ -139,7 +139,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins, int batch_proce
     scheduler->runningFlag = true;
     schedulerRunning = true;
     schedulerStopRequested = false;
-    startProcessGenerator(max_ins, batch_process_freq);
+    startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     // Start the clock thread
     std::thread([this]() {
@@ -225,12 +225,12 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int max_ins, int batch_proce
     schedulerThread.detach();
 }
 
-void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int max_ins, int batch_process_freq) {
+void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq) {
     if (schedulerType == "fcfs") {
-        FCFS(num_cpu, quantum_Cycles, max_ins, batch_process_freq);
+        FCFS(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq);
     }
     else if (schedulerType == "rr") {
-        RR(num_cpu, quantum_Cycles, max_ins, batch_process_freq);
+        RR(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq);
     }
     else {
         std::cout << "Unknown scheduler type: " << schedulerType << "\n";
@@ -260,7 +260,8 @@ void Functions::screen() {
     std::cout << "\n--------------------------------------------------------\n";
     std::cout << "Running processes:\n";
     for (const auto& p : allProcesses) {
-        if (!p->isFinished) {
+        // Only show processes that are not finished and have started execution (currentInstruction > 0)
+        if (!p->isFinished && p->currentInstruction > 0) {
             std::string timestamp = "-";
             if (!p->logs.empty()) {
                 size_t l = p->logs.back().find("]");
@@ -368,9 +369,9 @@ void Functions::switchScreen(const std::string& name) {
     }
 }
 
-void Functions::startProcessGenerator(int max_ins, int batch_process_freq) {
+void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_process_freq) {
     processGenRunning = true;
-    processGenThread = std::thread([this, max_ins, batch_process_freq]() {
+    processGenThread = std::thread([this, min_ins, max_ins, batch_process_freq]() {
         int lastCycle = globalClock ? globalClock->cycle.load() : 0;
         while (processGenRunning) {
             if (!globalClock) {
@@ -386,7 +387,7 @@ void Functions::startProcessGenerator(int max_ins, int batch_process_freq) {
             int pid = static_cast<int>(allProcesses.size());
             auto p = std::make_shared<Process>(pid);
             p->InstructionCode(pid);
-            int num_instructions = 1 + (rand() % max_ins);
+            int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
             for (int j = 0; j < num_instructions; ++j) {
                 int instructionID = rand() % 6 + 1;
                 p->instructionQueue.push(instructionID);
