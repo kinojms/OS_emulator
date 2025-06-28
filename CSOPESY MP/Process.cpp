@@ -1,4 +1,4 @@
-#include "Process.h"
+﻿#include "Process.h"
 #include <iostream>
 #include <fstream>
 #include <thread>
@@ -7,9 +7,12 @@
 #include <sstream>
 #include <random>
 #include <algorithm>
+#include <filesystem>
 
-Process::Process(int pid) : pid(pid) {
-    filename = "process_" + std::to_string(pid) + ".txt";
+Process::Process(int pid, const std::string& name) : pid(pid), processName(name) {
+    if (processName.empty())
+        processName = "process_" + std::to_string(pid);
+    filename = processName + ".txt";
 }
 
 void Process::generatePrintCommands(int count) {
@@ -70,106 +73,151 @@ void Process::InstructionCode(int pid) {
 
     instructionMap = {
         {1, [this](int) {
-            PRINT("Hello world from process_" + std::to_string(this ->pid) + "!");
+            // Default message unless overridden in a test case
+            std::string msg = "Hello world from process_" + std::to_string(this->pid) + "!";
+
+            // Example of test-case-specified print with variable
+            bool customTestCase = false; // Set to true in test scenario if needed
+
+            if (customTestCase) {
+                std::string base = "Value from: ";
+                std::string var = "x";  // Variable to print
+                uint16_t value = memory.count(var) ? memory[var] : 0;
+                msg = base + std::to_string(value);
+            }
+
+            PRINT(msg);
         }},
         {2, [this](int) {
-            DECLARE("x", 42);
+            uint16_t randX = 1 + (rand() % 100);
+            DECLARE("x", randX);
             PRINT("Declared x = 42");
         }},
         {3, [this](int) {
-            ADD("y", "x", "x");
-            PRINT("y = x + x");
+            // Ensure 'x' is declared
+            if (memory.find("x") == memory.end()) {
+                uint16_t randX = 1 + (rand() % 100);
+                DECLARE("x", randX);
+                PRINT("x was undeclared. Assigned random x = " + std::to_string(randX));
+            }
+
+            // Always assign a random value to 'z'
+            uint16_t randZ = 1 + (rand() % 100);
+            DECLARE("z", randZ);
+            
+
+            // Perform y = x + z
+            ADD("y", "x", "z");
+
+            // Show result
+            uint16_t resultY = memory["y"];
+            PRINT("y = x + z = " + std::to_string(resultY));
         }},
         {4, [this](int) {
-            SUBTRACT("z", "y", "x");
-            PRINT("z = y - x");
+            // Check if y and x exist; fallback handled inside SUBTRACT already
+            uint16_t resultZ = SUBTRACT("z", "y", "x");
+
+            // Print result
+            PRINT("z = y - x = " + std::to_string(resultZ));
         }},
         {5, [this](int) {
             PRINT("Sleeping for 2 ticks...");
             SLEEP(2);
         }},
         {6, [this](int) {
-            FOR(instructionMap, 1, 3);
+            static thread_local int for6_count = 0; // local to thread, persists across calls
+
+            int randomID = 1 + (rand() % 6); // random number from 1 to 6
+
+        // Limit recursive FOR instruction (ID 6) to max 3 times
+            if (randomID == 6) {
+            if (for6_count >= 3) {
+                PRINT("Max recursive FOR(6) use reached. Skipping.");
+                return;
+                }
+            ++for6_count;
+            }
+
+            int repeatCount = 3 + (rand() % 3); // repeat 3–5 times
+            PRINT("FOR loop repeating instruction " + std::to_string(randomID) + " " + std::to_string(repeatCount) + " times.");
+            FOR(instructionMap, randomID, repeatCount);
+
+        // Decrease counter after FOR completes
+            if (randomID == 6) {
+            --for6_count;
+            }
         }}
     };
 }
 
 void Process::execute() {
-    std::ofstream file(filename, std::ios::out);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file for Process " << pid << "\n";
-        return;
-    }
-
+    currentInstruction = 0;
+    totalInstructions = static_cast<int>(instructionQueue.size());
     while (!instructionQueue.empty()) {
         int instructionID = instructionQueue.front();
         instructionQueue.pop();
-
+        currentInstruction++;
         auto it = instructionMap.find(instructionID);
         if (it != instructionMap.end()) {
             it->second(0);
         }
-
         while (!printCommands.empty()) {
             std::string command = printCommands.front();
             printCommands.pop();
-
             auto now = std::chrono::system_clock::now();
             std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
             char timestamp[26];
             ctime_s(timestamp, sizeof(timestamp), &timeNow);
             std::string timestampStr(timestamp);
             timestampStr.pop_back();
-
-            file << "[" << timestampStr << "] " << command << "\n";
+            logs.push_back("[" + timestampStr + "] " + command);
         }
-
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-
-    file.close();
     isFinished = true;
 }
 
 void Process::executeTimeSlice(int instructionLimit) {
-    std::ofstream file(filename, std::ios::app);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file for Process " << pid << "\n";
-        return;
-    }
-
+    if (totalInstructions == 0) totalInstructions = static_cast<int>(instructionQueue.size());
     int executed = 0;
-
     while (!instructionQueue.empty() && executed < instructionLimit) {
         int instructionID = instructionQueue.front();
         instructionQueue.pop();
-
+        currentInstruction++;
         auto it = instructionMap.find(instructionID);
         if (it != instructionMap.end()) {
             it->second(0);
         }
-
         while (!printCommands.empty()) {
             std::string command = printCommands.front();
             printCommands.pop();
-
             auto now = std::chrono::system_clock::now();
             std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
             char timestamp[26];
             ctime_s(timestamp, sizeof(timestamp), &timeNow);
             std::string timestampStr(timestamp);
             timestampStr.pop_back();
-
-            file << "[" << timestampStr << "] " << command << "\n";
+            logs.push_back("[" + timestampStr + "] " + command);
         }
-
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         executed++;
     }
-
     if (instructionQueue.empty()) {
         isFinished = true;
     }
+}
 
+void Process::writeLogsToFile() {
+    // Ensure the process_logs directory exists
+    std::filesystem::create_directories("process_logs");
+    std::string logPath = "process_logs/" + processName + ".txt";
+    std::ofstream file(logPath, std::ios::out);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file for Process " << pid << "\n";
+        return;
+    }
+    for (const auto& log : logs) {
+        file << log << "\n";
+    }
     file.close();
 }
