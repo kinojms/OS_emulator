@@ -121,11 +121,11 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
 
     if (!scheduler) {
         scheduler = std::make_shared<Scheduler>();
-        for (int i = 0; i < num_cpu; ++i) {
+        for (int i = 0; i < num_cpu; i++) {
             scheduler->cores.push_back(std::make_shared<CPUCore>(i, globalClock));
         }
-    } else {
-        // Clear queues if scheduler already exists (for restart)
+    }
+    else {
         while (!scheduler->processQueue.empty()) scheduler->processQueue.pop();
         while (!scheduler->runningQueue.empty()) scheduler->runningQueue.pop();
     }
@@ -139,6 +139,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
     scheduler->runningFlag = true;
     schedulerRunning = true;
     schedulerStopRequested = false;
+
     startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     // Start the clock thread
@@ -148,12 +149,15 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
             if (globalClock) globalClock->advance();
         }
         if (globalClock) globalClock->stop();
-    }).detach();
+        }).detach();
 
+    // Start scheduler thread
     schedulerThread = std::thread([this, quantum_Cycles]() {
         const int timePerCycleMs = 10;
+
         while (scheduler->runningFlag || schedulerStopRequested) {
             std::shared_ptr<Process> process = nullptr;
+
             {
                 std::lock_guard<std::mutex> lock(scheduler->queueMutex);
                 if (!scheduler->runningQueue.empty()) {
@@ -161,20 +165,29 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                     scheduler->runningQueue.pop();
                 }
             }
+
             if (process) {
-                // Find an available core
                 bool assigned = false;
+
                 while (!assigned) {
                     for (auto& core : scheduler->cores) {
                         if (!core->isBusy) {
-                            // Use a lambda to wrap executeTimeSlice
                             core->isBusy = true;
                             process->assignedCore = core->id;
-                            std::thread([core, process, quantum_Cycles]() {
+
+                            // Detached thread to execute time slice and requeue if not finished
+                            std::thread([core, process, quantum_Cycles, this, timePerCycleMs]() {
+                                std::this_thread::sleep_for(std::chrono::milliseconds(quantum_Cycles * timePerCycleMs));
                                 process->executeTimeSlice(quantum_Cycles);
                                 core->isBusy = false;
                                 process->assignedCore = -1;
-                            }).detach();
+
+                                if (!process->isFinished) {
+                                    std::lock_guard<std::mutex> lock(scheduler->queueMutex);
+                                    scheduler->runningQueue.push(process);
+                                }
+                                }).detach();
+
                             assigned = true;
                             break;
                         }
@@ -183,13 +196,8 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                         std::this_thread::sleep_for(std::chrono::milliseconds(10));
                     }
                 }
-                std::this_thread::sleep_for(std::chrono::milliseconds(quantum_Cycles * timePerCycleMs));
-                if (!process->isFinished) {
-                    std::lock_guard<std::mutex> lock(scheduler->queueMutex);
-                    scheduler->runningQueue.push(process);
-                }
-            } else {
-                // Only exit if stop requested and all processes are finished and the queue is empty
+            }
+            else {
                 if (schedulerStopRequested) {
                     bool allDone = true;
                     for (const auto& p : allProcesses) {
@@ -198,6 +206,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                             break;
                         }
                     }
+
                     std::lock_guard<std::mutex> lock(scheduler->queueMutex);
                     if (allDone && scheduler->runningQueue.empty()) {
                         scheduler->runningFlag = false;
@@ -209,6 +218,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
         }
+
         // Wait for all cores to finish
         bool anyBusy = true;
         while (anyBusy) {
@@ -221,8 +231,9 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
             }
             if (anyBusy) std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-    });
-    schedulerThread.detach();
+        });
+
+    // schedulerThread.detach();
 }
 
 void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq) {
