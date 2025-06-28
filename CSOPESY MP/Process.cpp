@@ -138,7 +138,7 @@ void Process::InstructionCode(int pid) {
             ++for6_count;
             }
 
-            int repeatCount = 3 + (rand() % 3); // repeat 3–5 times
+            int repeatCount = 1 + (rand() % 3);
             PRINT("FOR loop repeating instruction " + std::to_string(randomID) + " " + std::to_string(repeatCount) + " times.");
             FOR(instructionMap, randomID, repeatCount);
 
