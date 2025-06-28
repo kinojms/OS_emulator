@@ -25,12 +25,11 @@ void Display::displayCommands()
 {
     std::cout
         << " initialize\n"
-        << " screen -s screen\n"
-        << " screen -s scheduler-test\n"
-        << " screen -s scheduler-stop\n"
-        << " screen -s report-util\n"
-        << " screen -s NivadaDummy\n"
-		<< " screen -r <name of process>\n"
+        << " screen -s <name of new process>\n"
+        << " scheduler-start\n"
+        << " scheduler-stop\n"
+        << " report-util\n"
+	<< " screen -r <name of existing process>\n"
         << " clear\n"
         << " exit\n";
 }
