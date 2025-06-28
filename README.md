@@ -19,8 +19,11 @@ This project is a CPU scheduling simulator written in C++. It supports various s
 
 ### Build Instructions
 1. Clone the repository and switch to the `pre-revert-branch`
-2. The config.txt file can be found in the local repository's root folder (in `<local repo>\CSOPESY MP`)
+2. The `.exe` can be found in `CSOPESY MP\x64\Debug`
 3. Run the program using __Start Debugging__ (F5) or __Start Without Debugging__ (Ctrl+F5).
+
+Note: The config.txt file can be found in the local repository's root folder (in `<local repo>\CSOPESY MP`). 
+Additionally, a folder named "process logs" is also available for tracking processes when using the "report-util" command.
 
 ### Entry Point
 - The entry point of the program is the `main` function located in: `CSOPESY MP\main.cpp`
