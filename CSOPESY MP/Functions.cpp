@@ -196,8 +196,24 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
             }
 
             if (process) {
-                bool assigned = false;
+                // Only run if memory is allocated
+                if (!process->isMemoryAllocated()) {
+                    // Try to allocate memory
+                    bool allocated = false;
+                    if (memoryManager) {
+                        allocated = memoryManager->allocateMemory(process);
+                        process->setMemoryAllocated(allocated);
+                    }
+                    if (!allocated) {
+                        // Could not allocate memory, requeue for later
+                        std::lock_guard<std::mutex> lock(scheduler->queueMutex);
+                        scheduler->runningQueue.push(process);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                        continue;
+                    }
+                }
 
+                bool assigned = false;
                 while (!assigned) {
                     for (auto& core : scheduler->cores) {
                         if (!core->isBusy) {
@@ -214,6 +230,13 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                                 if (!process->isFinished) {
                                     std::lock_guard<std::mutex> lock(scheduler->queueMutex);
                                     scheduler->runningQueue.push(process);
+                                }
+                                else {
+                                    // Deallocate memory when finished
+                                    if (memoryManager && process->isMemoryAllocated()) {
+                                        memoryManager->deallocateMemory(process->processName);
+                                        process->setMemoryAllocated(false);
+                                    }
                                 }
                                 }).detach();
 
