@@ -8,6 +8,7 @@
 #include <atomic>
 #include "Process.h"
 #include "CPUCore.h"
+#include "MemoryManager.h"
 
 class Scheduler {
 public:
@@ -16,12 +17,14 @@ public:
     std::vector<std::shared_ptr<CPUCore>> cores;
     std::mutex queueMutex;
     std::atomic<bool> runningFlag{ true };
+    std::shared_ptr<MemoryManager> memoryManager;
 
     Scheduler();
 
     void addProcess(std::shared_ptr<Process> process);
     void start();
     void roundRobin(int quantum_Cycles, const std::vector<std::shared_ptr<Process>>& allProcesses, std::atomic<bool>& schedulerRunning);
+    void setMemoryManager(std::shared_ptr<MemoryManager> memMgr);
 };
 
 #endif

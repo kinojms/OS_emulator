@@ -22,7 +22,14 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
     if (!scheduler) {
         scheduler = std::make_shared<Scheduler>();
         for (int i = 0; i < num_cpu; ++i) {
-            scheduler->cores.push_back(std::make_shared<CPUCore>(i, globalClock));
+            auto core = std::make_shared<CPUCore>(i, globalClock);
+            if (memoryManager) {
+                core->setMemoryManager(memoryManager);
+            }
+            scheduler->cores.push_back(core);
+        }
+        if (memoryManager) {
+            scheduler->setMemoryManager(memoryManager);
         }
     }
     else {
@@ -53,6 +60,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
 
     // Start the scheduler thread
     schedulerThread = std::thread([this]() {
+        int lastSnapshotCycle = -1;
         while (schedulerRunning || schedulerStopRequested) {
             std::shared_ptr<Process> process = nullptr;
             {
@@ -75,6 +83,16 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
                     }
                     if (!assigned) {
                         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                    }
+                }
+
+                // Generate memory snapshot every quantum cycle
+                if (globalClock && memoryManager) {
+                    int currentCycle = globalClock->cycle.load();
+                    if (currentCycle != lastSnapshotCycle) {
+                        memoryManager->setQuantumCycle(currentCycle);
+                        memoryManager->generateSnapshotFile();
+                        lastSnapshotCycle = currentCycle;
                     }
                 }
             }
@@ -125,7 +143,14 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
     if (!scheduler) {
         scheduler = std::make_shared<Scheduler>();
         for (int i = 0; i < num_cpu; i++) {
-            scheduler->cores.push_back(std::make_shared<CPUCore>(i, globalClock));
+            auto core = std::make_shared<CPUCore>(i, globalClock);
+            if (memoryManager) {
+                core->setMemoryManager(memoryManager);
+            }
+            scheduler->cores.push_back(core);
+        }
+        if (memoryManager) {
+            scheduler->setMemoryManager(memoryManager);
         }
     }
     else {
@@ -156,7 +181,8 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
 
     // Start scheduler thread
     schedulerThread = std::thread([this, quantum_Cycles, delay_Per_Exec]() {
-        const int timePerCycleMs = delay_Per_Exec;
+        const int timePerCycleMs = static_cast<int>(delay_Per_Exec);
+        int lastSnapshotCycle = -1;
 
         while (scheduler->runningFlag || schedulerStopRequested) {
             std::shared_ptr<Process> process = nullptr;
@@ -220,6 +246,16 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                 }
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
+
+            // Generate memory snapshot every quantum cycle
+            if (globalClock && memoryManager) {
+                int currentCycle = globalClock->cycle.load();
+                if (currentCycle != lastSnapshotCycle) {
+                    memoryManager->setQuantumCycle(currentCycle);
+                    memoryManager->generateSnapshotFile();
+                    lastSnapshotCycle = currentCycle;
+                }
+            }
         }
 
         // Wait for all cores to finish
@@ -236,7 +272,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
         }
         });
 
-    // schedulerThread.detach();
+    schedulerThread.detach();
 }
 
 void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
@@ -275,16 +311,39 @@ void Functions::writeScreenReport(std::ostream& out) {
     out << "Cores used: " << usedCores << "\n";
     out << "Cores available: " << availableCores << "\n";
     out << "\n--------------------------------------------------------\n";
-    out << "Running processes:\n";
+    out << "Running processes (in memory & assigned to a core):\n";
     for (const auto& p : allProcesses) {
-        if (!p->isFinished && p->currentInstruction > 0) {
+        if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore != -1) {
             std::string timestamp = "-";
             if (!p->logs.empty()) {
                 size_t l = p->logs.back().find("]");
                 if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
             }
-            out << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
+            out << p->processName << " " << timestamp << " Core: " << p->assignedCore
                 << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+        }
+    }
+    out << "\nWaiting for memory (not in memory):\n";
+    for (const auto& p : allProcesses) {
+        if (!p->isFinished && !p->isMemoryAllocated()) {
+            std::string timestamp = "-";
+            if (!p->logs.empty()) {
+                size_t l = p->logs.back().find("]");
+                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
+            }
+            out << p->processName << " " << timestamp << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+        }
+    }
+    out << "\nIn memory but not running (waiting for core):\n";
+    for (const auto& p : allProcesses) {
+        if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore == -1) {
+            std::string timestamp = "-";
+            if (!p->logs.empty()) {
+                size_t l = p->logs.back().find("]");
+                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
+            }
+            out << p->processName << " " << timestamp << " Core: - "
+                << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
         }
     }
     out << "\nFinished processes:\n";
@@ -438,5 +497,20 @@ void Functions::stopProcessGenerator() {
     processGenRunning = false;
     if (processGenThread.joinable()) {
         processGenThread.join();
+    }
+}
+
+void Functions::initializeMemoryManager(int maxOverallMem, int memPerProc, int memPerFrame) {
+    if (!memoryManager) {
+        memoryManager = std::make_shared<MemoryManager>(maxOverallMem, memPerProc, memPerFrame);
+        // std::cout << "[Functions] Memory manager initialized with " << maxOverallMem 
+        //          << " bytes total, " << memPerProc << " bytes per process" << std::endl;
+    }
+}
+
+void Functions::generateMemorySnapshot() {
+    if (memoryManager && globalClock) {
+        memoryManager->setQuantumCycle(globalClock->cycle.load());
+        memoryManager->generateSnapshotFile();
     }
 }

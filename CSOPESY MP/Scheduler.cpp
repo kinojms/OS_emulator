@@ -5,10 +5,36 @@
 
 Scheduler::Scheduler() {}
 
+void Scheduler::setMemoryManager(std::shared_ptr<MemoryManager> memMgr) {
+    memoryManager = memMgr;
+}
+
 void Scheduler::addProcess(std::shared_ptr<Process> process) {
     std::lock_guard<std::mutex> lock(queueMutex);
-    processQueue.push(process);
-    runningQueue.push(process);  // Also add to RR queue for compatibility
+
+    // If memory manager is available, try to allocate memory
+    if (memoryManager) {
+        if (memoryManager->allocateMemory(process)) {
+            // Memory allocation successful, add to queues
+            process->setMemoryAllocated(true);
+            processQueue.push(process);
+            runningQueue.push(process);
+            // std::cout << "[Scheduler] Process " << process->processName << " added to queues with memory allocated" << std::endl;
+        }
+        else {
+            // Memory allocation failed, add to tail of ready queue (no backing store)
+            process->setMemoryAllocated(false);
+            processQueue.push(process);
+            runningQueue.push(process);
+            // std::cout << "[Scheduler] Process " << process->processName << " added to tail of ready queue (memory full)" << std::endl;
+        }
+    }
+    else {
+        // No memory manager, add directly to queues
+        process->setMemoryAllocated(false);
+        processQueue.push(process);
+        runningQueue.push(process);
+    }
 }
 
 void Scheduler::start() {

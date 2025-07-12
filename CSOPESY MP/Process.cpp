@@ -105,7 +105,7 @@ void Process::InstructionCode(int pid) {
         {2, [this](int) {
             uint16_t randX = 1 + (rand() % 100);
             DECLARE("x", randX);
-			PRINT("Declared variable 'x' with random value: " + std::to_string(randX));
+            PRINT("Declared variable 'x' with random value: " + std::to_string(randX));
         }},
         {3, [this](int) {
             // Ensure 'x' is declared
@@ -234,4 +234,12 @@ void Process::writeLogsToFile() {
         file << log << "\n";
     }
     file.close();
+}
+
+void Process::setMemoryAllocated(bool allocated) {
+    memoryAllocated = allocated;
+}
+
+bool Process::isMemoryAllocated() const {
+    return memoryAllocated;
 }

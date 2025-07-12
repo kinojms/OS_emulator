@@ -7,6 +7,7 @@
 #include <mutex>
 #include "Process.h"
 #include "Clock.h"
+#include "MemoryManager.h"
 
 class CPUCore {
 public:
@@ -15,9 +16,13 @@ public:
     std::thread workerThread;
     std::mutex coreMutex;
     std::shared_ptr<Clock> clock; // Add this
+    void setMemoryManager(std::shared_ptr<MemoryManager> memMgr);
 
     CPUCore(int id, std::shared_ptr<Clock> clock);
     void assignProcess(std::shared_ptr<Process> process);
+
+private:
+    std::shared_ptr<MemoryManager> memoryManager;
 };
 
 #endif

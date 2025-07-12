@@ -10,11 +10,13 @@
 #include "Scheduler.h"
 #include "Process.h"
 #include "Clock.h"
+#include "MemoryManager.h"
 
 class Functions {
 private:
     std::vector<std::shared_ptr<Process>> allProcesses;
     std::shared_ptr<Scheduler> scheduler;
+    std::shared_ptr<MemoryManager> memoryManager;
     std::thread schedulerThread;
     std::thread processGenThread; // Thread for random process generation
     std::atomic<bool> schedulerRunning = false;
@@ -42,6 +44,10 @@ public:
     std::shared_ptr<Process> createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec);
     std::shared_ptr<Process> getProcessByName(const std::string& name);
     void switchScreen(const std::string& name);
+
+    // Memory management
+    void initializeMemoryManager(int maxOverallMem, int memPerProc, int memPerFrame);
+    void generateMemorySnapshot();
 };
 
 extern std::shared_ptr<Clock> globalClock;

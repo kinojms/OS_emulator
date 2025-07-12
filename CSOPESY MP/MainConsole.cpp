@@ -29,6 +29,9 @@ void consoleLayout::controller(std::string initializer) {
     int min_ins = 0;
     int max_ins = 0;
     float delay_Per_Exec = 0.0;
+    int max_overall_mem = 0;
+    int mem_per_frame = 0;
+    int mem_per_proc = 0;
 
 
     dp.displayIntro();
@@ -64,7 +67,20 @@ void consoleLayout::controller(std::string initializer) {
                         else if (key == "delay-per-exec" && eq == "=") {
                             iss >> delay_Per_Exec;
                         }
+                        else if (key == "max-overall-mem" && eq == "=") {
+                            iss >> max_overall_mem;
+                        }
+                        else if (key == "mem-per-frame" && eq == "=") {
+                            iss >> mem_per_frame;
+                        }
+                        else if (key == "mem-per-proc" && eq == "=") {
+                            iss >> mem_per_proc;
+                        }
                     }
+                }
+                // Initialize memory manager
+                if (max_overall_mem > 0 && mem_per_proc > 0 && mem_per_frame > 0) {
+                    fun.initializeMemoryManager(max_overall_mem, mem_per_proc, mem_per_frame);
                 }
                 firstRun = false;
             }

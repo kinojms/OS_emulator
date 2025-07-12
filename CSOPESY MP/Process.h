@@ -29,6 +29,7 @@ public:
     int assignedCore = -1; // -1 if not assigned
     int currentInstruction = 0; // 0-based index
     int totalInstructions = 0;
+    bool memoryAllocated = false; // Track if memory was allocated
 
     Process(int pid, const std::string& name = ""); // Add name to constructor
 
@@ -48,6 +49,10 @@ public:
 
     // Write logs to file (for report-util)
     void writeLogsToFile();
+
+    // Memory management
+    void setMemoryAllocated(bool allocated);
+    bool isMemoryAllocated() const;
 };
 
 #endif // PROCESS_H
