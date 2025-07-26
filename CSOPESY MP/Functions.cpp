@@ -8,6 +8,7 @@
 #include <ctime>
 #include <Windows.h>
 #include <sstream>
+#include "MemoryManager.h"
 
 std::shared_ptr<Clock> globalClock = nullptr;
 
@@ -405,15 +406,16 @@ void Functions::reportUtil() {
     std::cout << "Process logs have been written to their respective .txt files.\n";
 }
 
-std::shared_ptr<Process> Functions::createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec) {
-    int pid = static_cast<int>(allProcesses.size());
-    auto p = std::make_shared<Process>(pid, name);
-    p->InstructionCode(pid);
-    int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
-    for (int j = 0; j < num_instructions; ++j) {
-        int instructionID = rand() % 6 + 1;
-        p->instructionQueue.push(instructionID);
+std::shared_ptr<Process> Functions::createProcess(const std::string& name, int memorySize) {
+    // Validate memory size: power of 2, in [64, 65536]
+    if (memorySize < 64 || memorySize > 65536 || (memorySize & (memorySize - 1)) != 0) {
+        std::cout << "Invalid memory allocation. Must be a power of 2 between 64 and 65536 bytes.\n";
+        return nullptr;
     }
+    int pid = static_cast<int>(allProcesses.size());
+    auto p = std::make_shared<Process>(pid, name, memorySize);
+    // Default: generate random instructions (can be replaced for user-defined)
+    p->InstructionCode(pid);
     allProcesses.push_back(p);
     // Add to scheduler if running
     if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
@@ -526,8 +528,6 @@ void Functions::stopProcessGenerator() {
 void Functions::initializeMemoryManager(int maxOverallMem, int memPerProc, int memPerFrame) {
     if (!memoryManager) {
         memoryManager = std::make_shared<MemoryManager>(maxOverallMem, memPerProc, memPerFrame);
-        // std::cout << "[Functions] Memory manager initialized with " << maxOverallMem 
-        //          << " bytes total, " << memPerProc << " bytes per process" << std::endl;
     }
 }
 
@@ -536,4 +536,10 @@ void Functions::generateMemorySnapshot() {
         memoryManager->setQuantumCycle(globalClock->cycle.load());
         memoryManager->generateSnapshotFile();
     }
+}
+
+// Overload for legacy usage
+std::shared_ptr<Process> Functions::createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec) {
+    // Legacy method: fallback to default memory size (e.g., 1024)
+    return createProcess(name, 1024);
 }

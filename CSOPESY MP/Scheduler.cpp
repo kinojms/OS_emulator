@@ -5,7 +5,7 @@
 
 Scheduler::Scheduler() {}
 
-void Scheduler::setMemoryManager(std::shared_ptr<MemoryManager> memMgr) {
+void Scheduler::setMemoryManager(std::shared_ptr<IMemoryManager> memMgr) {
     memoryManager = memMgr;
 }
 

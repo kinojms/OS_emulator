@@ -128,21 +128,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackingStoreManager.cpp" />
+    <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="CPUCore.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="MainConsole.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
+    <ClCompile Include="PagingMemoryManager.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="Scheduler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackingStoreManager.h" />
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="CommandManager.h" />
     <ClInclude Include="CPUCore.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="IMemoryManager.h" />
+    <ClInclude Include="IScheduler.h" />
     <ClInclude Include="MemoryManager.h" />
+    <ClInclude Include="PagingMemoryManager.h" />
+    <ClInclude Include="PagingTypes.h" />
     <ClInclude Include="Process.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="windows_console_minimal.h" />

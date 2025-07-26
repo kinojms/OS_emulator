@@ -1,11 +1,11 @@
 #include "CPUCore.h"
 #include <iostream>
-#include "MemoryManager.h"
+#include "IMemoryManager.h"
 
 CPUCore::CPUCore(int id, std::shared_ptr<Clock> clock)
     : id(id), isBusy(false), clock(clock), memoryManager(nullptr) {}
 
-void CPUCore::setMemoryManager(std::shared_ptr<MemoryManager> memMgr) {
+void CPUCore::setMemoryManager(std::shared_ptr<IMemoryManager> memMgr) {
     memoryManager = memMgr;
 }
 

@@ -9,41 +9,77 @@
 #include <algorithm>
 #include <filesystem>
 
-Process::Process(int pid, const std::string& name) : pid(pid), processName(name) {
+Process::Process(int pid, const std::string& name, int memSize)
+    : pid(pid), processName(name), memorySize(memSize) {
     if (processName.empty())
         processName = "process_" + std::to_string(pid);
     filename = processName + ".txt";
 }
 
-void Process::generatePrintCommands(int count) {
-    for (int i = 1; i <= count; ++i) {
-        printCommands.push("Print message " + std::to_string(i));
+void Process::setMemorySize(int size) {
+    memorySize = size;
+}
+int Process::getMemorySize() const {
+    return memorySize;
+}
+void Process::setPageTable(const std::vector<PageTableEntry>& pt) {
+    pageTable = pt;
+}
+bool Process::isValidAddress(uint32_t address) const {
+    return address < static_cast<uint32_t>(memorySize);
+}
+
+uint16_t Process::READ(const std::string& var, uint32_t address) {
+    if (!isValidAddress(address)) {
+        logs.push_back("[ERROR] Memory access violation at address 0x" + std::to_string(address) + ". Process terminated.");
+        isFinished = true;
+        return 0;
     }
-}
-
-void Process::PRINT(const std::string& msg) {
-    printCommands.push(msg);
-}
-
-uint16_t Process::DECLARE(const std::string& var, uint16_t value) {
-    memory[var] = value;
+    uint16_t value = memorySpace.count(address) ? memorySpace[address] : 0;
+    if (symbolTable.size() < MAX_VARIABLES) {
+        symbolTable[var] = value;
+    } else {
+        logs.push_back("[WARN] Symbol table full. Variable '" + var + "' not stored.");
+    }
     return value;
 }
 
+void Process::WRITE(uint32_t address, uint16_t value) {
+    if (!isValidAddress(address)) {
+        logs.push_back("[ERROR] Memory access violation at address 0x" + std::to_string(address) + ". Process terminated.");
+        isFinished = true;
+        return;
+    }
+    memorySpace[address] = std::clamp<uint32_t>(value, 0, UINT16_MAX);
+}
+
+uint16_t Process::DECLARE(const std::string& var, uint16_t value) {
+    if (symbolTable.size() >= MAX_VARIABLES) {
+        logs.push_back("[WARN] Symbol table full. Variable '" + var + "' not stored.");
+        return 0;
+    }
+    symbolTable[var] = std::clamp<uint32_t>(value, 0, UINT16_MAX);
+    return symbolTable[var];
+}
+
 uint16_t Process::ADD(const std::string& dest, const std::string& src1, const std::string& src2) {
-    uint16_t val1 = memory.count(src1) ? memory[src1] : 0;
-    uint16_t val2 = memory.count(src2) ? memory[src2] : 0;
+    uint16_t val1 = symbolTable.count(src1) ? symbolTable[src1] : 0;
+    uint16_t val2 = symbolTable.count(src2) ? symbolTable[src2] : 0;
     uint16_t result = std::clamp<uint32_t>(val1 + val2, 0, UINT16_MAX);
-    memory[dest] = result;
+    if (symbolTable.size() < MAX_VARIABLES || symbolTable.count(dest)) {
+        symbolTable[dest] = result;
+    }
     return result;
 }
 
 uint16_t Process::SUBTRACT(const std::string& dest, const std::string& src1, const std::string& src2) {
-    uint16_t val1 = memory.count(src1) ? memory[src1] : 0;
-    uint16_t val2 = memory.count(src2) ? memory[src2] : 0;
+    uint16_t val1 = symbolTable.count(src1) ? symbolTable[src1] : 0;
+    uint16_t val2 = symbolTable.count(src2) ? symbolTable[src2] : 0;
     int32_t result = static_cast<int32_t>(val1) - static_cast<int32_t>(val2);
     result = std::clamp(result, 0, static_cast<int32_t>(UINT16_MAX));
-    memory[dest] = static_cast<uint16_t>(result);
+    if (symbolTable.size() < MAX_VARIABLES || symbolTable.count(dest)) {
+        symbolTable[dest] = static_cast<uint16_t>(result);
+    }
     return static_cast<uint16_t>(result);
 }
 
@@ -96,7 +132,7 @@ void Process::InstructionCode(int pid) {
             if (customTestCase) {
                 std::string base = "Value from: ";
                 std::string var = "x";  // Variable to print
-                uint16_t value = memory.count(var) ? memory[var] : 0;
+                uint16_t value = symbolTable.count(var) ? symbolTable[var] : 0;
                 msg = base + std::to_string(value);
             }
 
@@ -109,7 +145,7 @@ void Process::InstructionCode(int pid) {
         }},
         {3, [this](int) {
             // Ensure 'x' is declared
-            if (memory.find("x") == memory.end()) {
+            if (symbolTable.find("x") == symbolTable.end()) {
                 uint16_t randX = 1 + (rand() % 100);
                 DECLARE("x", randX);
                 PRINT("x was undeclared. Assigned random x = " + std::to_string(randX));
@@ -124,7 +160,7 @@ void Process::InstructionCode(int pid) {
             ADD("y", "x", "z");
 
             // Show result
-            uint16_t resultY = memory["y"];
+            uint16_t resultY = symbolTable.count("y") ? symbolTable["y"] : 0;
             PRINT("y = x + z = " + std::to_string(resultY));
         }},
         {4, [this](int) {
@@ -242,4 +278,8 @@ void Process::setMemoryAllocated(bool allocated) {
 
 bool Process::isMemoryAllocated() const {
     return memoryAllocated;
+}
+
+void Process::PRINT(const std::string& msg) {
+    printCommands.push(msg);
 }

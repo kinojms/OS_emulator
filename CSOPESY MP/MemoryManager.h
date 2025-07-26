@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iomanip>
 #include "Process.h"
+#include "IMemoryManager.h"
 
 struct MemoryBlock {
     int startAddress;
@@ -21,7 +22,7 @@ struct MemoryBlock {
         : startAddress(start), size(sz), processName(proc), isAllocated(allocated) {}
 };
 
-class MemoryManager {
+class MemoryManager : public IMemoryManager {
 private:
     std::vector<MemoryBlock> memoryBlocks;
     int totalMemory;
@@ -41,11 +42,11 @@ private:
 public:
     MemoryManager(int totalMem, int memPerProc, int memPerFrame);
 
-    bool allocateMemory(std::shared_ptr<Process> process);
-    void deallocateMemory(const std::string& processName);
-    void setQuantumCycle(int cycle);
-    int getProcessesInMemory();
-    void generateSnapshotFile();
+    bool allocateMemory(std::shared_ptr<Process> process) override;
+    void deallocateMemory(const std::string& processName) override;
+    void setQuantumCycle(int cycle) override;
+    int getProcessesInMemory() override;
+    void generateSnapshotFile() override;
 };
 
 #endif // MEMORYMANAGER_H 
