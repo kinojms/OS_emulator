@@ -64,6 +64,7 @@ public:
     int getMemorySize() const;
     void setPageTable(const std::vector<PageTableEntry>& pt);
     bool isValidAddress(uint32_t address) const;
+    void setUserInstructions(const std::string& instructions);
 };
 
 #endif // PROCESS_H

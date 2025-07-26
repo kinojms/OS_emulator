@@ -283,3 +283,84 @@ bool Process::isMemoryAllocated() const {
 void Process::PRINT(const std::string& msg) {
     printCommands.push(msg);
 }
+
+void Process::setUserInstructions(const std::string& instructions) {
+    // Parse semicolon-separated instructions
+    std::istringstream iss(instructions);
+    std::string instr;
+    std::vector<std::string> instrList;
+    size_t count = 0;
+    while (std::getline(iss, instr, ';')) {
+        instr.erase(0, instr.find_first_not_of(" \t\n\r"));
+        instr.erase(instr.find_last_not_of(" \t\n\r") + 1);
+        if (!instr.empty()) {
+            instrList.push_back(instr);
+            count++;
+        }
+    }
+    // Only accept 1-50 instructions
+    if (count < 1 || count > 50) {
+        logs.push_back("[ERROR] invalid command: instruction count must be 1-50");
+        isFinished = true;
+        return;
+    }
+    // Store instructions for execution
+    for (const auto& line : instrList) {
+        // Parse and enqueue instructions
+        std::istringstream lineStream(line);
+        std::string cmd;
+        lineStream >> cmd;
+        if (cmd == "DECLARE") {
+            std::string var; int val;
+            lineStream >> var >> val;
+            DECLARE(var, static_cast<uint16_t>(val));
+        } else if (cmd == "ADD") {
+            std::string dest, src1, src2;
+            lineStream >> dest >> src1 >> src2;
+            ADD(dest, src1, src2);
+        } else if (cmd == "SUBTRACT") {
+            std::string dest, src1, src2;
+            lineStream >> dest >> src1 >> src2;
+            SUBTRACT(dest, src1, src2);
+        } else if (cmd == "WRITE") {
+            std::string addrStr; int val;
+            lineStream >> addrStr >> val;
+            uint32_t addr = 0;
+            if (addrStr.find("0x") == 0 || addrStr.find("0X") == 0) {
+                addr = std::stoul(addrStr, nullptr, 16);
+            } else {
+                addr = std::stoul(addrStr);
+            }
+            WRITE(addr, static_cast<uint16_t>(val));
+        } else if (cmd == "READ") {
+            std::string var, addrStr;
+            lineStream >> var >> addrStr;
+            uint32_t addr = 0;
+            if (addrStr.find("0x") == 0 || addrStr.find("0X") == 0) {
+                addr = std::stoul(addrStr, nullptr, 16);
+            } else {
+                addr = std::stoul(addrStr);
+            }
+            READ(var, addr);
+        } else if (cmd == "PRINT") {
+            std::string msg;
+            std::getline(lineStream, msg);
+            msg.erase(0, msg.find_first_not_of(" (\"") );
+            msg.erase(msg.find_last_not_of(" )\"") + 1);
+            // Replace variable references
+            size_t pos = msg.find("+");
+            if (pos != std::string::npos) {
+                std::string left = msg.substr(0, pos);
+                std::string right = msg.substr(pos + 1);
+                left.erase(left.find_last_not_of(" ") + 1);
+                right.erase(0, right.find_first_not_of(" "));
+                if (symbolTable.count(right)) {
+                    msg = left + std::to_string(symbolTable[right]);
+                }
+            }
+            PRINT(msg);
+        } else {
+            logs.push_back("[ERROR] Unknown instruction: " + line);
+        }
+    }
+}

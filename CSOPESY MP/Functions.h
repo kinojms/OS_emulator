@@ -43,6 +43,7 @@ public:
     // Process management for screen -s and -r
     std::shared_ptr<Process> createProcess(const std::string& name, int memorySize);
     std::shared_ptr<Process> createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec);
+    std::shared_ptr<Process> createProcess(const std::string& name, int memorySize, const std::string& instructions);
     std::shared_ptr<Process> getProcessByName(const std::string& name);
     void switchScreen(const std::string& name);
 

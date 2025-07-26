@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
 #include "Functions.h"
 #include "Display.h"
 
@@ -26,7 +27,7 @@ private:
     int max_overall_mem = 0;
     int mem_per_frame = 0;
     int mem_per_proc = 0;
-    void handleScreenCommand(const std::string& flag, const std::string& command);
+    void handleScreenCommand(const std::string& flag, const std::vector<std::string>& args);
     void handleSchedulerCommand(const std::string& token);
     void handleReportUtil();
     void handleProcessSmi(const std::string& processName);

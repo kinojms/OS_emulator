@@ -41,10 +41,27 @@ void CommandManager::setInitialized(bool value) {
 }
 
 void CommandManager::execute(const std::string& input) {
+    // Split input into tokens
     std::istringstream iss(input);
-    std::string token, flag, command;
-    iss >> token >> flag >> command;
-
+    std::vector<std::string> tokens;
+    std::string tok;
+    while (iss >> tok) {
+        tokens.push_back(tok);
+    }
+    if (tokens.empty()) {
+        handleUnknownCommand();
+        return;
+    }
+    std::string token = tokens[0];
+    std::string flag = tokens.size() > 1 ? tokens[1] : "";
+    // For screen commands, pass all remaining tokens as arguments
+    if (token == "screen") {
+        std::vector<std::string> args(tokens.begin() + 2, tokens.end());
+        handleScreenCommand(flag, args);
+        return;
+    }
+    // Legacy handling for other commands
+    std::string command = tokens.size() > 2 ? tokens[2] : "";
     if (token == "clear") {
         system("clear");
         dp->displayIntro();
@@ -69,10 +86,6 @@ void CommandManager::execute(const std::string& input) {
         handleReportUtil();
         return;
     }
-    if (token == "screen") {
-        handleScreenCommand(flag, command);
-        return;
-    }
     if (token == "process-smi") {
         handleProcessSmi(command);
         return;
@@ -84,26 +97,70 @@ void CommandManager::execute(const std::string& input) {
     handleUnknownCommand();
 }
 
-void CommandManager::handleScreenCommand(const std::string& flag, const std::string& command) {
-    if (flag != "-r" && flag != "-s" && flag != "-ls") {
-        std::cout << "You must use '-r' or '-s' and input a command to continue.\n";
+void CommandManager::handleScreenCommand(const std::string& flag, const std::vector<std::string>& args) {
+    if (flag != "-r" && flag != "-s" && flag != "-ls" && flag != "-c") {
+        std::cout << "You must use '-r', '-s', '-c', or '-ls' and input a command to continue.\n";
         return;
     }
     if (flag == "-r") {
-        if (command.empty()) {
+        if (args.empty()) {
             std::cout << "You must specify a process to resume using 'screen -r'.\n";
         } else {
-            fun->switchScreen(command);
+            fun->switchScreen(args[0]);
         }
         return;
     }
     if (flag == "-s") {
-        if (command.empty()) {
-            std::cout << "You must specify a command using 'screen -s'.\n";
+        if (args.size() != 2) {
+            std::cout << "You must specify a process name and memory size using 'screen -s <name> <size>'.\n";
             return;
-        } else {
-            auto proc = fun->createProcess(command, min_ins, max_ins, delay_Per_Exec);
-            fun->switchScreen(command);
+        }
+        std::string name = args[0];
+        std::string memSizeStr = args[1];
+        int memSize = 0;
+        try {
+            memSize = std::stoi(memSizeStr);
+        } catch (...) {
+            std::cout << "invalid memory allocation\n";
+            return;
+        }
+        if (memSize < 64 || memSize > 65536 || (memSize & (memSize - 1)) != 0) {
+            std::cout << "invalid memory allocation\n";
+            return;
+        }
+        auto proc = fun->createProcess(name, memSize);
+        if (proc) {
+            fun->switchScreen(name);
+        }
+        return;
+    }
+    if (flag == "-c") {
+        if (args.size() < 3) {
+            std::cout << "invalid command\n";
+            return;
+        }
+        std::string name = args[0];
+        std::string memSizeStr = args[1];
+        std::string instructions;
+        for (size_t i = 2; i < args.size(); ++i) {
+            if (i > 2) instructions += " ";
+            instructions += args[i];
+        }
+        int memSize = 0;
+        try {
+            memSize = std::stoi(memSizeStr);
+        } catch (...) {
+            std::cout << "invalid command\n";
+            return;
+        }
+        size_t count = std::count(instructions.begin(), instructions.end(), ';');
+        if (count < 1 || count > 50) {
+            std::cout << "invalid command\n";
+            return;
+        }
+        auto proc = fun->createProcess(name, memSize, instructions);
+        if (proc) {
+            fun->switchScreen(name);
         }
         return;
     }

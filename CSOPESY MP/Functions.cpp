@@ -424,6 +424,24 @@ std::shared_ptr<Process> Functions::createProcess(const std::string& name, int m
     return p;
 }
 
+std::shared_ptr<Process> Functions::createProcess(const std::string& name, int memorySize, const std::string& instructions) {
+    // Validate memory size: power of 2, in [64, 65536]
+    if (memorySize < 64 || memorySize > 65536 || (memorySize & (memorySize - 1)) != 0) {
+        std::cout << "Invalid memory allocation. Must be a power of 2 between 64 and 65536 bytes.\n";
+        return nullptr;
+    }
+    int pid = static_cast<int>(allProcesses.size());
+    auto p = std::make_shared<Process>(pid, name, memorySize);
+    // Parse and set user instructions
+    p->setUserInstructions(instructions);
+    allProcesses.push_back(p);
+    // Add to scheduler if running
+    if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
+        scheduler->addProcess(p);
+    }
+    return p;
+}
+
 std::shared_ptr<Process> Functions::getProcessByName(const std::string& name) {
     for (auto& p : allProcesses) {
         if (p->processName == name) {
