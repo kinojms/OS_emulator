@@ -12,10 +12,10 @@
 std::shared_ptr<Clock> globalClock = nullptr;
 
 void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
-    if (schedulerRunning) {
+    /*if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
-    }
+    }*/
 
     if (!globalClock) globalClock = std::make_shared<Clock>();
 
@@ -47,7 +47,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
 
     schedulerRunning = true;
     schedulerStopRequested = false;
-    startProcessGenerator(min_ins, max_ins, batch_process_freq);
+    //startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     // Start the clock thread
     std::thread([this]() {
@@ -133,10 +133,10 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
 }
 
 void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
-    if (schedulerRunning) {
+    /*if (schedulerRunning) {
         std::cout << "Scheduler already running.\n";
         return;
-    }
+    }*/
 
     if (!globalClock) globalClock = std::make_shared<Clock>();
 
@@ -168,7 +168,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
     schedulerRunning = true;
     schedulerStopRequested = false;
 
-    startProcessGenerator(min_ins, max_ins, batch_process_freq);
+    //startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     // Start the clock thread
     std::thread([this]() {
@@ -189,23 +189,26 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
 
             {
                 std::lock_guard<std::mutex> lock(scheduler->queueMutex);
-                if (!scheduler->runningQueue.empty()) {
-                    process = scheduler->runningQueue.front();
+                // Skip any already finished processes (e.g., due to access violations)
+                while (!scheduler->runningQueue.empty()) {
+                    auto next = scheduler->runningQueue.front();
                     scheduler->runningQueue.pop();
+                    if (!next->isFinished) {
+                        process = next;
+                        break;
+                    }
                 }
             }
 
             if (process) {
                 // Only run if memory is allocated
                 if (!process->isMemoryAllocated()) {
-                    // Try to allocate memory
                     bool allocated = false;
                     if (memoryManager) {
                         allocated = memoryManager->allocateMemory(process);
                         process->setMemoryAllocated(allocated);
                     }
                     if (!allocated) {
-                        // Could not allocate memory, requeue for later
                         std::lock_guard<std::mutex> lock(scheduler->queueMutex);
                         scheduler->runningQueue.push(process);
                         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -220,13 +223,14 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                             core->isBusy = true;
                             process->assignedCore = core->id;
 
-                            // Detached thread to execute time slice and requeue if not finished
+                            // Detached thread for executing the time slice
                             std::thread([core, process, quantum_Cycles, this, timePerCycleMs]() {
                                 std::this_thread::sleep_for(std::chrono::milliseconds(quantum_Cycles * timePerCycleMs));
                                 process->executeTimeSlice(quantum_Cycles);
                                 core->isBusy = false;
                                 process->assignedCore = -1;
 
+                                // Requeue if not finished
                                 if (!process->isFinished) {
                                     std::lock_guard<std::mutex> lock(scheduler->queueMutex);
                                     scheduler->runningQueue.push(process);
@@ -237,6 +241,8 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                                         memoryManager->deallocateMemory(process->processName);
                                         process->setMemoryAllocated(false);
                                     }
+                                    // Write logs when done (important!)
+                                    process->writeLogsToFile();
                                 }
                                 }).detach();
 
@@ -250,6 +256,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                 }
             }
             else {
+                // Check if all processes are finished
                 if (schedulerStopRequested) {
                     bool allDone = true;
                     for (const auto& p : allProcesses) {
@@ -270,7 +277,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
 
-            // Generate memory snapshot every quantum cycle
+            // Generate memory snapshot per quantum cycle
             if (globalClock && memoryManager) {
                 int currentCycle = globalClock->cycle.load();
                 if (currentCycle != lastSnapshotCycle) {
@@ -281,7 +288,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
             }
         }
 
-        // Wait for all cores to finish
+        // Final wait for all cores to finish
         bool anyBusy = true;
         while (anyBusy) {
             anyBusy = false;
@@ -299,7 +306,7 @@ void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, in
 }
 
 void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
-    if (schedulerType == "fcfs") {
+    /*if (schedulerType == "fcfs") {
         FCFS(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq, delay_Per_Exec);
     }
     else if (schedulerType == "rr") {
@@ -307,12 +314,19 @@ void Functions::schedulerTest(int num_cpu, const std::string& schedulerType, int
     }
     else {
         std::cout << "Unknown scheduler type: " << schedulerType << "\n";
-    }
+    }*/
+
+	startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
     std::cout << "Scheduler started.\n";
 }
 
 void Functions::schedulerStop() {
+    if(!schedulerRunning) {
+        std::cout << "Scheduler is not running.\n";
+        return;
+	}
+
     schedulerStopRequested = true; // Request scheduler to stop after finishing all current processes
     stopProcessGenerator(); // Stop generating new processes
     std::cout << "Scheduler stop requested. Waiting for all processes to finish...\n";
@@ -405,20 +419,34 @@ void Functions::reportUtil() {
     std::cout << "Process logs have been written to their respective .txt files.\n";
 }
 
-std::shared_ptr<Process> Functions::createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec) {
+std::shared_ptr<Process> Functions::createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec, int size) {
+    // Validate memory size
+    /*if (size < 64 || size > 262144 || (size & (size - 1)) != 0) {
+        std::cerr << "Invalid memory allocation: must be a power of 2 between 64 and 262144 bytes.\n";
+        std::cout << "User entered a size of " + size;
+        return nullptr;
+    }*/
+    std::cout << "Process " << name << " created with PID " << name << " and size " << size << "\n";
+
     int pid = static_cast<int>(allProcesses.size());
-    auto p = std::make_shared<Process>(pid, name);
+
+    // Make sure Process constructor supports memorySize if you want to pass it in
+    auto p = std::make_shared<Process>(pid, name, size); // or (pid, name, size)
+
     p->InstructionCode(pid);
     int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
+
     for (int j = 0; j < num_instructions; ++j) {
-        int instructionID = rand() % 6 + 1;
+        int instructionID = rand() % 8 + 1;
         p->instructionQueue.push(instructionID);
     }
+
     allProcesses.push_back(p);
-    // Add to scheduler if running
+
     if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
         scheduler->addProcess(p);
     }
+
     return p;
 }
 
@@ -485,6 +513,11 @@ void Functions::switchScreen(const std::string& name) {
 }
 
 void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_process_freq) {
+    if (processGenRunning) {
+        std::cout << "Process generator already running.\n";
+        return;
+	}
+
     processGenRunning = true;
     processGenThread = std::thread([this, min_ins, max_ins, batch_process_freq]() {
         int lastCycle = globalClock ? globalClock->cycle.load() : 0;
@@ -504,7 +537,7 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             p->InstructionCode(pid);
             int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
             for (int j = 0; j < num_instructions; ++j) {
-                int instructionID = rand() % 6 + 1;
+                int instructionID = rand() % 8 + 1;
                 p->instructionQueue.push(instructionID);
             }
             allProcesses.push_back(p);

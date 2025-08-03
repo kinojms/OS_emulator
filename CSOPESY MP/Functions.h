@@ -23,8 +23,6 @@ private:
     std::atomic<bool> processGenRunning = false; // Control flag for process generation
     std::atomic<bool> schedulerStopRequested = false; // New flag to request scheduler stop
 
-    void writeScreenReport(std::ostream& out); // Helper for screen/reportUtil
-
 public:
     // Schedulers
     void FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
@@ -38,10 +36,11 @@ public:
 
     // Monitoring
     void screen();
+    void writeScreenReport(std::ostream& out); // Helper for screen/reportUtil
     void reportUtil();
 
     // Process management for screen -s and -r
-    std::shared_ptr<Process> createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec);
+    std::shared_ptr<Process> createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec, int size);
     std::shared_ptr<Process> getProcessByName(const std::string& name);
     void switchScreen(const std::string& name);
 

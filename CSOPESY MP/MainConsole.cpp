@@ -7,6 +7,7 @@
 #include "Process.h"
 #include "Functions.h"
 #include <fstream>
+#include <regex>
 
 Display dp;
 Functions fun;
@@ -25,7 +26,7 @@ void consoleLayout::controller(std::string initializer) {
     int num_cpu = 0;
     std::string scheduler;
     int quantum_Cycles = 0;
-    int batch_Process_Freq = 0;
+    int batch_process_freq = 0;
     int min_ins = 0;
     int max_ins = 0;
     float delay_Per_Exec = 0.0;
@@ -33,7 +34,7 @@ void consoleLayout::controller(std::string initializer) {
     int mem_per_frame = 0;
     int mem_per_proc = 0;
 
-
+    std::string tmp, processName, instructionBlock;
     dp.displayIntro();
     std::cout << "\nEnter a command: ";
     std::getline(std::cin, initializer);
@@ -56,7 +57,7 @@ void consoleLayout::controller(std::string initializer) {
                             iss >> quantum_Cycles;
                         }
                         else if (key == "batch-process-freq" && eq == "=") {
-                            iss >> batch_Process_Freq;
+                            iss >> batch_process_freq;
                         }
                         else if (key == "min-ins" && eq == "=") {
                             iss >> min_ins;
@@ -83,6 +84,15 @@ void consoleLayout::controller(std::string initializer) {
                     fun.initializeMemoryManager(max_overall_mem, mem_per_proc, mem_per_frame);
                 }
                 firstRun = false;
+                if (scheduler == "fcfs") {
+                    fun.FCFS(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq, delay_Per_Exec);
+                }
+                else if (scheduler == "rr") {
+                    fun.RR(num_cpu, quantum_Cycles, min_ins, max_ins, batch_process_freq, delay_Per_Exec);
+                }
+                else {
+                    std::cout << "Unknown scheduler type: " << scheduler << "\n";
+                }
             }
 
             while (running) {
@@ -90,10 +100,11 @@ void consoleLayout::controller(std::string initializer) {
                 std::getline(std::cin, line);
 
                 std::istringstream iss(line);
-                std::string token, flag, command;
-                iss >> token >> flag >> command;
+                std::string token, flag, command, size_str, command_String;
+                iss >> token >> flag >> command >> size_str >> command_String;
 
-                // Basic commands
+
+                // Basic comman ds
                 if (token == "clear") {
                     system("clear");
                     dp.displayIntro();
@@ -110,7 +121,8 @@ void consoleLayout::controller(std::string initializer) {
 
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec);
+                    // fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, min_ins, max_ins, batch_process_freq, delay_Per_Exec);
+                    fun.startProcessGenerator(min_ins, max_ins, batch_process_freq);
                     continue;
                 }
 
@@ -126,8 +138,8 @@ void consoleLayout::controller(std::string initializer) {
 
                 // Screen commands
                 if (token == "screen") {
-                    if (flag != "-r" && flag != "-s" && flag != "-ls") {
-                        std::cout << "You must use '-r' or '-s' and input a command to continue.\n";
+                    if (flag != "-r" && flag != "-s" && flag != "-ls" && flag != "-c") {
+                        std::cout << "You must use '-r' or '-s' or e-cf and input a command to continue.\n";
                         continue;
                     }
 
@@ -142,34 +154,108 @@ void consoleLayout::controller(std::string initializer) {
                     }
 
                     if (flag == "-s") {
-                        if (command.empty()) {
-                            std::cout << "You must specify a command using 'screen -s'.\n";
+                        if (command.empty() || size_str.empty()) {
+                            std::cout << "You must specify both a process name and memory size using 'screen -s <name> <size>'.\n";
                             continue;
                         }
+
+                        int size = 0;
+                        try {
+                            size = std::stoi(size_str);
+                        }
+                        catch (...) {
+                            std::cout << "Invalid memory size input. Must be a number.\n";
+                            continue;
+                        }
+
+                        // Memory must be between 64 bytes and 262144 (2^6 to 2^18), and power of 2
+                        if (size <= 64 && size >= 262144 && (size & (size - 1)) != 0) {
+                        // if (size <= 64 && size > 500) {
+                            std::cout << "Invalid memory allocation: must be a power of 2 between 64 and 262144 bytes. " + size;
+                            std::cout << "User entered a size of " + size;
+                            continue;
+                        }
+
                         else {
-                            auto proc = fun.createProcess(command, min_ins, max_ins, delay_Per_Exec);
-                            fun.switchScreen(command);
+                            std::cout << "User entered a size of " + size;
+
+                            auto proc = fun.createProcess(command, min_ins, max_ins, delay_Per_Exec, size);
+                            //fun.switchScreen(command);
                         }
                         continue;
                     }
 
                     if (flag == "-ls") {
                         std::cout << "Listing all processes...\n";
-                        fun.screen(); // Assuming this lists all processes
+                        fun.writeScreenReport(std::cout); // Assuming this lists all processes
                         continue;
                     }
 
+                    if (flag == "-c") {
+                        // Check for valid memory size
+                        int size = 0;
+                        try {
+                            size = std::stoi(size_str);
+                        }
+                        catch (...) {
+                            std::cout << "Invalid memory size input. Must be a number.\n";
+                            continue;
+                        }
+
+                        if (command.empty() || size_str.empty()) {
+                            std::cout << "You must specify a process name and memory size using 'screen -c <name> <size> \"<commands>\"'.\n";
+                            continue;
+                        }
+
+                        // Extract quoted instruction string from the entire input line
+                        std::size_t firstQuote = line.find('"');
+                        std::size_t lastQuote = line.rfind('"');
+                        if (firstQuote == std::string::npos || lastQuote == std::string::npos || lastQuote <= firstQuote) {
+                            std::cout << "Invalid command string. Instructions must be enclosed in double quotes.\n";
+                            continue;
+                        }
+
+                        std::string instructionStr = line.substr(firstQuote + 1, lastQuote - firstQuote - 1);
+
+                        // Split by semicolon
+                        std::vector<std::string> instructions;
+                        std::stringstream ss(instructionStr);
+                        std::string item;
+
+                        while (std::getline(ss, item, ';')) {
+                            std::string trimmed = std::regex_replace(item, std::regex("^\\s+|\\s+$"), "");
+                            if (!trimmed.empty()) instructions.push_back(trimmed);
+                        }
+
+                        if (instructions.size() == 0 || instructions.size() > 50) {
+                            std::cout << "Invalid command: instruction count must be between 1 and 50.\n";
+                            continue;
+                        }
+
+                        // Create or reuse process
+                        auto process = fun.getProcessByName(command);
+                        if (!process) {
+                            process = fun.createProcess(command, 0, 0, 0, size);
+                            if (!process) {
+                                std::cout << "Failed to create process.\n";
+                                continue;
+                            }
+                        }
+
+                        process->loadCustomInstructions(instructions);
+                        std::cout << "Instructions loaded into " << command << ".\n";
+                        continue;
+                    }
+
+                    // Unknown command
+                    std::cout << "Unknown command.\n";
                 }
-
-                // Unknown command
-                std::cout << "Unknown command.\n";
+                else {
+                    std::cout << "You must initialize before using other commands.\n";
+                    std::cout << "\nEnter a command: ";
+                    std::getline(std::cin, initializer);
+                }
             }
-
-        }
-        else {
-            std::cout << "You must initialize before using other commands.\n";
-            std::cout << "\nEnter a command: ";
-            std::getline(std::cin, initializer);
         }
     }
 }

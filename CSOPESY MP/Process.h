@@ -13,30 +13,35 @@ class Process {
 private:
     std::string filename;
     std::unordered_map<std::string, uint16_t> memory;
+    std::unordered_map<uint32_t, uint16_t> emulatedMemory; // New: Simulated memory
+    static constexpr int SYMBOL_TABLE_LIMIT = 64; // New: Symbol table size in bytes
+    int memorySize; // New: total memory allocated to process
+
     // FOR loop tracking
     std::stack<int> forInstructionCountStack; // Tracks instruction count per FOR
     int forNestingLevel = 0; // Current FOR nesting level
     static constexpr int MAX_FOR_NESTING = 3;
+    std::queue<int> instructionsQueue;
 
 public:
     int pid;
-    std::string processName; // Add process name
+    std::string processName;
     std::queue<std::string> printCommands;
     std::unordered_map<int, std::function<void(int)>> instructionMap;
     std::queue<int> instructionQueue;
     bool isFinished = false;
-    std::vector<std::string> logs; // In-memory logs
-    int assignedCore = -1; // -1 if not assigned
-    int currentInstruction = 0; // 0-based index
+    std::vector<std::string> logs;
+    int assignedCore = -1;
+    int currentInstruction = 0;
     int totalInstructions = 0;
-    bool memoryAllocated = false; // Track if memory was allocated
+    bool memoryAllocated = false;
 
-    Process(int pid, const std::string& name = ""); // Add name to constructor
+    // Updated constructor to require memory size
+    Process(int pid, const std::string& name = "", int memorySize = 65536);
 
     void generatePrintCommands(int count);
     void InstructionCode(int pid);
     void execute();
-
     void executeTimeSlice(int instructionLimit);
 
     // Instruction implementations
@@ -47,12 +52,17 @@ public:
     void SLEEP(int ticks);
     void FOR(const std::unordered_map<int, std::function<void(int)>>& instructions, int instructionID, int repeats);
 
-    // Write logs to file (for report-util)
+    // New: memory access
+    uint16_t READ(const std::string& var, const std::string& addressHex);
+    void WRITE(const std::string& addressHex, uint16_t value);
+
+    std::string getRandomAddress() const;
+
     void writeLogsToFile();
 
-    // Memory management
     void setMemoryAllocated(bool allocated);
     bool isMemoryAllocated() const;
+    void loadCustomInstructions(const std::vector<std::string>& customInstructions);
 };
 
 #endif // PROCESS_H

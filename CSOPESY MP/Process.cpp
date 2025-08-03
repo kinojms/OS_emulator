@@ -9,7 +9,8 @@
 #include <algorithm>
 #include <filesystem>
 
-Process::Process(int pid, const std::string& name) : pid(pid), processName(name) {
+Process::Process(int pid, const std::string& name, int memorySize)
+    : pid(pid), processName(name), memorySize(memorySize) {
     if (processName.empty())
         processName = "process_" + std::to_string(pid);
     filename = processName + ".txt";
@@ -26,8 +27,12 @@ void Process::PRINT(const std::string& msg) {
 }
 
 uint16_t Process::DECLARE(const std::string& var, uint16_t value) {
-    memory[var] = value;
-    return value;
+    if (memory.size() >= SYMBOL_TABLE_LIMIT / 2) {
+        logs.push_back("[ERROR] Symbol table limit reached. DECLARE ignored.");
+        return 0;
+    }
+    memory[var] = std::clamp<uint16_t>(value, 0, UINT16_MAX);
+    return memory[var];
 }
 
 uint16_t Process::ADD(const std::string& dest, const std::string& src1, const std::string& src2) {
@@ -52,7 +57,6 @@ void Process::SLEEP(int ticks) {
 }
 
 void Process::FOR(const std::unordered_map<int, std::function<void(int)>>& instructions, int instructionID, int repeats) {
-    // Enforce max FOR nesting using member variable
     if (forNestingLevel >= MAX_FOR_NESTING) {
         logs.push_back("[ERROR] Maximum FOR nesting level (" + std::to_string(MAX_FOR_NESTING) + ") reached. Skipping FOR.");
         return;
@@ -64,14 +68,12 @@ void Process::FOR(const std::unordered_map<int, std::function<void(int)>>& instr
         auto it = instructions.find(instructionID);
         if (it != instructions.end()) {
             it->second(0);
-            // Count this instruction inside the FOR
             if (!forInstructionCountStack.empty()) {
                 forInstructionCountStack.top()++;
             }
         }
     }
 
-    // After FOR loop ends
     int instructionsInThisFor = 0;
     if (!forInstructionCountStack.empty()) {
         instructionsInThisFor = forInstructionCountStack.top();
@@ -81,25 +83,73 @@ void Process::FOR(const std::unordered_map<int, std::function<void(int)>>& instr
     forNestingLevel--;
 }
 
+uint16_t Process::READ(const std::string& var, const std::string& addressHex) {
+    uint32_t addr;
+    try {
+        addr = std::stoul(addressHex, nullptr, 16);
+    }
+    catch (...) {
+        logs.push_back("[ERROR] Invalid memory address format: " + addressHex);
+        isFinished = true;
+        return 0;
+    }
+
+    // Ensure address is within process memory size (each address maps to 1 byte)
+    if (addr + 1 >= memorySize) { // +1 since uint16 is 2 bytes
+        logs.push_back("[ACCESS VIOLATION] READ from address " + addressHex +
+                       " exceeds memory size " + std::to_string(memorySize));
+        isFinished = true;
+        writeLogsToFile();
+        return 0;
+    }
+
+    uint16_t value = emulatedMemory.count(addr) ? emulatedMemory[addr] : 0;
+    DECLARE(var, value);
+    logs.push_back("[INFO] READ from " + addressHex + ": " + std::to_string(value));
+    return value;
+}
+
+
+void Process::WRITE(const std::string& addressHex, uint16_t value) {
+    uint32_t addr;
+    try {
+        addr = std::stoul(addressHex, nullptr, 16);
+    }
+    catch (...) {
+        logs.push_back("[ERROR] Invalid memory address format: " + addressHex);
+        isFinished = true;
+        writeLogsToFile();
+        return;
+    }
+
+    // Ensure write does not exceed memory bounds (2 bytes for uint16_t)
+    if (addr + 1 >= memorySize) {
+        logs.push_back("[ACCESS VIOLATION] WRITE to address " + addressHex +
+            " exceeds memory size " + std::to_string(memorySize));
+        isFinished = true;
+        return;
+    }
+
+    emulatedMemory[addr] = std::clamp<uint16_t>(value, 0, UINT16_MAX);
+    logs.push_back("[INFO] WRITE " + std::to_string(value) + " to " + addressHex);
+}
+
+std::string Process::getRandomAddress() const {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<uint32_t> dist(0, memorySize - 2); // -2 to allow room for uint16
+    std::stringstream ss;
+    ss << "0x" << std::hex << dist(gen);
+    return ss.str();
+}
+
 void Process::InstructionCode(int pid) {
     this->pid = pid;
     filename = "process_" + std::to_string(pid) + ".txt";
 
     instructionMap = {
         {1, [this](int) {
-            // Default message unless overridden in a test case
             std::string msg = "Hello world from process_" + std::to_string(this->pid) + "!";
-
-            // Example of test-case-specified print with variable
-            bool customTestCase = false; // Set to true in test scenario if needed
-
-            if (customTestCase) {
-                std::string base = "Value from: ";
-                std::string var = "x";  // Variable to print
-                uint16_t value = memory.count(var) ? memory[var] : 0;
-                msg = base + std::to_string(value);
-            }
-
             PRINT(msg);
         }},
         {2, [this](int) {
@@ -108,30 +158,19 @@ void Process::InstructionCode(int pid) {
             PRINT("Declared variable 'x' with random value: " + std::to_string(randX));
         }},
         {3, [this](int) {
-            // Ensure 'x' is declared
             if (memory.find("x") == memory.end()) {
                 uint16_t randX = 1 + (rand() % 100);
                 DECLARE("x", randX);
                 PRINT("x was undeclared. Assigned random x = " + std::to_string(randX));
             }
-
-            // Always assign a random value to 'z'
             uint16_t randZ = 1 + (rand() % 100);
             DECLARE("z", randZ);
-
-
-            // Perform y = x + z
             ADD("y", "x", "z");
-
-            // Show result
             uint16_t resultY = memory["y"];
             PRINT("y = x + z = " + std::to_string(resultY));
         }},
         {4, [this](int) {
-            // Check if y and x exist; fallback handled inside SUBTRACT already
             uint16_t resultZ = SUBTRACT("z", "y", "x");
-
-            // Print result
             PRINT("z = y - x = " + std::to_string(resultZ));
         }},
         {5, [this](int) {
@@ -139,31 +178,28 @@ void Process::InstructionCode(int pid) {
             SLEEP(2);
         }},
         {6, [this](int) {
-            static thread_local int for6_count = 0; // local to thread, persists across calls
-
-            int randomID = 1 + (rand() % 6); // random number from 1 to 6
-
-            // Limit recursive FOR instruction (ID 6) to max 3 times
-                if (randomID == 6) {
-                if (for6_count >= 3) {
-                    PRINT("Max recursive FOR(6) use reached. Skipping.");
-                    return;
-                    }
-                ++for6_count;
-                }
-
-                int repeatCount = 1 + (rand() % 3);
-                PRINT("FOR loop repeating instruction " + std::to_string(randomID) + " " + std::to_string(repeatCount) + " times.");
-                FOR(instructionMap, randomID, repeatCount);
-
-                // Decrease counter after FOR completes
-                    if (randomID == 6) {
-                    --for6_count;
-                    }
-                }}
+            static thread_local int for6_count = 0;
+            int randomID = 1 + (rand() % 6);
+            if (randomID == 6 && for6_count >= 3) {
+                PRINT("Max recursive FOR(6) use reached. Skipping.");
+                return;
+            }
+            if (randomID == 6) ++for6_count;
+            int repeatCount = 1 + (rand() % 3);
+            PRINT("FOR loop repeating instruction " + std::to_string(randomID) + " " + std::to_string(repeatCount) + " times.");
+            FOR(instructionMap, randomID, repeatCount);
+            if (randomID == 6) --for6_count;
+        }},
+        {7, [this](int) {
+            std::string address = getRandomAddress();
+            WRITE(address, 42);
+        }},
+        {8, [this](int) {
+            std::string address = getRandomAddress();
+            READ("my_var", address);
+        }}
     };
 }
-
 void Process::execute() {
     currentInstruction = 0;
     totalInstructions = static_cast<int>(instructionQueue.size());
@@ -188,7 +224,9 @@ void Process::execute() {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-    isFinished = true;
+    if (isFinished) {
+        writeLogsToFile();
+    }
 }
 
 void Process::executeTimeSlice(int instructionLimit) {
@@ -218,11 +256,11 @@ void Process::executeTimeSlice(int instructionLimit) {
     }
     if (instructionQueue.empty()) {
         isFinished = true;
+        writeLogsToFile();
     }
 }
 
 void Process::writeLogsToFile() {
-    // Ensure the process_logs directory exists
     std::filesystem::create_directories("process_logs");
     std::string logPath = "process_logs/" + processName + ".txt";
     std::ofstream file(logPath, std::ios::out);
@@ -242,4 +280,69 @@ void Process::setMemoryAllocated(bool allocated) {
 
 bool Process::isMemoryAllocated() const {
     return memoryAllocated;
+}
+
+void Process::loadCustomInstructions(const std::vector <std::string>& customInstructions) {
+    instructionsQueue = std::queue<int>();
+    totalInstructions = static_cast<int>(customInstructions.size());
+    currentInstruction = 0;
+    for (const auto& instr : customInstructions) {
+        // Parse each instruction and bind to a lambda that wraps actual behavior
+        if (instr.starts_with("DECLARE ")) {
+            std::istringstream iss(instr);
+            std::string cmd, var;
+            int value;
+            iss >> cmd >> var >> value;
+            instructionMap[9000 + currentInstruction] = [this, var, value](int) {
+                DECLARE(var, static_cast<uint16_t>(value));
+                };
+        }
+        else if (instr.starts_with("ADD ")) {
+            std::istringstream iss(instr);
+            std::string cmd, dest, src1, src2;
+            iss >> cmd >> dest >> src1 >> src2;
+            instructionMap[9000 + currentInstruction] = [this, dest, src1, src2](int) {
+                ADD(dest, src1, src2);
+                };
+        }
+        else if (instr.starts_with("WRITE ")) {
+            std::istringstream iss(instr);
+            std::string cmd, addr, var;
+            iss >> cmd >> addr >> var;
+            instructionMap[9000 + currentInstruction] = [this, addr, var](int) {
+                WRITE(addr, memory.count(var) ? memory[var] : 0);
+                };
+        }
+        else if (instr.starts_with("READ ")) {
+            std::istringstream iss(instr);
+            std::string cmd, var, addr;
+            iss >> cmd >> var >> addr;
+            instructionMap[9000 + currentInstruction] = [this, var, addr](int) {
+                READ(var, addr);
+                };
+        }
+        else if (instr.starts_with("PRINT(")) {
+            size_t start = instr.find("\"") + 1;
+            size_t end = instr.rfind("\"");
+            std::string content = (start < end) ? instr.substr(start, end - start) : "Invalid";
+
+            instructionMap[9000 + currentInstruction] = [this, content](int) {
+                std::string expanded = content;
+                for (const auto& [var, val] : memory) {
+                    std::string placeholder = var;
+                    size_t pos = expanded.find(placeholder);
+                    if (pos != std::string::npos) {
+                        expanded.replace(pos, placeholder.length(), std::to_string(val));
+                    }
+                }
+                PRINT(expanded);
+                };
+        }
+        else {
+            logs.push_back("[ERROR] Unknown instruction: " + instr);
+        }
+
+        instructionQueue.push(9000 + currentInstruction);
+        currentInstruction++;
+    }
 }
