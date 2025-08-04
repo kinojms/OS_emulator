@@ -1,0 +1,4 @@
+[Mon Aug  4 11:24:22 2025] DECLARE varA = 10
+[Mon Aug  4 11:24:22 2025] DECLARE varB = 10
+[Mon Aug  4 11:24:22 2025] ADD varA = varA + varB = 20
+[Mon Aug  4 11:24:22 2025] \"Result: \"20

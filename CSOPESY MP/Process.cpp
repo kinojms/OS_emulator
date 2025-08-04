@@ -10,6 +10,23 @@
 #include <filesystem>
 #include <regex>
 
+std::string Process::getCurrentTimestamp() const {
+    auto now = std::chrono::system_clock::now();
+    std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
+
+    char buffer[26] = { 0 };  // Safe fixed-size buffer
+    errno_t err = ctime_s(buffer, sizeof(buffer), &timeNow);
+    if (err != 0) {
+        return "[Timestamp Error]";
+    }
+
+    std::string timestampStr(buffer);
+    if (!timestampStr.empty() && timestampStr.back() == '\n') {
+        timestampStr.pop_back();  // Remove newline
+    }
+
+    return "[" + timestampStr + "]";
+}
 
 Process::Process(int pid, const std::string& name, int memorySize)
     : pid(pid), processName(name), memorySize(memorySize) {
@@ -107,7 +124,7 @@ uint16_t Process::READ(const std::string& var, const std::string& addressHex) {
 
     uint16_t value = emulatedMemory.count(addr) ? emulatedMemory[addr] : 0;
     DECLARE(var, value);
-    logs.push_back("[INFO] READ from " + addressHex + ": " + std::to_string(value));
+    logs.push_back(getCurrentTimestamp() + " WRITE " + std::to_string(value) + " to " + addressHex);
     return value;
 }
 
@@ -133,7 +150,7 @@ void Process::WRITE(const std::string& addressHex, uint16_t value) {
     }
 
     emulatedMemory[addr] = std::clamp<uint16_t>(value, 0, UINT16_MAX);
-    logs.push_back("[INFO] WRITE " + std::to_string(value) + " to " + addressHex);
+    logs.push_back(getCurrentTimestamp() + " WRITE " + std::to_string(value) + " to " + addressHex);
 }
 
 std::string Process::getRandomAddress() const {
@@ -214,31 +231,112 @@ void Process::InstructionCode(int pid) {
 void Process::execute() {
     currentInstruction = 0;
     totalInstructions = static_cast<int>(instructionQueue.size());
+
+    int customArgIndex = 0;
+
     while (!instructionQueue.empty()) {
         int instructionID = instructionQueue.front();
         instructionQueue.pop();
         currentInstruction++;
-        auto it = instructionMap.find(instructionID);
-        if (it != instructionMap.end()) {
-            it->second(0);
+
+        // Standard instructions
+        if (instructionMap.count(instructionID)) {
+            instructionMap;  // <<== You forgot to call it
         }
+        else {
+            if (customArgIndex >= customArgs.size()) {
+                logs.push_back("[ERROR] Custom argument index out of bounds.");
+                break;
+            }
+
+            const std::vector<std::string>& args = customArgs[customArgIndex];
+
+            switch (instructionID) {
+            case INST_DECLARE: {
+                const std::string& var = args[0];
+                uint16_t val = static_cast<uint16_t>(std::stoi(args[1]));
+                DECLARE(var, val);
+                logs.push_back(getCurrentTimestamp() + " DECLARE " + var + " = " + std::to_string(val));
+                break;
+            }
+            case INST_ADD: {
+                const std::string& dest = args[0];
+                const std::string& src1 = args[1];
+                const std::string& src2 = args[2];
+                uint16_t result = ADD(dest, src1, src2);
+                logs.push_back(getCurrentTimestamp() + " ADD " + dest + " = " + src1 + " + " + src2 + " = " + std::to_string(result));
+                break;
+            }
+            case INST_SUBTRACT: {
+                const std::string& dest = args[0];
+                const std::string& src1 = args[1];
+                const std::string& src2 = args[2];
+                uint16_t result = SUBTRACT(dest, src1, src2);
+                logs.push_back(getCurrentTimestamp() + " SUBTRACT " + dest + " = " + src1 + " - " + src2 + " = " + std::to_string(result));
+                break;
+            }
+            case INST_WRITE: {
+                const std::string& addr = args[0];
+                const std::string& var = args[1];
+                uint16_t val = memory.count(var) ? memory[var] : 0;
+                WRITE(addr, val);
+                break;
+            }
+            case INST_READ: {
+                const std::string& var = args[0];
+                const std::string& addr = args[1];
+                READ(var, addr);
+                break;
+            }
+            case INST_PRINT: {
+                std::string finalMessage;
+                for (const auto& part : args) {
+                    if (memory.count(part)) {
+                        finalMessage += std::to_string(memory[part]);
+                    }
+                    else {
+                        finalMessage += part;
+                    }
+                }
+                PRINT(finalMessage);
+                break;
+            }
+            default:
+                logs.push_back("[ERROR] Unknown instruction ID: " + std::to_string(instructionID));
+                break;
+            }
+
+            customArgIndex++;  // only incremented for custom instructions
+        }
+
+        // Flush printCommands to log with timestamp
         while (!printCommands.empty()) {
             std::string command = printCommands.front();
             printCommands.pop();
+
             auto now = std::chrono::system_clock::now();
             std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
-            char timestamp[26];
-            ctime_s(timestamp, sizeof(timestamp), &timeNow);
-            std::string timestampStr(timestamp);
-            timestampStr.pop_back();
-            logs.push_back("[" + timestampStr + "] " + command);
+            if (timeNow != -1) {
+                char timestamp[26];
+                ctime_s(timestamp, sizeof(timestamp), &timeNow);
+                std::string timestampStr(timestamp);
+                timestampStr.pop_back();  // Remove newline
+                logs.push_back("[" + timestampStr + "] " + command);
+            }
+            else {
+                logs.push_back("[ERROR] Timestamp unavailable for PRINT output.");
+            }
         }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-    if (isFinished) {
+
+    if (!logs.empty()) {
         writeLogsToFile();
     }
 }
+
+
 
 void Process::executeTimeSlice(int instructionLimit) {
     if (totalInstructions == 0) totalInstructions = static_cast<int>(instructionQueue.size());
@@ -264,7 +362,7 @@ void Process::executeTimeSlice(int instructionLimit) {
                 const std::string& var = args[0];
                 uint16_t val = static_cast<uint16_t>(std::stoi(args[1]));
                 DECLARE(var, val);
-                logs.push_back("[INFO] DECLARE " + var + " = " + std::to_string(val));
+                logs.push_back(getCurrentTimestamp() + " DECLARE " + var + " = " + std::to_string(val));
                 break;
             }
             case INST_ADD: {
@@ -272,7 +370,7 @@ void Process::executeTimeSlice(int instructionLimit) {
                 const std::string& src1 = args[1];
                 const std::string& src2 = args[2];
                 uint16_t result = ADD(dest, src1, src2);
-                logs.push_back("[INFO] ADD " + dest + " = " + src1 + " + " + src2 + " = " + std::to_string(result));
+                logs.push_back(getCurrentTimestamp() + " ADD " + dest + " = " + src1 + " + " + src2 + " = " + std::to_string(result));
                 break;
             }
             case INST_SUBTRACT: {
@@ -280,7 +378,7 @@ void Process::executeTimeSlice(int instructionLimit) {
                 const std::string& src1 = args[1];
                 const std::string& src2 = args[2];
                 uint16_t result = SUBTRACT(dest, src1, src2);
-                logs.push_back("[INFO] SUBTRACT " + dest + " = " + src1 + " - " + src2 + " = " + std::to_string(result));
+                logs.push_back(getCurrentTimestamp() + " SUBTRACT " + dest + " = " + src1 + " - " + src2 + " = " + std::to_string(result));
                 break;
             }
             case INST_WRITE: {
@@ -413,30 +511,33 @@ void Process::loadCustomInstructions(const std::vector<std::string>& customInstr
             args = { var, addr };
             instructionQueue.push(INST_READ);
         }
-        else if (cmd.starts_with("PRINT(")) {
-            size_t start = instr.find("(");
-            size_t end = instr.rfind(")");
-            std::string content = (start != std::string::npos && end != std::string::npos && end > start)
-                ? instr.substr(start + 1, end - start - 1)
-                : "Invalid";
+        else if (instr.find("PRINT(") == 0) {
+            // Better PRINT parser that supports + concatenation
+            size_t firstParen = instr.find("(");
+            size_t lastParen = instr.rfind(")");
 
-            // Split by '+' to simulate string concatenation
+            std::string content = (firstParen != std::string::npos && lastParen != std::string::npos && lastParen > firstParen)
+                ? instr.substr(firstParen + 1, lastParen - firstParen - 1)
+                : "";
+
             std::vector<std::string> parts;
-            std::stringstream ss(content);
-            std::string segment;
-            while (std::getline(ss, segment, '+')) {
-                // Trim spaces
-                segment = std::regex_replace(segment, std::regex("^\\s+|\\s+$"), "");
+            std::istringstream partStream(content);
+            std::string token;
 
-                // Remove surrounding quotes if any
-                if (segment.front() == '"' && segment.back() == '"') {
-                    segment = segment.substr(1, segment.length() - 2);
+            while (std::getline(partStream, token, '+')) {
+                // Trim whitespace
+                token.erase(0, token.find_first_not_of(" \t"));
+                token.erase(token.find_last_not_of(" \t") + 1);
+
+                // Remove quotes if it's a string literal
+                if (!token.empty() && token.front() == '"' && token.back() == '"') {
+                    token = token.substr(1, token.size() - 2);
                 }
 
-                parts.push_back(segment);
+                parts.push_back(token);
             }
 
-            args = parts;
+            customArgs.push_back(parts);
             instructionQueue.push(INST_PRINT);
         }
         else {
@@ -444,6 +545,8 @@ void Process::loadCustomInstructions(const std::vector<std::string>& customInstr
             continue;
         }
 
-        customArgs.push_back(args);
+        if (cmd != "PRINT") {
+            customArgs.push_back(args);
+        }
     }
 }

@@ -33,12 +33,11 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
         }
     }
     else {
-        // Clear queues if scheduler already exists (for restart)
+        // Clear previous queues for restart
         while (!scheduler->processQueue.empty()) scheduler->processQueue.pop();
         while (!scheduler->runningQueue.empty()) scheduler->runningQueue.pop();
     }
 
-    // Ensure all processes are added to the scheduler
     for (auto& p : allProcesses) {
         if (!p->isFinished) {
             scheduler->addProcess(p);
@@ -47,21 +46,23 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
 
     schedulerRunning = true;
     schedulerStopRequested = false;
+
     startProcessGenerator(min_ins, max_ins, batch_process_freq);
 
-    // Start the clock thread
+    // CLOCK THREAD
     std::thread([this]() {
-        while (schedulerRunning || schedulerStopRequested) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 1 cycle = 100ms
+        while (schedulerRunning) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             if (globalClock) globalClock->advance();
         }
         if (globalClock) globalClock->stop();
         }).detach();
 
-    // Start the scheduler thread
+    //SCHEDULER THREAD
     schedulerThread = std::thread([this]() {
         int lastSnapshotCycle = -1;
-        while (schedulerRunning || schedulerStopRequested) {
+
+        while (schedulerRunning) {
             std::shared_ptr<Process> process = nullptr;
             {
                 std::lock_guard<std::mutex> lock(scheduler->queueMutex);
@@ -70,8 +71,9 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
                     scheduler->processQueue.pop();
                 }
             }
+
             if (process) {
-                // assign to core as before
+                // Try assigning to a free core
                 bool assigned = false;
                 while (!assigned) {
                     for (auto& core : scheduler->cores) {
@@ -81,12 +83,10 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
                             break;
                         }
                     }
-                    if (!assigned) {
-                        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-                    }
+                    if (!assigned) std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 }
 
-                // Generate memory snapshot every quantum cycle
+                // Optional: log snapshot every cycle
                 if (globalClock && memoryManager) {
                     int currentCycle = globalClock->cycle.load();
                     if (currentCycle != lastSnapshotCycle) {
@@ -99,15 +99,12 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
             else {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
-            // Only exit if stop requested and all processes are finished and the queue is empty
+
+            // Stop condition check
             if (schedulerStopRequested) {
-                bool allDone = true;
-                for (const auto& p : allProcesses) {
-                    if (!p->isFinished) {
-                        allDone = false;
-                        break;
-                    }
-                }
+                bool allDone = std::all_of(allProcesses.begin(), allProcesses.end(),
+                    [](const std::shared_ptr<Process>& p) { return p->isFinished; });
+
                 std::lock_guard<std::mutex> lock(scheduler->queueMutex);
                 if (allDone && scheduler->processQueue.empty()) {
                     schedulerRunning = false;
@@ -115,6 +112,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
                 }
             }
         }
+
         // Wait for all cores to finish
         bool anyBusy = true;
         while (anyBusy) {
@@ -131,6 +129,7 @@ void Functions::FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, 
 
     schedulerThread.detach();
 }
+
 
 void Functions::RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec) {
     if (schedulerRunning) {
