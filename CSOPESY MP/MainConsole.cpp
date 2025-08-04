@@ -242,15 +242,19 @@ void consoleLayout::controller(std::string initializer) {
                         continue;
                     }
 
-                    // Unknown command
-                    std::cout << "Unknown command.\n";
+
                 }
+
                 else {
-                    std::cout << "You must initialize before using other commands.\n";
-                    std::cout << "\nEnter a command: ";
-                    std::getline(std::cin, initializer);
+                    std::cout << "Unknown command: " << token << ". Type 'command' to see available commands.\n";
+					continue;
                 }
             }
+        }
+        else {
+            std::cout << "You must initialize before using other commands.\n";
+            std::cout << "\nEnter a command: ";
+            std::getline(std::cin, initializer);
         }
     }
 }

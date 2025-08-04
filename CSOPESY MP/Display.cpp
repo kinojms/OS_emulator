@@ -25,20 +25,21 @@ void Display::displayCommands()
 {
     std::cout
         << "Available commands:\n"
+        << " Basic commands:\n"
+        << " >   clear\n"
+        << " >   command\n"
+        << " >   exit\n"
+        << " \n"
         << " Screen commands:\n"
-        << " screen -r <name of existing process>\n"
-        << " screen -s <name of new process> <memory size>\n"
-        << " screen -c <name of new process> <memory size> \"<commands>\"\n"
+        << " >   screen -r <name of existing process>\n"
+        << " >   screen -s <name of new process> <memory size>\n"
+        << " >   screen -c <name of new process> <memory size> \"<commands>\"\n"
         << " \n"
         << " Monitoring/Logging commands:\n"
-        << " screen -ls\n"
-        << " report-util\n"
+        << " >   screen -ls\n"
+        << " >   report-util\n"
         << " \n"
         << " Scheduler commands:\n"
-        << " scheduler-start\n"
-        << " scheduler-stop\n"
-        << " \n"
-        << " Misc commands:\n"
-        << " clear\n"
-        << " exit\n";
+        << " >   scheduler-start\n"
+        << " >   scheduler-stop\n";
 }

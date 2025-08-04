@@ -395,6 +395,9 @@ void Functions::switchScreen(const std::string& name) {
 }
 
 void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_process_freq) {
+
+    std::cout << "Process generation started. Use screen-ls to check the progress.\n";
+
     processGenRunning = true;
     processGenThread = std::thread([this, min_ins, max_ins, batch_process_freq]() {
         int lastCycle = globalClock ? globalClock->cycle.load() : 0;
