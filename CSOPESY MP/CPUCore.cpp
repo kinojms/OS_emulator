@@ -23,7 +23,7 @@ void CPUCore::assignProcess(std::shared_ptr<Process> process) {
                 /*std::cout << "[Clock Cycle " << lastCycle << "] Core " << id << " executing process '"
                           << process->processName << "' (PID " << process->pid << ")" << std::endl;*/
             }
-            process->executeTimeSlice(1); // Execute one instruction per cycle
+            process->runInstructions(1); // Execute one instruction per cycle
         }
         isBusy = false;
         process->assignedCore = -1; // Unassign core when done

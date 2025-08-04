@@ -126,7 +126,7 @@ void Functions::runScheduler(
                                 process->assignedCore = core->id;
                                 std::thread([core, process, quantum_Cycles, this, timePerCycleMs]() {
                                     std::this_thread::sleep_for(std::chrono::milliseconds(quantum_Cycles * timePerCycleMs));
-                                    process->executeTimeSlice(quantum_Cycles);
+                                    process->runInstructions(quantum_Cycles);
                                     core->isBusy = false;
                                     process->assignedCore = -1;
                                     if (!process->isFinished) {

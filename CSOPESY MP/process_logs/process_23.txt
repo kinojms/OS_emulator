@@ -1,0 +1,409 @@
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:27 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:27 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:27 2025] Hello world from process_23!
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:27 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:27 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:27 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:27 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:27 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:27 2025] Hello world from process_23!
+[Mon Aug  4 23:49:27 2025] Hello world from process_23!
+[Mon Aug  4 23:49:27 2025] Hello world from process_23!
+[Mon Aug  4 23:49:27 2025] Hello world from process_23!
+[Mon Aug  4 23:49:27 2025] WRITE 42 to 0x2a7
+[Mon Aug  4 23:49:28 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:28 2025] Hello world from process_23!
+[Mon Aug  4 23:49:28 2025] WRITE 0 to 0xa27d
+[Mon Aug  4 23:49:28 2025] WRITE 0 to 0x22e5
+[Mon Aug  4 23:49:28 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:28 2025] Declared variable 'x' with random value: 42
+[Mon Aug  4 23:49:28 2025] y = x + z = 110
+[Mon Aug  4 23:49:28 2025] y = x + z = 77
+[Mon Aug  4 23:49:28 2025] Declared variable 'x' with random value: 1
+[Mon Aug  4 23:49:28 2025] WRITE 0 to 0xb272
+[Mon Aug  4 23:49:28 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:28 2025] z = y - x = 76
+[Mon Aug  4 23:49:28 2025] z = y - x = 76
+[Mon Aug  4 23:49:29 2025] Hello world from process_23!
+[Mon Aug  4 23:49:29 2025] Declared variable 'x' with random value: 42
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:29 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:29 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:29 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:29 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:29 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:29 2025] FOR loop repeating instruction 5 1 times.
+[Mon Aug  4 23:49:29 2025] Sleeping for 2 ticks...
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:29 2025] FOR loop repeating instruction 1 2 times.
+[Mon Aug  4 23:49:29 2025] Hello world from process_23!
+[Mon Aug  4 23:49:29 2025] Hello world from process_23!
+[Mon Aug  4 23:49:29 2025] WRITE 42 to 0x3f7
+[Mon Aug  4 23:49:29 2025] y = x + z = 84
+[Mon Aug  4 23:49:29 2025] Declared variable 'x' with random value: 68
+[Mon Aug  4 23:49:29 2025] WRITE 42 to 0x3b52
+[Mon Aug  4 23:49:29 2025] z = y - x = 16
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:30 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] y = x + z = 116
+[Mon Aug  4 23:49:30 2025] WRITE 42 to 0xdb9e
+[Mon Aug  4 23:49:30 2025] z = y - x = 54
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:30 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] WRITE 0 to 0x5863
+[Mon Aug  4 23:49:30 2025] WRITE 0 to 0x24ae
+[Mon Aug  4 23:49:30 2025] y = x + z = 104
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] FOR loop repeating instruction 5 1 times.
+[Mon Aug  4 23:49:30 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:30 2025] Hello world from process_23!
+[Mon Aug  4 23:49:30 2025] WRITE 0 to 0x8c0e
+[Mon Aug  4 23:49:31 2025] WRITE 42 to 0x3b15
+[Mon Aug  4 23:49:31 2025] z = y - x = 42
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:31 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] z = y - x = 42
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:31 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] Hello world from process_23!
+[Mon Aug  4 23:49:31 2025] y = x + z = 116
+[Mon Aug  4 23:49:31 2025] z = y - x = 54
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:31 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:31 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] Declared variable 'x' with random value: 42
+[Mon Aug  4 23:49:32 2025] Hello world from process_23!
+[Mon Aug  4 23:49:32 2025] Declared variable 'x' with random value: 68
+[Mon Aug  4 23:49:32 2025] Declared variable 'x' with random value: 35
+[Mon Aug  4 23:49:32 2025] z = y - x = 81
+[Mon Aug  4 23:49:32 2025] y = x + z = 77
+[Mon Aug  4 23:49:32 2025] y = x + z = 103
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:32 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] WRITE 0 to 0x652e
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:32 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:32 2025] Hello world from process_23!
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:32 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:32 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:32 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:32 2025] Hello world from process_23!
+[Mon Aug  4 23:49:32 2025] Hello world from process_23!
+[Mon Aug  4 23:49:32 2025] Hello world from process_23!
+[Mon Aug  4 23:49:32 2025] z = y - x = 41
+[Mon Aug  4 23:49:32 2025] WRITE 0 to 0xfe1c
+[Mon Aug  4 23:49:33 2025] WRITE 0 to 0xe64f
+[Mon Aug  4 23:49:33 2025] WRITE 0 to 0x647c
+[Mon Aug  4 23:49:33 2025] Hello world from process_23!
+[Mon Aug  4 23:49:33 2025] z = y - x = 41
+[Mon Aug  4 23:49:33 2025] y = x + z = 104
+[Mon Aug  4 23:49:33 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:33 2025] y = x + z = 130
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:33 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:33 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:33 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] WRITE 42 to 0xc1ec
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:34 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:34 2025] Hello world from process_23!
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:34 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:34 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:34 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:34 2025] Hello world from process_23!
+[Mon Aug  4 23:49:34 2025] Hello world from process_23!
+[Mon Aug  4 23:49:34 2025] Hello world from process_23!
+[Mon Aug  4 23:49:34 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:34 2025] z = y - x = 68
+[Mon Aug  4 23:49:34 2025] WRITE 42 to 0x2be2
+[Mon Aug  4 23:49:34 2025] WRITE 42 to 0xc3e1
+[Mon Aug  4 23:49:34 2025] Hello world from process_23!
+[Mon Aug  4 23:49:35 2025] y = x + z = 104
+[Mon Aug  4 23:49:35 2025] WRITE 0 to 0x5b7
+[Mon Aug  4 23:49:35 2025] Declared variable 'x' with random value: 68
+[Mon Aug  4 23:49:35 2025] WRITE 42 to 0xfedd
+[Mon Aug  4 23:49:35 2025] WRITE 0 to 0x3362
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:35 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:35 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:35 2025] Hello world from process_23!
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:35 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:35 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:35 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:35 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:35 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:35 2025] Hello world from process_23!
+[Mon Aug  4 23:49:35 2025] Hello world from process_23!
+[Mon Aug  4 23:49:35 2025] Hello world from process_23!
+[Mon Aug  4 23:49:35 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:35 2025] Declared variable 'x' with random value: 54
+[Mon Aug  4 23:49:35 2025] y = x + z = 96
+[Mon Aug  4 23:49:35 2025] y = x + z = 122
+[Mon Aug  4 23:49:35 2025] WRITE 42 to 0xb7a4
+[Mon Aug  4 23:49:35 2025] y = x + z = 89
+[Mon Aug  4 23:49:36 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:36 2025] z = y - x = 35
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[ERROR] Maximum FOR nesting level (3) reached. Skipping FOR.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 5 2 times.
+[Mon Aug  4 23:49:36 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:36 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:36 2025] Hello world from process_23!
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 5 3 times.
+[Mon Aug  4 23:49:36 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:36 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:36 2025] Sleeping for 2 ticks...
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 6 3 times.
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 2 1 times.
+[Mon Aug  4 23:49:36 2025] Declared variable 'x' with random value: 62
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 6 2 times.
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 3 1 times.
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 1 1 times.
+[Mon Aug  4 23:49:36 2025] FOR loop repeating instruction 1 3 times.
+[Mon Aug  4 23:49:36 2025] Hello world from process_23!
+[Mon Aug  4 23:49:36 2025] Hello world from process_23!
+[Mon Aug  4 23:49:36 2025] Hello world from process_23!
+[Mon Aug  4 23:49:36 2025] z = y - x = 27
+[Mon Aug  4 23:49:36 2025] Hello world from process_23!
+[Mon Aug  4 23:49:36 2025] Hello world from process_23!
+[Mon Aug  4 23:49:36 2025] WRITE 42 to 0x12ee
+[Mon Aug  4 23:49:36 2025] Declared variable 'x' with random value: 42
+[Mon Aug  4 23:49:37 2025] WRITE 0 to 0x2475
+[Mon Aug  4 23:49:37 2025] Declared variable 'x' with random value: 42
+[Mon Aug  4 23:49:37 2025] WRITE 42 to 0x6d77
+[Mon Aug  4 23:49:37 2025] Declared variable 'x' with random value: 68
+[Mon Aug  4 23:49:37 2025] y = x + z = 110
+[Mon Aug  4 23:49:37 2025] WRITE 0 to 0x387a
+[Mon Aug  4 23:49:37 2025] Declared variable 'x' with random value: 68
+[Mon Aug  4 23:49:37 2025] Sleeping for 2 ticks...

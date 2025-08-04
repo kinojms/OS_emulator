@@ -76,7 +76,7 @@ void Scheduler::roundRobin(int quantum_Cycles, const std::vector<std::shared_ptr
             runningQueue.pop();
 
             if (!process->isFinished) {
-                process->executeTimeSlice(quantum_Cycles);
+                process->runInstructions(quantum_Cycles);
                 if (!process->isFinished) {
                     runningQueue.push(process);
                 }

@@ -52,8 +52,9 @@ public:
 
     void generatePrintCommands(int count);
     void InstructionCode(int pid);
-    void execute();
-    void executeTimeSlice(int instructionLimit);
+    //void execute();
+    //void executeTimeSlice(int instructionLimit);
+	void runInstructions(int instructionLimit = -1); // Default to -1 for non-preemptive execution
 
     // Instruction implementations
     void PRINT(const std::string& msg);

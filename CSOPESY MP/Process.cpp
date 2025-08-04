@@ -227,30 +227,28 @@ void Process::InstructionCode(int pid) {
     };
 }
 
+void Process::runInstructions(int instructionLimit) {
+    if (totalInstructions == 0) totalInstructions = static_cast<int>(instructionQueue.size());
 
-void Process::execute() {
-    currentInstruction = 0;
-    totalInstructions = static_cast<int>(instructionQueue.size());
-
+    int executed = 0;
     int customArgIndex = 0;
 
-    while (!instructionQueue.empty()) {
+    // If instructionLimit <= 0, run all instructions (non-preemptive)
+    while (!instructionQueue.empty() && (instructionLimit <= 0 || executed < instructionLimit)) {
         int instructionID = instructionQueue.front();
         instructionQueue.pop();
         currentInstruction++;
+        executed++;
 
-        // Standard instructions
         if (instructionMap.count(instructionID)) {
-            instructionMap[instructionID](0);  // <<== You forgot to call it
+            instructionMap[instructionID](0);
         }
         else {
             if (customArgIndex >= customArgs.size()) {
                 logs.push_back("[ERROR] Custom argument index out of bounds.");
                 break;
             }
-
             const std::vector<std::string>& args = customArgs[customArgIndex];
-
             switch (instructionID) {
             case INST_DECLARE: {
                 const std::string& var = args[0];
@@ -305,115 +303,6 @@ void Process::execute() {
                 logs.push_back("[ERROR] Unknown instruction ID: " + std::to_string(instructionID));
                 break;
             }
-
-            customArgIndex++;  // only incremented for custom instructions
-        }
-
-        // Flush printCommands to log with timestamp
-        while (!printCommands.empty()) {
-            std::string command = printCommands.front();
-            printCommands.pop();
-
-            auto now = std::chrono::system_clock::now();
-            std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
-            if (timeNow != -1) {
-                char timestamp[26];
-                ctime_s(timestamp, sizeof(timestamp), &timeNow);
-                std::string timestampStr(timestamp);
-                timestampStr.pop_back();  // Remove newline
-                logs.push_back("[" + timestampStr + "] " + command);
-            }
-            else {
-                logs.push_back("[ERROR] Timestamp unavailable for PRINT output.");
-            }
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    }
-
-    if (!logs.empty()) {
-        writeLogsToFile();
-    }
-}
-
-
-
-void Process::executeTimeSlice(int instructionLimit) {
-    if (totalInstructions == 0) totalInstructions = static_cast<int>(instructionQueue.size());
-
-    int executed = 0;
-    int customArgIndex = 0;
-
-    while (!instructionQueue.empty() && executed < instructionLimit) {
-        int instructionID = instructionQueue.front();
-        instructionQueue.pop();
-        currentInstruction++;
-        executed++;
-
-        if (instructionMap.count(instructionID)) {
-            instructionMap;
-        }
-        else {
-            // Handle custom instructions
-            const std::vector<std::string>& args = customArgs[customArgIndex];
-
-            switch (instructionID) {
-            case INST_DECLARE: {
-                const std::string& var = args[0];
-                uint16_t val = static_cast<uint16_t>(std::stoi(args[1]));
-                DECLARE(var, val);
-                logs.push_back(getCurrentTimestamp() + " DECLARE " + var + " = " + std::to_string(val));
-                break;
-            }
-            case INST_ADD: {
-                const std::string& dest = args[0];
-                const std::string& src1 = args[1];
-                const std::string& src2 = args[2];
-                uint16_t result = ADD(dest, src1, src2);
-                logs.push_back(getCurrentTimestamp() + " ADD " + dest + " = " + src1 + " + " + src2 + " = " + std::to_string(result));
-                break;
-            }
-            case INST_SUBTRACT: {
-                const std::string& dest = args[0];
-                const std::string& src1 = args[1];
-                const std::string& src2 = args[2];
-                uint16_t result = SUBTRACT(dest, src1, src2);
-                logs.push_back(getCurrentTimestamp() + " SUBTRACT " + dest + " = " + src1 + " - " + src2 + " = " + std::to_string(result));
-                break;
-            }
-            case INST_WRITE: {
-                const std::string& addr = args[0];
-                const std::string& var = args[1];
-                uint16_t val = memory.count(var) ? memory[var] : 0;
-                WRITE(addr, val);
-                break;
-            }
-            case INST_READ: {
-                const std::string& var = args[0];
-                const std::string& addr = args[1];
-                READ(var, addr);
-                break;
-            }
-            case INST_PRINT: {
-                const auto& parts = customArgs[customArgIndex];
-                std::string finalMessage;
-
-                for (const auto& part : parts) {
-                    if (memory.count(part)) {
-                        finalMessage += std::to_string(memory[part]);
-                    }
-                    else {
-                        finalMessage += part;
-                    }
-                }
-
-                PRINT(finalMessage);
-                break;
-            }
-            default:
-                logs.push_back("[ERROR] Unknown instruction ID: " + std::to_string(instructionID));
-                break;
-            }
             customArgIndex++;
         }
 
@@ -439,10 +328,10 @@ void Process::executeTimeSlice(int instructionLimit) {
         isFinished = true;
         writeLogsToFile();
     }
+    else if (!logs.empty() && instructionLimit > 0) {
+        writeLogsToFile();
+    }
 }
-
-
-
 
 void Process::writeLogsToFile() {
     std::filesystem::create_directories("process_logs");
@@ -455,7 +344,7 @@ void Process::writeLogsToFile() {
     for (const auto& log : logs) {
         file << log << "\n";
     }
-    std::cout << "Wrote logs for " << processName << " to " << logPath << std::endl;
+    // std::cout << "Wrote logs for " << processName << " to " << logPath << std::endl;
     file.close();
 }
 
