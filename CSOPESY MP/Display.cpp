@@ -10,26 +10,35 @@
 void Display::displayIntro()
 {
     std::cout << _CYAN << R"(
- ______     ______     ______     ______   ______     ______     __  __    
-/\  ___\   /\  ___\   /\  __ \   /\  == \ /\  ___\   /\  ___\   /\ \_\ \   
-\ \ \____  \ \___  \  \ \ \/\ \  \ \  _-/ \ \  __\   \ \___  \  \ \____ \  
- \ \_____\  \/\_____\  \ \_____\  \ \_\    \ \_____\  \/\_____\  \/\_____\ 
-  \/_____/   \/_____/   \/_____/   \/_/     \/_____/   \/_____/   \/_____/
+  ______     ______     ______     ______   ______     ______     __  __    
+ /\  ___\   /\  ___\   /\  __ \   /\  == \ /\  ___\   /\  ___\   /\ \_\ \   
+ \ \ \____  \ \___  \  \ \ \/\ \  \ \  _-/ \ \  __\   \ \___  \  \ \____ \  
+  \ \_____\  \/\_____\  \ \_____\  \ \_\    \ \_____\  \/\_____\  \/\_____\ 
+   \/_____/   \/_____/   \/_____/   \/_/     \/_____/   \/_____/   \/_____/
 
 )" << _END_COLOR << '\n'
-<< _GREEN << "Hello, welcome to CSOPESY command line!" << _END_COLOR << '\n'
-<< _YELLOW << "Type 'exit' to quit, 'clear' to clear the screen, 'command' to show all commands" << _END_COLOR << '\n';
+<< _GREEN <<    " Hello, welcome to CSOPESY command line!" << _END_COLOR << '\n'
+<< _YELLOW <<   " Type 'exit' to quit, 'clear' to clear the screen, 'command' to show all commands" << _END_COLOR << '\n';
 }
 
 void Display::displayCommands()
 {
-        std::cout
-        << " initialize\n"
-        << " screen -s <name of new process>\n"
+    std::cout
+        << "Available commands:\n"
+        << " Screen commands:\n"
+        << " screen -r <name of existing process>\n"
+        << " screen -s <name of new process> <memory size>\n"
+        << " screen -c <name of new process> <memory size> \"<commands>\"\n"
+        << " \n"
+        << " Monitoring/Logging commands:\n"
+        << " screen -ls\n"
+        << " report-util\n"
+        << " \n"
+        << " Scheduler commands:\n"
         << " scheduler-start\n"
         << " scheduler-stop\n"
-        << " report-util\n"
-        << " screen -r <name of existing process>\n"
+        << " \n"
+        << " Misc commands:\n"
         << " clear\n"
         << " exit\n";
 }
