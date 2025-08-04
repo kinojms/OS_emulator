@@ -241,7 +241,7 @@ void Process::execute() {
 
         // Standard instructions
         if (instructionMap.count(instructionID)) {
-            instructionMap;  // <<== You forgot to call it
+            instructionMap[instructionID](0);  // <<== You forgot to call it
         }
         else {
             if (customArgIndex >= customArgs.size()) {
@@ -455,6 +455,7 @@ void Process::writeLogsToFile() {
     for (const auto& log : logs) {
         file << log << "\n";
     }
+    std::cout << "Wrote logs for " << processName << " to " << logPath << std::endl;
     file.close();
 }
 
