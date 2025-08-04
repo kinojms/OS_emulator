@@ -84,6 +84,14 @@ void consoleLayout::controller(std::string initializer) {
                     fun.initializeMemoryManager(max_overall_mem, mem_per_proc, mem_per_frame);
                 }
                 firstRun = false;
+
+				// Initialize scheduler
+                if (num_cpu > 0 && quantum_Cycles > 0 && !scheduler.empty()) {
+                    fun.runScheduler(num_cpu, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec, scheduler);
+                }
+                else {
+                    std::cout << "Invalid scheduler configuration. Please check config.txt.\n";
+                }
             }
 
             while (running) {
@@ -97,7 +105,7 @@ void consoleLayout::controller(std::string initializer) {
 
                 // Basic commands
                 if (token == "clear") {
-                    system("clear");
+                    system("cls");
                     dp.displayIntro();
                     continue;
                 }
@@ -112,7 +120,8 @@ void consoleLayout::controller(std::string initializer) {
 
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec);
+                    //fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec);
+					fun.startProcessGenerator(min_ins, max_ins, batch_Process_Freq);
                     continue;
                 }
 
@@ -135,7 +144,7 @@ void consoleLayout::controller(std::string initializer) {
 
                     if (flag == "-r") {
                         if (command.empty()) {
-                            std::cout << "You must specify a process to resume using 'screen -r'.\n";
+                            std::cout << "You must specify a process to read using 'screen -r'.\n";
                         }
                         else {
                             fun.switchScreen(command);
@@ -173,7 +182,7 @@ void consoleLayout::controller(std::string initializer) {
 
                     if (flag == "-ls") {
                         std::cout << "Listing all processes...\n";
-                        fun.screen(); // Assuming this lists all processes
+						fun.writeScreenReport(std::cout);
                         continue;
                     }
 

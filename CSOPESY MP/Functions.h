@@ -21,15 +21,13 @@ private:
     std::thread processGenThread; // Thread for random process generation
     std::atomic<bool> schedulerRunning = false;
     std::atomic<bool> processGenRunning = false; // Control flag for process generation
-    std::atomic<bool> schedulerStopRequested = false; // New flag to request scheduler stop
-
-    void writeScreenReport(std::ostream& out); // Helper for screen/reportUtil
+    std::atomic<bool> schedulerStopRequested = false; // New flag to request scheduler 
 
 public:
     // Schedulers
-    void FCFS(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
-    void RR(int num_cpu, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
-    void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
+    void runScheduler(int num_cpu, int quantum_Cycles, int min_ins, int max_ins,int batch_process_freq, float delay_Per_Exec, const std::string& schedulerType
+	);
+    // void schedulerTest(int num_cpu, const std::string& schedulerType, int quantum_Cycles, int min_ins, int max_ins, int batch_process_freq, float delay_Per_Exec);
 
     // Control
     void schedulerStop();
@@ -37,7 +35,8 @@ public:
     void stopProcessGenerator(); // Stop background process generator
 
     // Monitoring
-    void screen();
+    // void screen();
+    void writeScreenReport(std::ostream& out); // Helper for screen/reportUtil
     void reportUtil();
 
     // Process management for screen -s and -r
