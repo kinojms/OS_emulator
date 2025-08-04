@@ -329,62 +329,55 @@ void Functions::writeScreenReport(std::ostream& out) {
         out << "No scheduler initialized.\n";
         return;
     }
+
     int totalCores = static_cast<int>(scheduler->cores.size());
     int availableCores = 0;
     for (const auto& core : scheduler->cores) {
         if (!core->isBusy) availableCores++;
     }
+
     int usedCores = totalCores - availableCores;
     double cpuUtilization = totalCores > 0 ? (static_cast<double>(usedCores) / totalCores) : 0.0;
+
     out << "CPU Utilization: " << std::fixed << std::setprecision(2) << (cpuUtilization * 100) << "%\n";
     out << "Cores used: " << usedCores << "\n";
     out << "Cores available: " << availableCores << "\n";
     out << "\n--------------------------------------------------------\n";
+
     out << "Running processes (in memory & assigned to a core):\n";
     for (const auto& p : allProcesses) {
         if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore != -1) {
-            std::string timestamp = "-";
-            if (!p->logs.empty()) {
-                size_t l = p->logs.back().find("]");
-                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
-            }
-            out << p->processName << " " << timestamp << " Core: " << p->assignedCore
-                << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+            out << p->processName << " Core: " << p->assignedCore
+                << " " << p->currentInstruction << "/"
+                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
         }
     }
+
     out << "\nWaiting for memory (not in memory):\n";
     for (const auto& p : allProcesses) {
         if (!p->isFinished && !p->isMemoryAllocated()) {
-            std::string timestamp = "-";
-            if (!p->logs.empty()) {
-                size_t l = p->logs.back().find("]");
-                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
-            }
-            out << p->processName << " " << timestamp << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+            out << p->processName << " Core: - "
+                << p->currentInstruction << "/"
+                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
         }
     }
+
     out << "\nIn memory but not running (waiting for core):\n";
     for (const auto& p : allProcesses) {
         if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore == -1) {
-            std::string timestamp = "-";
-            if (!p->logs.empty()) {
-                size_t l = p->logs.back().find("]");
-                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
-            }
-            out << p->processName << " " << timestamp << " Core: - "
-                << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+            out << p->processName << " Core: - "
+                << p->currentInstruction << "/"
+                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
         }
     }
+
     out << "\nFinished processes:\n";
     for (const auto& p : allProcesses) {
         if (p->isFinished) {
-            std::string timestamp = "-";
-            if (!p->logs.empty()) {
-                size_t l = p->logs.back().find("]");
-                if (l != std::string::npos) timestamp = p->logs.back().substr(0, l + 1);
-            }
-            out << p->processName << " " << timestamp << " Core: " << (p->assignedCore == -1 ? "-" : std::to_string(p->assignedCore))
-                << " " << p->currentInstruction << "/" << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+            int coreID = (p->assignedCore == -1 ? -1 : p->assignedCore);
+            out << p->processName << " Core: " << (coreID == -1 ? "-" : std::to_string(coreID))
+                << " " << p->currentInstruction << "/"
+                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
         }
     }
 }
