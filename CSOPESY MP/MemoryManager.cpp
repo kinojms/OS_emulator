@@ -2,6 +2,9 @@
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
+#include <vector>
+#include <map>
+#include <iomanip>
 
 MemoryManager::MemoryManager(int totalMem, int memPerProc, int memPerFrame)
     : totalMemory(totalMem), memoryPerProcess(memPerProc), memoryPerFrame(memPerFrame), currentQuantumCycle(0) {
@@ -12,6 +15,27 @@ void MemoryManager::initializeMemory() {
     // Start with one free block covering the entire memory
     memoryBlocks.clear();
     memoryBlocks.emplace_back(0, totalMemory, "", false);
+}
+
+// Add these to your MemoryManager class (private section)
+std::vector<Frame> frames; // Physical memory frames
+std::map<std::string, std::map<int, PageTableEntry>> processPageTables; // processName -> (pageNumber -> PageTableEntry)
+int pageFaultCount = 0;
+
+// Helper: Find a free frame index, or -1 if none
+int MemoryManager::findFreeFrame() const {
+    for (size_t i = 0; i < frames.size(); ++i) {
+        if (!frames[i].isOccupied) return static_cast<int>(i);
+    }
+    return -1;
+}
+
+// Helper: Select a victim frame for replacement (FIFO here, can use LRU)
+int MemoryManager::selectVictimFrame() const {
+    for (size_t i = 0; i < frames.size(); ++i) {
+        if (frames[i].isOccupied) return static_cast<int>(i);
+    }
+    return -1;
 }
 
 bool MemoryManager::allocateMemory(std::shared_ptr<Process> process) {
@@ -167,6 +191,7 @@ void MemoryManager::generateSnapshotFile() {
         file << "----end---- = " << totalMemory << " // This is the max\n";
         file << formatMemoryLayoutInternal();
         file << "----start---- = 0\n";
+        file << "ProcessName PageNumber Data\n";
         file.close();
         //std::cout << "[MemoryManager] Generated memory snapshot: " << filename << std::endl;
     }
@@ -177,4 +202,92 @@ void MemoryManager::generateSnapshotFile() {
 
 void MemoryManager::generateMemorySnapshot() {
     generateSnapshotFile();
+}
+
+void MemoryManager::swapOutPage(const std::string& processName, int pageNumber) {
+    std::string pageData;
+    // Find the frame containing this page
+    for (const auto& frame : frames) {
+        if (frame.isOccupied && frame.processName == processName && frame.pageNumber == pageNumber) {
+            pageData = frame.data;
+            break;
+        }
+    }
+    std::ofstream backingStore("csopesy-backing-store.txt", std::ios::app);
+    backingStore << processName << " " << pageNumber << " " << pageData << "\n";
+    backingStore.close();
+}
+
+void MemoryManager::swapInPage(const std::string& processName, int pageNumber) {
+    std::ifstream backingStore("csopesy-backing-store.txt");
+    std::string line;
+    std::string pageData;
+    while (std::getline(backingStore, line)) {
+        std::istringstream iss(line);
+        std::string pname;
+        int pnum;
+        iss >> pname >> pnum;
+        if (pname == processName && pnum == pageNumber) {
+            std::getline(iss, pageData); // Get the rest as data
+            break;
+        }
+    }
+    backingStore.close();
+
+
+    int frameIdx = findFreeFrame();
+    if (frameIdx == -1) return; // No free frame, should not happen here
+
+    frames[frameIdx] = { frameIdx, processName, pageNumber, true, pageData };
+    processPageTables[processName][pageNumber] = { frameIdx, false };
+}
+
+void MemoryManager::handlePageFault(std::shared_ptr<Process> process, int pageNumber) {
+    ++pageFaultCount;
+    int frameIdx = findFreeFrame();
+    if (frameIdx != -1) {
+        swapInPage(process->processName, pageNumber);
+    } else {
+        int victimIdx = selectVictimFrame();
+        if (victimIdx == -1) return; // No victim found, should not happen
+
+        // Swap out victim
+        const Frame& victim = frames[victimIdx];
+        swapOutPage(victim.processName, victim.pageNumber);
+
+        // Update victim's page table
+        processPageTables[victim.processName][victim.pageNumber] = { -1, true };
+
+        // Swap in requested page
+        frames[victimIdx] = { victimIdx, process->processName, pageNumber, true, "" };
+        swapInPage(process->processName, pageNumber);
+        processPageTables[process->processName][pageNumber] = { victimIdx, false };
+    }
+}
+
+void MemoryManager::vmstat() const {
+    std::cout << "---- VMSTAT ----\n";
+    std::cout << "Total frames: " << frames.size() << "\n";
+    int used = 0;
+    for (const auto& f : frames) if (f.isOccupied) ++used;
+    std::cout << "Used frames: " << used << "\n";
+    std::cout << "Free frames: " << (frames.size() - used) << "\n";
+    std::cout << "Page faults: " << pageFaultCount << "\n";
+    std::cout << "----------------\n";
+}
+
+void MemoryManager::processSmi(const std::string& processName) const {
+    auto it = processPageTables.find(processName);
+    if (it == processPageTables.end()) {
+        std::cout << "Process not found.\n";
+        return;
+    }
+    std::cout << "---- process-smi for " << processName << " ----\n";
+    std::cout << std::setw(10) << "Page" << std::setw(10) << "Frame" << std::setw(15) << "Location\n";
+    for (const auto& [pageNum, entry] : it->second) {
+        std::cout << std::setw(10) << pageNum
+                  << std::setw(10) << (entry.frameNumber == -1 ? "-" : std::to_string(entry.frameNumber))
+                  << std::setw(15) << (entry.inBackingStore ? "BackingStore" : "PhysicalMem") << "\n";
+    }
+    std::cout << "-----------------------------\n";
 }

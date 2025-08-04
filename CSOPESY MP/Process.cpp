@@ -115,6 +115,9 @@ uint16_t Process::READ(const std::string& var, const std::string& addressHex) {
 
     // Ensure address is within process memory size (each address maps to 1 byte)
     if (addr + 1 >= memorySize) { // +1 since uint16 is 2 bytes
+        accessViolationOccurred = true;
+        accessViolationTimestamp = getCurrentTimestamp();
+        accessViolationAddress = addressHex;
         logs.push_back("[ACCESS VIOLATION] READ from address " + addressHex +
                        " exceeds memory size " + std::to_string(memorySize));
         isFinished = true;
@@ -124,7 +127,7 @@ uint16_t Process::READ(const std::string& var, const std::string& addressHex) {
 
     uint16_t value = emulatedMemory.count(addr) ? emulatedMemory[addr] : 0;
     DECLARE(var, value);
-    logs.push_back(getCurrentTimestamp() + " WRITE " + std::to_string(value) + " to " + addressHex);
+    logs.push_back(getCurrentTimestamp() + " READ " + std::to_string(value) + " from " + addressHex);
     return value;
 }
 
@@ -143,9 +146,13 @@ void Process::WRITE(const std::string& addressHex, uint16_t value) {
 
     // Ensure write does not exceed memory bounds (2 bytes for uint16_t)
     if (addr + 1 >= memorySize) {
+        accessViolationOccurred = true;
+        accessViolationTimestamp = getCurrentTimestamp();
+        accessViolationAddress = addressHex;
         logs.push_back("[ACCESS VIOLATION] WRITE to address " + addressHex +
             " exceeds memory size " + std::to_string(memorySize));
         isFinished = true;
+        writeLogsToFile();
         return;
     }
 

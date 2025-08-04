@@ -30,6 +30,10 @@ private:
     int forNestingLevel = 0; // Current FOR nesting level
     static constexpr int MAX_FOR_NESTING = 3;
 
+    bool accessViolationOccurred = false;
+    std::string accessViolationTimestamp;
+    std::string accessViolationAddress;
+
 public:
     bool hasCustomInstructions = false;
     int pid;
