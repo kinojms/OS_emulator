@@ -245,6 +245,14 @@ void consoleLayout::controller(std::string initializer) {
 
                 }
 
+                else if (token == "process-smi") {
+                    fun.processSMI();
+                    continue;
+                }
+                else if (token == "vmstat") {
+                    fun.vmstat();
+                    continue;
+                }
                 else {
                     std::cout << "Unknown command: " << token << ". Type 'command' to see available commands.\n";
 					continue;

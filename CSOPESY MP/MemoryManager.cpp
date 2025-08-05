@@ -56,15 +56,13 @@ bool MemoryManager::allocateMemory(std::shared_ptr<Process> process) {
                     MemoryBlock(newStartAddress, remainingSize, "", false));
             }
 
-            /*std::cout << "[MemoryManager] Allocated " << memoryPerProcess << " bytes for process "
-                << process->processName << " at address " << memoryBlocks[i].startAddress << std::endl;*/
+            // Mark process as in memory (at least one page table entry exists)
+            // This is a logical allocation; actual frames are filled on demand paging
             return true;
         }
     }
 
     // No suitable block found
-    /*std::cout << "[MemoryManager] Failed to allocate memory for process " << process->processName
-        << ". Memory is full or fragmented." << std::endl;*/
     return false;
 }
 
@@ -228,20 +226,29 @@ void MemoryManager::handlePageFault(const std::string& processName, int pageNumb
                 victimPT[victim.pageNumber].inMemory = false;
                 victimPT[victim.pageNumber].frameNumber = -1;
             }
+            pageOutCount++; // Increment page out count
         }
     }
     // Load the required page into the frame
     std::cout << "[MemoryManager] Loading page " << pageNumber << " of process '" << processName << "' into frame " << frameNumber << std::endl;
     loadPageFromBackingStore(processName, pageNumber, frameNumber);
+
+    pageInCount++; // Increment page in count
+
     // Update frame and page table
     Frame& frame = frames[frameNumber];
     frame.isOccupied = true;
     frame.processName = processName;
     frame.pageNumber = pageNumber;
     frame.dirty = false;
-    pageTables[processName][pageNumber] = { frameNumber, true, false };
-    // Add to FIFO queue
-    frameQueue.push_back(frameNumber);
+    // Update page table entry to reflect page is in memory
+    pageTables[processName][pageNumber].frameNumber = frameNumber;
+    pageTables[processName][pageNumber].inMemory = true;
+    pageTables[processName][pageNumber].dirty = false;
+    // Add to FIFO queue if not already present
+    if (std::find(frameQueue.begin(), frameQueue.end(), frameNumber) == frameQueue.end()) {
+        frameQueue.push_back(frameNumber);
+    }
 }
 
 // Stub for memory access (to be implemented in next phase)

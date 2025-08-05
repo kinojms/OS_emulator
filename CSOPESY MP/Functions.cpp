@@ -163,6 +163,23 @@ void Functions::runScheduler(
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
 
+            // CPU tick accounting
+            bool anyActive = false;
+            if (scheduler) {
+                for (const auto& core : scheduler->cores) {
+                    if (core->isBusy) {
+                        anyActive = true;
+                        break;
+                    }
+                }
+            }
+            if (anyActive) {
+                activeCpuTicks++;
+            } else {
+                idleCpuTicks++;
+            }
+            totalCpuTicks++;
+
             // Stop condition
             if (schedulerStopRequested) {
                 bool allDone = std::all_of(allProcesses.begin(), allProcesses.end(),
@@ -420,7 +437,7 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             p->InstructionCode(pid);
             int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
             for (int j = 0; j < num_instructions; ++j) {
-                int instructionID = rand() % 6 + 1;
+                int instructionID = rand() % 8 + 1;
                 p->instructionQueue.push(instructionID);
             }
             allProcesses.push_back(p);
@@ -452,4 +469,61 @@ void Functions::generateMemorySnapshot() {
         memoryManager->setQuantumCycle(globalClock->cycle.load());
         memoryManager->generateSnapshotFile();
     }
+}
+
+void Functions::processSMI() {
+    std::cout << "\n===== process-smi (Memory/Process Summary) =====\n";
+    if (!memoryManager) {
+        std::cout << "No memory manager initialized.\n";
+        return;
+    }
+    int totalMem = memoryManager->getTotalMemory();
+    int usedMem = 0;
+    int freeMem = 0;
+    std::vector<std::string> usedBlocks;
+    for (const auto& block : memoryManager->getMemoryBlocks()) {
+        if (block.isAllocated) {
+            usedMem += block.size;
+            usedBlocks.push_back(block.processName + " (" + std::to_string(block.size) + " bytes)");
+        } else {
+            freeMem += block.size;
+        }
+    }
+    std::cout << "Total Memory: " << totalMem << " bytes\n";
+    std::cout << "Used Memory:  " << usedMem << " bytes\n";
+    std::cout << "Free Memory:  " << freeMem << " bytes\n";
+    std::cout << "\nProcesses in memory:\n";
+    for (const auto& name : usedBlocks) {
+        std::cout << "  " << name << "\n";
+    }
+    std::cout << "\nAll Processes:\n";
+    for (const auto& p : allProcesses) {
+        std::cout << "  " << p->processName << (p->isMemoryAllocated() ? " [IN MEMORY]" : " [NOT IN MEMORY]") << (p->isFinished ? " [FINISHED]" : "") << "\n";
+    }
+    std::cout << "===============================================\n";
+}
+
+void Functions::vmstat() {
+    std::cout << "\n===== vmstat (Detailed VM/Process/Page Stats) =====\n";
+    if (!memoryManager) {
+        std::cout << "No memory manager initialized.\n";
+        return;
+    }
+    int totalMem = memoryManager->getTotalMemory();
+    int usedMem = 0;
+    int freeMem = 0;
+    for (const auto& block : memoryManager->getMemoryBlocks()) {
+        if (block.isAllocated) usedMem += block.size;
+        else freeMem += block.size;
+    }
+    // CPU ticks: idle, active, total
+    std::cout << "Total Memory: " << totalMem << " bytes\n";
+    std::cout << "Used Memory:  " << usedMem << " bytes\n";
+    std::cout << "Free Memory:  " << freeMem << " bytes\n";
+    std::cout << "Idle cpu ticks:   " << idleCpuTicks << "\n";
+    std::cout << "Active cpu ticks: " << activeCpuTicks << "\n";
+    std::cout << "Total cpu ticks:  " << totalCpuTicks << "\n";
+    std::cout << "Num paged in:     " << memoryManager->pageInCount << "\n";
+    std::cout << "Num paged out:    " << memoryManager->pageOutCount << "\n";
+    std::cout << "===============================================\n";
 }

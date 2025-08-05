@@ -1,2 +1,11 @@
-﻿  Functions.cpp
+﻿  CPUCore.cpp
+  Functions.cpp
+  MainConsole.cpp
+  MemoryManager.cpp
+  Process.cpp
+C:\Users\Justin Sacdalan\Documents\College Files\3rd Year\3rd Sem\CSOPESY\Github_MP\CSOPESY MP\Process.cpp(118,18): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\Justin Sacdalan\Documents\College Files\3rd Year\3rd Sem\CSOPESY\Github_MP\CSOPESY MP\Process.cpp(151,18): warning C4018: '>=': signed/unsigned mismatch
+  Scheduler.cpp
+  main.cpp
+  Generating Code...
   CSOPESY MP.vcxproj -> C:\Users\Justin Sacdalan\Documents\College Files\3rd Year\3rd Sem\CSOPESY\Github_MP\x64\Debug\CSOPESY MP.exe

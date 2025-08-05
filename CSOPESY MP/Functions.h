@@ -23,6 +23,11 @@ private:
     std::atomic<bool> processGenRunning = false; // Control flag for process generation
     std::atomic<bool> schedulerStopRequested = false; // New flag to request scheduler 
 
+    // CPU tick counters for vmstat
+    int idleCpuTicks = 0;
+    int activeCpuTicks = 0;
+    int totalCpuTicks = 0;
+
 public:
     // Schedulers
     void runScheduler(int num_cpu, int quantum_Cycles, int min_ins, int max_ins,int batch_process_freq, float delay_Per_Exec, const std::string& schedulerType
@@ -38,6 +43,8 @@ public:
     // void screen();
     void writeScreenReport(std::ostream& out); // Helper for screen/reportUtil
     void reportUtil();
+    void processSMI(); // Summarized memory/process view
+    void vmstat();     // Detailed memory/process/page view
 
     // Process management for screen -s and -r
     std::shared_ptr<Process> createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec, int size);

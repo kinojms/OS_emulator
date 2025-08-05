@@ -98,7 +98,7 @@ void testDemandPagingEviction() {
 
 int main() {
     // Run demand paging eviction test
-    //testDemandPagingEviction();
+    testDemandPagingEviction();
 
     // Start the main console as usual
     consoleLayout layout;
