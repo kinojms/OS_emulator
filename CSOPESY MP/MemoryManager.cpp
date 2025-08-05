@@ -6,6 +6,13 @@
 MemoryManager::MemoryManager(int totalMem, int memPerProc, int memPerFrame)
     : totalMemory(totalMem), memoryPerProcess(memPerProc), memoryPerFrame(memPerFrame), currentQuantumCycle(0) {
     initializeMemory();
+    // Demand paging initialization
+    numFrames = totalMemory / memoryPerFrame;
+    pageSize = memoryPerFrame; // 1 page per frame for simplicity
+    frames.reserve(numFrames);
+    for (int i = 0; i < numFrames; ++i) {
+        frames.emplace_back(i);
+    }
 }
 
 void MemoryManager::initializeMemory() {

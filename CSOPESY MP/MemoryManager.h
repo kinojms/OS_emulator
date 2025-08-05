@@ -9,6 +9,8 @@
 #include <ctime>
 #include <sstream>
 #include <iomanip>
+#include <unordered_map>
+#include <deque>
 #include "Process.h"
 
 struct MemoryBlock {
@@ -21,6 +23,24 @@ struct MemoryBlock {
         : startAddress(start), size(sz), processName(proc), isAllocated(allocated) {}
 };
 
+// Frame structure for demand paging
+struct Frame {
+    int frameNumber;
+    std::string processName;
+    int pageNumber; // Virtual page number
+    bool isOccupied;
+    bool dirty;
+    Frame(int num) : frameNumber(num), processName(""), pageNumber(-1), isOccupied(false), dirty(false) {}
+};
+
+// Page table entry for a process
+struct PageTableEntry {
+    int frameNumber; // -1 if not in memory
+    bool inMemory;
+    bool dirty;
+    PageTableEntry() : frameNumber(-1), inMemory(false), dirty(false) {}
+};
+
 class MemoryManager {
 private:
     std::vector<MemoryBlock> memoryBlocks;
@@ -30,6 +50,14 @@ private:
     std::mutex memoryMutex;
     int currentQuantumCycle;
 
+    // Demand paging members
+    int numFrames;
+    int pageSize;
+    std::vector<Frame> frames; // Physical memory frames
+    std::unordered_map<std::string, std::unordered_map<int, PageTableEntry>> pageTables; // processName -> (pageNumber -> entry)
+    std::deque<int> frameQueue; // FIFO for page replacement
+    std::string backingStoreFile = "csopesy-backing-store.txt";
+
     void initializeMemory();
     void generateMemorySnapshot();
     int calculateExternalFragmentation();
@@ -37,6 +65,13 @@ private:
     std::string formatMemoryLayout();
     std::string formatMemoryLayoutInternal();
     int getProcessesInMemoryInternal();
+
+    // Demand paging helpers (to be implemented in next phases)
+    void loadPageFromBackingStore(const std::string& processName, int pageNumber, int frameNumber);
+    void writePageToBackingStore(const std::string& processName, int pageNumber, int frameNumber);
+    int findFreeFrame();
+    int selectVictimFrame();
+    void handlePageFault(const std::string& processName, int pageNumber);
 
 public:
     MemoryManager(int totalMem, int memPerProc, int memPerFrame);
@@ -46,6 +81,11 @@ public:
     void setQuantumCycle(int cycle);
     int getProcessesInMemory();
     void generateSnapshotFile();
+
+    // Demand paging API
+    void accessMemory(const std::string& processName, int virtualAddress, bool isWrite);
+    void contextSwitchOut(const std::string& processName);
+    void contextSwitchIn(const std::string& processName);
 };
 
 #endif // MEMORYMANAGER_H 
