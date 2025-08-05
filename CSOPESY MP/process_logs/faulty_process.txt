@@ -1,0 +1,7 @@
+[Tue Aug  5 18:39:48 2025] DECLARE varA = 10
+[Tue Aug  5 18:39:48 2025] DECLARE varB = 5
+[Tue Aug  5 18:39:48 2025] ADD varA = varA + varB = 15
+[Tue Aug  5 18:39:48 2025] WRITE 15 to 0x10
+[Tue Aug  5 18:39:48 2025] READ 15 to 0x10
+[Tue Aug  5 18:39:48 2025] \"Result:\"15
+[Tue Aug  5 18:39:48 2025] 

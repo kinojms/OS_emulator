@@ -288,13 +288,46 @@ void MemoryManager::contextSwitchOut(const std::string& processName) {
             entry.inMemory = false;
             entry.frameNumber = -1;
             entry.dirty = false;
+            pageOutCount++; // Increment for each page written out
         }
     }
 }
 
 // Stub for context switch in (to be implemented in Phase 5)
 void MemoryManager::contextSwitchIn(const std::string& processName) {
-    // No-op for demand paging: pages will be loaded on demand
+    std::lock_guard<std::mutex> lock(memoryMutex);
+    auto& pt = pageTables[processName];
+    for (auto& [pageNumber, entry] : pt) {
+        if (!entry.inMemory) {
+            int frameNumber = findFreeFrame();
+            if (frameNumber == -1) {
+                frameNumber = selectVictimFrame();
+                Frame& victim = frames[frameNumber];
+                if (victim.isOccupied) {
+                    writePageToBackingStore(victim.processName, victim.pageNumber, frameNumber);
+                    auto& victimPT = pageTables[victim.processName];
+                    if (victimPT.count(victim.pageNumber)) {
+                        victimPT[victim.pageNumber].inMemory = false;
+                        victimPT[victim.pageNumber].frameNumber = -1;
+                    }
+                    pageOutCount++;
+                }
+            }
+            loadPageFromBackingStore(processName, pageNumber, frameNumber);
+            Frame& frame = frames[frameNumber];
+            frame.isOccupied = true;
+            frame.processName = processName;
+            frame.pageNumber = pageNumber;
+            frame.dirty = false;
+            entry.frameNumber = frameNumber;
+            entry.inMemory = true;
+            entry.dirty = false;
+            if (std::find(frameQueue.begin(), frameQueue.end(), frameNumber) == frameQueue.end()) {
+                frameQueue.push_back(frameNumber);
+            }
+            pageInCount++; // Increment for each page loaded in
+        }
+    }
 }
 
 // Write a page to the backing store (append or update)

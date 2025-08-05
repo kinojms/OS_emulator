@@ -127,8 +127,16 @@ void Functions::runScheduler(
                                 core->isBusy = true;
                                 process->assignedCore = core->id;
                                 std::thread([core, process, quantum_Cycles, this, timePerCycleMs]() {
+                                    // Phase 2: Context switch in
+                                    if (memoryManager) {
+                                        memoryManager->contextSwitchIn(process->processName);
+                                    }
                                     std::this_thread::sleep_for(std::chrono::milliseconds(quantum_Cycles * timePerCycleMs));
                                     process->runInstructions(quantum_Cycles);
+                                    // Phase 2: Context switch out (if not finished)
+                                    if (memoryManager && !process->isFinished) {
+                                        memoryManager->contextSwitchOut(process->processName);
+                                    }
                                     core->isBusy = false;
                                     process->assignedCore = -1;
                                     if (!process->isFinished) {

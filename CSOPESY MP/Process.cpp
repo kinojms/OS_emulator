@@ -314,12 +314,20 @@ void Process::runInstructions(int instructionLimit) {
             }
             case INST_PRINT: {
                 std::string finalMessage;
+                bool first = true;
                 for (const auto& part : args) {
+                    if (!first) finalMessage += " "; // Add space between parts
+                    first = false;
                     if (memory.count(part)) {
                         finalMessage += std::to_string(memory[part]);
                     }
                     else {
-                        finalMessage += part;
+                        // Remove any surrounding quotes (in case they slipped through)
+                        std::string clean = part;
+                        if (!clean.empty() && clean.front() == '\"' && clean.back() == '\"' && clean.size() > 1) {
+                            clean = clean.substr(1, clean.size() - 2);
+                        }
+                        finalMessage += clean;
                     }
                 }
                 PRINT(finalMessage);
