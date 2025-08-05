@@ -8,3 +8,5 @@ P1,3,data
 P1,2,data
 P1,0,data
 P1,1,data
+P2,1,data
+P2,0,data

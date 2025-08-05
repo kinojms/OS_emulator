@@ -301,36 +301,34 @@ void Functions::reportUtil() {
 
 std::shared_ptr<Process> Functions::createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec, int size) {
     // Validate memory size
-    //if (size < 64 || size > 262144 || (size & (size - 1)) != 0) {
-    //    std::cerr << "Invalid memory allocation: must be a power of 2 between 64 and 262144 bytes.\n";
-    //    return nullptr;
-    //}
     std::cout << "Process " << name << " created with PID " << name << " and size " << size << "\n";
-
+	int count = 0; // count to check how many instructions are added
     int pid = static_cast<int>(allProcesses.size());
-
-    // Make sure Process constructor supports memorySize if you want to pass it in
-    auto p = std::make_shared<Process>(pid, name, size); // or (pid, name, size)
-
-    // Set memory manager for demand paging
+    auto p = std::make_shared<Process>(pid, name, size);
     if (memoryManager) {
         p->setMemoryManager(memoryManager.get());
     }
-
     p->InstructionCode(pid);
-    int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
 
-    for (int j = 0; j < num_instructions; ++j) {
-        int instructionID = rand() % 8 + 1;
-        p->instructionQueue.push(instructionID);
+    // Each instruction is 2 bytes, so max allowed is size / 2
+    int maxInstructionsAllowed = size / 2;
+    int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
+    if (num_instructions > maxInstructionsAllowed) {
+        std::cout << "[WARNING] Requested " << num_instructions << " instructions, but only " << maxInstructionsAllowed << " fit in " << size << " bytes. Truncating.\n";
+        num_instructions = maxInstructionsAllowed;
     }
 
-    allProcesses.push_back(p);
+    for (int j = 0; j < num_instructions; ++j) {
+        int instructionID = rand() % 6 + 1;
+        p->instructionQueue.push(instructionID);
+		count++;
+    }
+	std::cout << "Process " << name << " created with " << count << " instructions.\n";
 
+    allProcesses.push_back(p);
     if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
         scheduler->addProcess(p);
     }
-
     return p;
 }
 

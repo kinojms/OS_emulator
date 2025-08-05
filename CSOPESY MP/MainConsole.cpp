@@ -168,7 +168,7 @@ void consoleLayout::controller(std::string initializer) {
                         }
 
                         // Memory must be between 64 bytes and 262144 (2^6 to 2^18), and power of 2
-                        if (size <= 64 && size >= 262144 && (size & (size - 1)) != 0) {
+                        if (size <= 64 && size <= 262144 && (size & (size - 1)) != 0) {
                             std::cout << "Invalid memory allocation: must be a power of 2 between 64 and 262144 bytes.\n";
                             continue;
                         }
