@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <filesystem>
+#include <sstream>
 
 MemoryManager::MemoryManager(int totalMem, int memPerProc, int memPerFrame)
     : totalMemory(totalMem), memoryPerProcess(memPerProc), memoryPerFrame(memPerFrame), currentQuantumCycle(0) {
@@ -227,4 +228,53 @@ void MemoryManager::contextSwitchOut(const std::string& processName) {
 // Stub for context switch in (to be implemented in Phase 5)
 void MemoryManager::contextSwitchIn(const std::string& processName) {
     // To be implemented in Phase 5
+}
+
+// Write a page to the backing store (append or update)
+void MemoryManager::writePageToBackingStore(const std::string& processName, int pageNumber, int frameNumber) {
+    // Read all lines and update or append the page
+    std::ifstream inFile(backingStoreFile);
+    std::vector<std::string> lines;
+    std::string line;
+    bool found = false;
+    std::string pageKey = processName + "," + std::to_string(pageNumber) + ",";
+    std::string newData = "data"; // Placeholder for page data
+    while (std::getline(inFile, line)) {
+        if (line.rfind(pageKey, 0) == 0) {
+            // Update existing
+            lines.push_back(pageKey + newData);
+            found = true;
+        } else {
+            lines.push_back(line);
+        }
+    }
+    inFile.close();
+    if (!found) {
+        lines.push_back(pageKey + newData);
+    }
+    std::ofstream outFile(backingStoreFile, std::ios::trunc);
+    for (const auto& l : lines) {
+        outFile << l << "\n";
+    }
+    outFile.close();
+}
+
+// Load a page from the backing store (if exists), else initialize
+void MemoryManager::loadPageFromBackingStore(const std::string& processName, int pageNumber, int frameNumber) {
+    std::ifstream inFile(backingStoreFile);
+    std::string line;
+    std::string pageKey = processName + "," + std::to_string(pageNumber) + ",";
+    bool found = false;
+    while (std::getline(inFile, line)) {
+        if (line.rfind(pageKey, 0) == 0) {
+            // Simulate loading data into frame (no real data used)
+            found = true;
+            break;
+        }
+    }
+    inFile.close();
+    if (!found) {
+        // Simulate initializing a new page in the backing store
+        writePageToBackingStore(processName, pageNumber, frameNumber);
+    }
 }
