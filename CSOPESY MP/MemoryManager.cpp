@@ -24,6 +24,13 @@ void MemoryManager::initializeMemory() {
 bool MemoryManager::allocateMemory(std::shared_ptr<Process> process) {
     std::lock_guard<std::mutex> lock(memoryMutex);
 
+    // Calculate number of pages needed for this process
+    int numPages = (memoryPerProcess + pageSize - 1) / pageSize;
+    auto& pt = pageTables[process->processName];
+    for (int i = 0; i < numPages; ++i) {
+        pt[i] = PageTableEntry(); // All pages start as not in memory
+    }
+
     // Find the first block that can fit the process (first-fit algorithm)
     for (size_t i = 0; i < memoryBlocks.size(); ++i) {
         if (!memoryBlocks[i].isAllocated && memoryBlocks[i].size >= memoryPerProcess) {
@@ -184,4 +191,40 @@ void MemoryManager::generateSnapshotFile() {
 
 void MemoryManager::generateMemorySnapshot() {
     generateSnapshotFile();
+}
+
+// Find a free frame in physical memory, return frame number or -1 if none
+int MemoryManager::findFreeFrame() {
+    for (auto& frame : frames) {
+        if (!frame.isOccupied) return frame.frameNumber;
+    }
+    return -1;
+}
+
+// FIFO page replacement: evict the oldest frame in the queue
+int MemoryManager::selectVictimFrame() {
+    if (frameQueue.empty()) return -1;
+    int victim = frameQueue.front();
+    frameQueue.pop_front();
+    return victim;
+}
+
+// Stub for page fault handler (to be implemented in next phase)
+void MemoryManager::handlePageFault(const std::string& processName, int pageNumber) {
+    // To be implemented in Phase 4
+}
+
+// Stub for memory access (to be implemented in next phase)
+void MemoryManager::accessMemory(const std::string& processName, int virtualAddress, bool isWrite) {
+    // To be implemented in Phase 4
+}
+
+// Stub for context switch out (to be implemented in Phase 5)
+void MemoryManager::contextSwitchOut(const std::string& processName) {
+    // To be implemented in Phase 5
+}
+
+// Stub for context switch in (to be implemented in Phase 5)
+void MemoryManager::contextSwitchIn(const std::string& processName) {
+    // To be implemented in Phase 5
 }
