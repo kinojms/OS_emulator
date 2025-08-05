@@ -1,4 +1,5 @@
 #include "Process.h"
+#include "MemoryManager.h"
 #include <iostream>
 #include <fstream>
 #include <thread>
@@ -122,6 +123,11 @@ uint16_t Process::READ(const std::string& var, const std::string& addressHex) {
         return 0;
     }
 
+    // Demand paging: notify memory manager of access
+    if (memoryManager) {
+        memoryManager->accessMemory(processName, addr, false); // false = read
+    }
+
     uint16_t value = emulatedMemory.count(addr) ? emulatedMemory[addr] : 0;
     DECLARE(var, value);
     logs.push_back(getCurrentTimestamp() + " WRITE " + std::to_string(value) + " to " + addressHex);
@@ -149,6 +155,11 @@ void Process::WRITE(const std::string& addressHex, uint16_t value) {
         return;
     }
 
+    // Demand paging: notify memory manager of access
+    if (memoryManager) {
+        memoryManager->accessMemory(processName, addr, true); // true = write
+    }
+
     emulatedMemory[addr] = std::clamp<uint16_t>(value, 0, UINT16_MAX);
     logs.push_back(getCurrentTimestamp() + " WRITE " + std::to_string(value) + " to " + addressHex);
 }
@@ -169,6 +180,7 @@ void Process::InstructionCode(int pid) {
     instructionMap = {
         {1, [this](int) {
             std::string msg = "Hello world from process_" + std::to_string(this->pid) + "!";
+
             PRINT(msg);
         }},
         {2, [this](int) {

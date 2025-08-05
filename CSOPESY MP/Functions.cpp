@@ -312,6 +312,11 @@ std::shared_ptr<Process> Functions::createProcess(const std::string& name, int m
     // Make sure Process constructor supports memorySize if you want to pass it in
     auto p = std::make_shared<Process>(pid, name, size); // or (pid, name, size)
 
+    // Set memory manager for demand paging
+    if (memoryManager) {
+        p->setMemoryManager(memoryManager.get());
+    }
+
     p->InstructionCode(pid);
     int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
 

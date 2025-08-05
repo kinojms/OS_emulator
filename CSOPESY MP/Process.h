@@ -16,6 +16,7 @@
 #define INST_READ 1005
 #define INST_PRINT 1006
 
+class MemoryManager; // Forward declaration
 
 class Process {
 private:
@@ -29,6 +30,7 @@ private:
     std::stack<int> forInstructionCountStack; // Tracks instruction count per FOR
     int forNestingLevel = 0; // Current FOR nesting level
     static constexpr int MAX_FOR_NESTING = 3;
+    MemoryManager* memoryManager = nullptr; // Pointer to memory manager
 
 public:
     bool hasCustomInstructions = false;
@@ -49,6 +51,9 @@ public:
     std::deque<std::vector<std::string>> customArgs;
     // Updated constructor to require memory size
     Process(int pid, const std::string& name = "", int memorySize = 65536);
+
+    void setMemoryManager(MemoryManager* mgr) { memoryManager = mgr; }
+    MemoryManager* getMemoryManager() const { return memoryManager; }
 
     void generatePrintCommands(int count);
     void InstructionCode(int pid);
