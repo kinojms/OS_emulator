@@ -49,6 +49,7 @@ public:
     std::string getCurrentTimestamp() const;
     std::queue<int> instructionsQueue;
     std::deque<std::vector<std::string>> customArgs;
+
     // Updated constructor to require memory size
     Process(int pid, const std::string& name = "", int memorySize = 65536);
 

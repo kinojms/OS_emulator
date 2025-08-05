@@ -422,7 +422,7 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             p->InstructionCode(pid);
             int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
             for (int j = 0; j < num_instructions; ++j) {
-                int instructionID = rand() % 8 + 1;
+                int instructionID = rand() % 6 + 1;
                 p->instructionQueue.push(instructionID);
             }
             allProcesses.push_back(p);

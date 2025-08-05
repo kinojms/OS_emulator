@@ -212,11 +212,13 @@ int MemoryManager::selectVictimFrame() {
 
 // Stub for page fault handler (to be implemented in next phase)
 void MemoryManager::handlePageFault(const std::string& processName, int pageNumber) {
+    std::cout << "[MemoryManager] PAGE FAULT: Process '" << processName << "' needs page " << pageNumber << std::endl;
     int frameNumber = findFreeFrame();
     if (frameNumber == -1) {
         // No free frame, need to evict
         frameNumber = selectVictimFrame();
         Frame& victim = frames[frameNumber];
+        std::cout << "[MemoryManager] No free frame. Evicting page " << victim.pageNumber << " of process '" << victim.processName << "' from frame " << frameNumber << std::endl;
         // Write victim to backing store if dirty
         if (victim.isOccupied) {
             writePageToBackingStore(victim.processName, victim.pageNumber, frameNumber);
@@ -229,6 +231,7 @@ void MemoryManager::handlePageFault(const std::string& processName, int pageNumb
         }
     }
     // Load the required page into the frame
+    std::cout << "[MemoryManager] Loading page " << pageNumber << " of process '" << processName << "' into frame " << frameNumber << std::endl;
     loadPageFromBackingStore(processName, pageNumber, frameNumber);
     // Update frame and page table
     Frame& frame = frames[frameNumber];
@@ -244,6 +247,7 @@ void MemoryManager::handlePageFault(const std::string& processName, int pageNumb
 // Stub for memory access (to be implemented in next phase)
 void MemoryManager::accessMemory(const std::string& processName, int virtualAddress, bool isWrite) {
     int pageNumber = virtualAddress / pageSize;
+    std::cout << "[MemoryManager] ACCESS: Process '" << processName << "' " << (isWrite ? "WRITE" : "READ") << " at address 0x" << std::hex << virtualAddress << std::dec << " (page " << pageNumber << ")" << std::endl;
     auto& pt = pageTables[processName];
     if (pt.find(pageNumber) == pt.end() || !pt[pageNumber].inMemory) {
         // Page fault
