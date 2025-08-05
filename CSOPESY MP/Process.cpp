@@ -298,7 +298,6 @@ void Process::runInstructions(int instructionLimit) {
                 break;
             }
             case INST_WRITE: {
-                // std::cout << "[DEBUG] Process " << processName << " executing custom WRITE instruction." << std::endl;
                 const std::string& addr = args[0];
                 const std::string& var = args[1];
                 uint16_t val = memory.count(var) ? memory[var] : 0;
@@ -306,7 +305,6 @@ void Process::runInstructions(int instructionLimit) {
                 break;
             }
             case INST_READ: {
-                // std::cout << "[DEBUG] Process " << processName << " executing custom READ instruction." << std::endl;
                 const std::string& var = args[0];
                 const std::string& addr = args[1];
                 READ(var, addr);
@@ -314,11 +312,12 @@ void Process::runInstructions(int instructionLimit) {
             }
             case INST_PRINT: {
                 std::string finalMessage;
+                // Use regex to match valid variable names (alphanumeric and underscores, not empty)
+                static const std::regex varRegex("^[A-Za-z_][A-Za-z0-9_]*$");
                 for (const auto& part : args) {
-                    if (memory.count(part)) {
+                    if (std::regex_match(part, varRegex) && memory.count(part)) {
                         finalMessage += std::to_string(memory[part]);
-                    }
-                    else {
+                    } else {
                         finalMessage += part;
                     }
                 }
@@ -402,67 +401,65 @@ void Process::loadCustomInstructions(const std::vector<std::string>& customInstr
             iss >> var >> value;
             args = { var, std::to_string(value) };
             instructionQueue.push(INST_DECLARE);
+            customArgs.push_back(args);
         }
         else if (cmd == "ADD") {
             std::string dest, src1, src2;
             iss >> dest >> src1 >> src2;
             args = { dest, src1, src2 };
             instructionQueue.push(INST_ADD);
+            customArgs.push_back(args);
         }
         else if (cmd == "SUBTRACT") {
             std::string dest, src1, src2;
             iss >> dest >> src1 >> src2;
             args = { dest, src1, src2 };
             instructionQueue.push(INST_SUBTRACT);
+            customArgs.push_back(args);
         }
         else if (cmd == "WRITE") {
             std::string addr, var;
             iss >> addr >> var;
             args = { addr, var };
             instructionQueue.push(INST_WRITE);
+            customArgs.push_back(args);
         }
         else if (cmd == "READ") {
             std::string var, addr;
             iss >> var >> addr;
             args = { var, addr };
             instructionQueue.push(INST_READ);
+            customArgs.push_back(args);
         }
         else if (instr.find("PRINT(") == 0) {
-            // Better PRINT parser that supports + concatenation
+            // Improved PRINT parser: supports + concatenation, removes quotes, trims whitespace, and removes leading/trailing backslashes
             size_t firstParen = instr.find("(");
             size_t lastParen = instr.rfind(")");
-
             std::string content = (firstParen != std::string::npos && lastParen != std::string::npos && lastParen > firstParen)
                 ? instr.substr(firstParen + 1, lastParen - firstParen - 1)
                 : "";
-
             std::vector<std::string> parts;
             std::istringstream partStream(content);
             std::string token;
-
             while (std::getline(partStream, token, '+')) {
                 // Trim whitespace
                 token.erase(0, token.find_first_not_of(" \t"));
                 token.erase(token.find_last_not_of(" \t") + 1);
-
                 // Remove quotes if it's a string literal
                 if (!token.empty() && token.front() == '"' && token.back() == '"') {
                     token = token.substr(1, token.size() - 2);
                 }
-
+                // Remove leading/trailing backslashes (for escaped quotes from shell)
+                while (!token.empty() && token.front() == '\\') token.erase(0, 1);
+                while (!token.empty() && token.back() == '\\') token.pop_back();
                 parts.push_back(token);
             }
-
-            customArgs.push_back(parts);
             instructionQueue.push(INST_PRINT);
+            customArgs.push_back(parts);
         }
         else {
             logs.push_back("[ERROR] Unknown instruction: " + instr);
             continue;
-        }
-
-        if (cmd != "PRINT") {
-            customArgs.push_back(args);
         }
     }
 }
