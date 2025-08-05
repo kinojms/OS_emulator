@@ -16,6 +16,7 @@ This project simulates a CLI OS with process execution and memory management, pr
 ## Usage
 - Configure and run the project to simulate process execution and memory management
 - Logs are generated in the `process_logs` directory for each process
+- main.cpp is the entry class file that contains main() function
 
 ## Contributors
 - Justin Sacdalan
