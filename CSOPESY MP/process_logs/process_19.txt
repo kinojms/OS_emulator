@@ -1,0 +1,94 @@
+[Tue Aug  5 17:01:47 2025] WRITE 42 to 0xf6
+[Tue Aug  5 17:01:47 2025] READ 0 to 0xc7
+[Tue Aug  5 17:01:47 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:47 2025] Declared variable 'x' with random value: 42
+[Tue Aug  5 17:01:47 2025] Declared variable 'x' with random value: 68
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Tue Aug  5 17:01:47 2025] FOR loop repeating instruction 5 2 times.
+[Tue Aug  5 17:01:47 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:47 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:47 2025] z = y - x = 0
+[Tue Aug  5 17:01:47 2025] y = x + z = 138
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 1.
+[Tue Aug  5 17:01:47 2025] FOR loop repeating instruction 5 1 times.
+[Tue Aug  5 17:01:47 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:47 2025] z = y - x = 70
+[Tue Aug  5 17:01:48 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:48 2025] WRITE 42 to 0x1f5
+[Tue Aug  5 17:01:48 2025] WRITE 42 to 0x1e7
+[Tue Aug  5 17:01:48 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:48 2025] READ 0 to 0x1e6
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 1.
+[Tue Aug  5 17:01:48 2025] FOR loop repeating instruction 1 2 times.
+[Tue Aug  5 17:01:48 2025] Hello world from process_19!
+[Tue Aug  5 17:01:48 2025] Hello world from process_19!
+[Tue Aug  5 17:01:48 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:48 2025] Hello world from process_19!
+[Tue Aug  5 17:01:48 2025] Declared variable 'x' with random value: 65
+[Tue Aug  5 17:01:49 2025] WRITE 42 to 0x137
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 3.
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Tue Aug  5 17:01:49 2025] FOR loop repeating instruction 6 3 times.
+[Tue Aug  5 17:01:49 2025] FOR loop repeating instruction 2 1 times.
+[Tue Aug  5 17:01:49 2025] Declared variable 'x' with random value: 62
+[Tue Aug  5 17:01:49 2025] FOR loop repeating instruction 6 2 times.
+[Tue Aug  5 17:01:49 2025] FOR loop repeating instruction 3 1 times.
+[Tue Aug  5 17:01:49 2025] y = x + z = 99
+[Tue Aug  5 17:01:49 2025] FOR loop repeating instruction 4 1 times.
+[Tue Aug  5 17:01:49 2025] z = y - x = 37
+[Tue Aug  5 17:01:49 2025] FOR loop repeating instruction 3 1 times.
+[Tue Aug  5 17:01:49 2025] y = x + z = 155
+[Tue Aug  5 17:01:49 2025] READ 0 to 0xcc
+[Tue Aug  5 17:01:49 2025] y = x + z = 145
+[Tue Aug  5 17:01:49 2025] READ 0 to 0xc9
+[Tue Aug  5 17:01:49 2025] WRITE 42 to 0x11f
+[Tue Aug  5 17:01:49 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:49 2025] z = y - x = 83
+[Tue Aug  5 17:01:49 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:50 2025] READ 0 to 0x165
+[Tue Aug  5 17:01:50 2025] WRITE 42 to 0x18a
+[Tue Aug  5 17:01:50 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:50 2025] WRITE 42 to 0x16e
+[Tue Aug  5 17:01:50 2025] READ 0 to 0x116
+[Tue Aug  5 17:01:50 2025] Declared variable 'x' with random value: 22
+[INFO] FOR loop executed with 3 instructions inside. Nesting level was 1.
+[Tue Aug  5 17:01:50 2025] FOR loop repeating instruction 3 3 times.
+[Tue Aug  5 17:01:50 2025] y = x + z = 118
+[Tue Aug  5 17:01:50 2025] y = x + z = 70
+[Tue Aug  5 17:01:50 2025] y = x + z = 49
+[Tue Aug  5 17:01:50 2025] WRITE 42 to 0x1d9
+[Tue Aug  5 17:01:50 2025] READ 0 to 0x1c5
+[INFO] FOR loop executed with 2 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 1.
+[Tue Aug  5 17:01:51 2025] FOR loop repeating instruction 6 1 times.
+[Tue Aug  5 17:01:51 2025] FOR loop repeating instruction 4 2 times.
+[Tue Aug  5 17:01:51 2025] z = y - x = 27
+[Tue Aug  5 17:01:51 2025] z = y - x = 27
+[Tue Aug  5 17:01:51 2025] z = y - x = 27
+[Tue Aug  5 17:01:51 2025] y = x + z = 90
+[Tue Aug  5 17:01:51 2025] z = y - x = 68
+[Tue Aug  5 17:01:51 2025] WRITE 42 to 0x195
+[Tue Aug  5 17:01:51 2025] WRITE 42 to 0x151
+[Tue Aug  5 17:01:51 2025] READ 0 to 0x131
+[Tue Aug  5 17:01:51 2025] READ 0 to 0x95
+[Tue Aug  5 17:01:51 2025] Sleeping for 2 ticks...
+[Tue Aug  5 17:01:52 2025] Declared variable 'x' with random value: 100
+[Tue Aug  5 17:01:52 2025] Hello world from process_19!
+[Tue Aug  5 17:01:52 2025] READ 0 to 0x41
+[Tue Aug  5 17:01:52 2025] z = y - x = 0
+[Tue Aug  5 17:01:52 2025] Declared variable 'x' with random value: 36
+[Tue Aug  5 17:01:52 2025] WRITE 42 to 0x3c
+[Tue Aug  5 17:01:52 2025] y = x + z = 131
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 2.
+[INFO] FOR loop executed with 1 instructions inside. Nesting level was 1.
+[Tue Aug  5 17:01:52 2025] FOR loop repeating instruction 6 1 times.
+[Tue Aug  5 17:01:52 2025] FOR loop repeating instruction 3 1 times.
+[Tue Aug  5 17:01:52 2025] y = x + z = 110
+[Tue Aug  5 17:01:52 2025] Declared variable 'x' with random value: 65
+[Tue Aug  5 17:01:52 2025] Declared variable 'x' with random value: 42
+[Tue Aug  5 17:01:53 2025] READ 0 to 0x6b
+[Tue Aug  5 17:01:53 2025] READ 0 to 0x5e

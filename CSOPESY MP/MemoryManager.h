@@ -30,6 +30,7 @@ struct Frame {
     int pageNumber; // Virtual page number
     bool isOccupied;
     bool dirty;
+    Frame() : frameNumber(-1), processName(""), pageNumber(-1), isOccupied(false), dirty(false) {} // <-- Add this
     Frame(int num) : frameNumber(num), processName(""), pageNumber(-1), isOccupied(false), dirty(false) {}
 };
 

@@ -125,7 +125,10 @@ uint16_t Process::READ(const std::string& var, const std::string& addressHex) {
 
     // Demand paging: notify memory manager of access
     if (memoryManager) {
+        // std::cout << "[DEBUG] Process " << processName << " calling accessMemory (READ) at address " << addressHex << std::endl;
         memoryManager->accessMemory(processName, addr, false); // false = read
+    } else {
+        // std::cout << "[DEBUG] Process " << processName << " has no memoryManager set for READ!" << std::endl;
     }
 
     uint16_t value = emulatedMemory.count(addr) ? emulatedMemory[addr] : 0;
@@ -157,7 +160,10 @@ void Process::WRITE(const std::string& addressHex, uint16_t value) {
 
     // Demand paging: notify memory manager of access
     if (memoryManager) {
+        // std::cout << "[DEBUG] Process " << processName << " calling accessMemory (WRITE) at address " << addressHex << std::endl;
         memoryManager->accessMemory(processName, addr, true); // true = write
+    } else {
+        // std::cout << "[DEBUG] Process " << processName << " has no memoryManager set for WRITE!" << std::endl;
     }
 
     emulatedMemory[addr] = std::clamp<uint16_t>(value, 0, UINT16_MAX);
@@ -252,6 +258,12 @@ void Process::runInstructions(int instructionLimit) {
         currentInstruction++;
         executed++;
 
+        if (instructionID == 7) {
+            // std::cout << "[DEBUG] Process " << processName << " executing WRITE instruction." << std::endl;
+        } else if (instructionID == 8) {
+            // std::cout << "[DEBUG] Process " << processName << " executing READ instruction." << std::endl;
+        }
+
         if (instructionMap.count(instructionID)) {
             instructionMap[instructionID](0);
         }
@@ -286,6 +298,7 @@ void Process::runInstructions(int instructionLimit) {
                 break;
             }
             case INST_WRITE: {
+                // std::cout << "[DEBUG] Process " << processName << " executing custom WRITE instruction." << std::endl;
                 const std::string& addr = args[0];
                 const std::string& var = args[1];
                 uint16_t val = memory.count(var) ? memory[var] : 0;
@@ -293,6 +306,7 @@ void Process::runInstructions(int instructionLimit) {
                 break;
             }
             case INST_READ: {
+                // std::cout << "[DEBUG] Process " << processName << " executing custom READ instruction." << std::endl;
                 const std::string& var = args[0];
                 const std::string& addr = args[1];
                 READ(var, addr);

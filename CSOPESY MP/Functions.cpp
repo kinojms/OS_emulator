@@ -321,7 +321,7 @@ void Functions::reportUtil() {
 std::shared_ptr<Process> Functions::createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec, int size) {
     // Validate memory size
     std::cout << "Process " << name << " created with PID " << name << " and size " << size << "\n";
-	int count = 0; // count to check how many instructions are added
+    int count = 0; // count to check how many instructions are added
     int pid = static_cast<int>(allProcesses.size());
     auto p = std::make_shared<Process>(pid, name, size);
     if (memoryManager) {
@@ -336,13 +336,18 @@ std::shared_ptr<Process> Functions::createProcess(const std::string& name, int m
         std::cout << "[WARNING] Requested " << num_instructions << " instructions, but only " << maxInstructionsAllowed << " fit in " << size << " bytes. Truncating.\n";
         num_instructions = maxInstructionsAllowed;
     }
-
-    for (int j = 0; j < num_instructions; ++j) {
-        int instructionID = rand() % 6 + 1;
+    // Ensure at least 2 instructions (WRITE and READ)
+    if (num_instructions < 2) num_instructions = 2;
+    // Add a WRITE and a READ instruction first (WRITE=7, READ=8)
+    p->instructionQueue.push(7); // WRITE
+    p->instructionQueue.push(8); // READ
+    count += 2;
+    for (int j = 2; j < num_instructions; ++j) {
+        int instructionID = rand() % 8 + 1;
         p->instructionQueue.push(instructionID);
-		count++;
+        count++;
     }
-	std::cout << "Process " << name << " created with " << count << " instructions.\n";
+    std::cout << "Process " << name << " created with " << count << " instructions.\n";
 
     allProcesses.push_back(p);
     if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
@@ -442,9 +447,22 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             int num_pages = mem_per_frame > 0 ? (mem_size + mem_per_frame - 1) / mem_per_frame : 0;
 
             auto p = std::make_shared<Process>(pid, "", mem_size);
+            if (memoryManager) {
+                p->setMemoryManager(memoryManager.get());
+                // std::cout << "[DEBUG] Set memoryManager for process_" << pid << std::endl;
+            } else {
+                // std::cout << "[DEBUG] No memoryManager to set for process_" << pid << std::endl;
+            }
             p->InstructionCode(pid);
             int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
-            for (int j = 0; j < num_instructions; ++j) {
+            // Ensure at least one WRITE and one READ instruction
+            // WRITE = 7, READ = 8 in instructionMap
+            if (num_instructions < 2) num_instructions = 2;
+            // Add a random WRITE instruction
+            p->instructionQueue.push(7);
+            // Add a random READ instruction
+            p->instructionQueue.push(8);
+            for (int j = 2; j < num_instructions; ++j) {
                 int instructionID = rand() % 8 + 1;
                 p->instructionQueue.push(instructionID);
             }
