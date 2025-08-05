@@ -11,7 +11,7 @@ This project simulates a CLI OS with process execution and memory management, pr
 
 ## Build Instructions
 - Requires a C++20 compatible compiler (e.g., MSVC, GCC, or Clang)
-- Open the project in your preferred IDE or build using the provided project files
+- Open the project in Visual Studio 2022
 
 ## Usage
 - Configure and run the project to simulate process execution and memory management
