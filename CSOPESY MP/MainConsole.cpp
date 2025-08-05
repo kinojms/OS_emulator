@@ -32,7 +32,8 @@ void consoleLayout::controller(std::string initializer) {
     float delay_Per_Exec = 0.0;
     int max_overall_mem = 0;
     int mem_per_frame = 0;
-    int mem_per_proc = 0;
+    int min_mem_per_proc = 0;
+    int max_mem_per_proc = 0;
 
     std::string tmp, processName, instructionBlock;
     dp.displayIntro();
@@ -74,19 +75,22 @@ void consoleLayout::controller(std::string initializer) {
                         else if (key == "mem-per-frame" && eq == "=") {
                             iss >> mem_per_frame;
                         }
-                        else if (key == "mem-per-proc" && eq == "=") {
-                            iss >> mem_per_proc;
+                        else if (key == "min-mem-per-proc" && eq == "=") {
+                            iss >> min_mem_per_proc;
+                        }
+                        else if (key == "max-mem-per-proc" && eq == "=") {
+                            iss >> max_mem_per_proc;
                         }
                     }
                 }
                 // Initialize memory manager
-                if (max_overall_mem > 0 && mem_per_proc > 0 && mem_per_frame > 0) {
-                    fun.initializeMemoryManager(max_overall_mem, mem_per_proc, mem_per_frame);
+                if (max_overall_mem > 0 && max_mem_per_proc > 0 && mem_per_frame > 0) {
+                    fun.initializeMemoryManager(max_overall_mem, max_mem_per_proc, mem_per_frame);
                 }
                 firstRun = false;
 
 				// Initialize scheduler
-                if (num_cpu > 0 && quantum_Cycles > 0 && !scheduler.empty()) {
+                if (num_cpu > 0 && quantum_Cycles >= 0 && !scheduler.empty()) {
                     fun.runScheduler(num_cpu, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec, scheduler);
                 }
                 else {
@@ -120,8 +124,7 @@ void consoleLayout::controller(std::string initializer) {
 
                 // Scheduler commands
                 if (token == "scheduler-start") {
-                    //fun.schedulerTest(num_cpu, scheduler, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec);
-					fun.startProcessGenerator(min_ins, max_ins, batch_Process_Freq);
+                    fun.startProcessGenerator(min_ins, max_ins, batch_Process_Freq, min_mem_per_proc, max_mem_per_proc, mem_per_frame);
                     continue;
                 }
 
@@ -245,6 +248,14 @@ void consoleLayout::controller(std::string initializer) {
 
                 }
 
+                else if (token == "process-smi") {
+                    fun.processSMI();
+                    continue;
+                }
+                else if (token == "vmstat") {
+                    fun.vmstat();
+                    continue;
+                }
                 else {
                     std::cout << "Unknown command: " << token << ". Type 'command' to see available commands.\n";
 					continue;

@@ -1,6 +1,8 @@
 #include "Functions.h"
 #include "Display.h"
 #include "Clock.h"
+#include "MemoryManager.h"
+
 #include <iostream>
 #include <random>
 #include <fstream>
@@ -163,6 +165,23 @@ void Functions::runScheduler(
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
 
+            // CPU tick accounting
+            bool anyActive = false;
+            if (scheduler) {
+                for (const auto& core : scheduler->cores) {
+                    if (core->isBusy) {
+                        anyActive = true;
+                        break;
+                    }
+                }
+            }
+            if (anyActive) {
+                activeCpuTicks++;
+            } else {
+                idleCpuTicks++;
+            }
+            totalCpuTicks++;
+
             // Stop condition
             if (schedulerStopRequested) {
                 bool allDone = std::all_of(allProcesses.begin(), allProcesses.end(),
@@ -248,23 +267,23 @@ void Functions::writeScreenReport(std::ostream& out) {
         }
     }
 
-    out << "\nWaiting for memory (not in memory):\n";
-    for (const auto& p : allProcesses) {
-        if (!p->isFinished && !p->isMemoryAllocated()) {
-            out << p->processName << " Core: - "
-                << p->currentInstruction << "/"
-                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
-        }
-    }
+    //out << "\nWaiting for memory (not in memory):\n";
+    //for (const auto& p : allProcesses) {
+    //    if (!p->isFinished && !p->isMemoryAllocated()) {
+    //        out << p->processName << " Core: - "
+    //            << p->currentInstruction << "/"
+    //            << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+    //    }
+    //}
 
-    out << "\nIn memory but not running (waiting for core):\n";
-    for (const auto& p : allProcesses) {
-        if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore == -1) {
-            out << p->processName << " Core: - "
-                << p->currentInstruction << "/"
-                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
-        }
-    }
+    //out << "\nIn memory but not running (waiting for core):\n";
+    //for (const auto& p : allProcesses) {
+    //    if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore == -1) {
+    //        out << p->processName << " Core: - "
+    //            << p->currentInstruction << "/"
+    //            << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+    //    }
+    //}
 
     out << "\nFinished processes:\n";
     for (const auto& p : allProcesses) {
@@ -302,7 +321,7 @@ void Functions::reportUtil() {
 std::shared_ptr<Process> Functions::createProcess(const std::string& name, int min_ins, int max_ins, float delay_per_exec, int size) {
     // Validate memory size
     std::cout << "Process " << name << " created with PID " << name << " and size " << size << "\n";
-	int count = 0; // count to check how many instructions are added
+    int count = 0; // count to check how many instructions are added
     int pid = static_cast<int>(allProcesses.size());
     auto p = std::make_shared<Process>(pid, name, size);
     if (memoryManager) {
@@ -317,13 +336,18 @@ std::shared_ptr<Process> Functions::createProcess(const std::string& name, int m
         std::cout << "[WARNING] Requested " << num_instructions << " instructions, but only " << maxInstructionsAllowed << " fit in " << size << " bytes. Truncating.\n";
         num_instructions = maxInstructionsAllowed;
     }
-
-    for (int j = 0; j < num_instructions; ++j) {
-        int instructionID = rand() % 6 + 1;
+    // Ensure at least 2 instructions (WRITE and READ)
+    if (num_instructions < 2) num_instructions = 2;
+    // Add a WRITE and a READ instruction first (WRITE=7, READ=8)
+    p->instructionQueue.push(7); // WRITE
+    p->instructionQueue.push(8); // READ
+    count += 2;
+    for (int j = 2; j < num_instructions; ++j) {
+        int instructionID = rand() % 8 + 1;
         p->instructionQueue.push(instructionID);
-		count++;
+        count++;
     }
-	std::cout << "Process " << name << " created with " << count << " instructions.\n";
+    std::cout << "Process " << name << " created with " << count << " instructions.\n";
 
     allProcesses.push_back(p);
     if (scheduler && (schedulerRunning || scheduler->runningFlag)) {
@@ -397,12 +421,12 @@ void Functions::switchScreen(const std::string& name) {
     }
 }
 
-void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_process_freq) {
+void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_process_freq, int min_mem_per_proc, int max_mem_per_proc, int mem_per_frame) {
 
     std::cout << "Process generation started. Use screen-ls to check the progress.\n";
 
     processGenRunning = true;
-    processGenThread = std::thread([this, min_ins, max_ins, batch_process_freq]() {
+    processGenThread = std::thread([this, min_ins, max_ins, batch_process_freq, min_mem_per_proc, max_mem_per_proc, mem_per_frame]() {
         int lastCycle = globalClock ? globalClock->cycle.load() : 0;
         while (processGenRunning) {
             if (!globalClock) {
@@ -416,20 +440,40 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             }
             if (!processGenRunning) break;
             int pid = static_cast<int>(allProcesses.size());
-            auto p = std::make_shared<Process>(pid);
+
+            // Random memory size between min and max
+            int mem_size = min_mem_per_proc + (rand() % (max_mem_per_proc - min_mem_per_proc + 1));
+            // Compute number of pages
+            int num_pages = mem_per_frame > 0 ? (mem_size + mem_per_frame - 1) / mem_per_frame : 0;
+
+            auto p = std::make_shared<Process>(pid, "", mem_size);
+            if (memoryManager) {
+                p->setMemoryManager(memoryManager.get());
+                // std::cout << "[DEBUG] Set memoryManager for process_" << pid << std::endl;
+            } else {
+                // std::cout << "[DEBUG] No memoryManager to set for process_" << pid << std::endl;
+            }
             p->InstructionCode(pid);
             int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
-            for (int j = 0; j < num_instructions; ++j) {
-                int instructionID = rand() % 6 + 1;
+            // Ensure at least one WRITE and one READ instruction
+            // WRITE = 7, READ = 8 in instructionMap
+            if (num_instructions < 2) num_instructions = 2;
+            // Add a random WRITE instruction
+            p->instructionQueue.push(7);
+            // Add a random READ instruction
+            p->instructionQueue.push(8);
+            for (int j = 2; j < num_instructions; ++j) {
+                int instructionID = rand() % 8 + 1;
                 p->instructionQueue.push(instructionID);
             }
             allProcesses.push_back(p);
             if (scheduler) {
                 scheduler->addProcess(p);
             }
-            // std::cout << "[Process Generator] New random process created: " << p->processName << std::endl;
+            // Optional: log memory/page info
+            // std::cout << "[Process Generator] New process: mem=" << mem_size << " bytes, pages=" << num_pages << std::endl;
         }
-        });
+    });
 }
 
 void Functions::stopProcessGenerator() {
@@ -439,11 +483,11 @@ void Functions::stopProcessGenerator() {
     }
 }
 
-void Functions::initializeMemoryManager(int maxOverallMem, int memPerProc, int memPerFrame) {
+void Functions::initializeMemoryManager(int maxOverallMem, int maxMemPerProc, int memPerFrame) {
     if (!memoryManager) {
-        memoryManager = std::make_shared<MemoryManager>(maxOverallMem, memPerProc, memPerFrame);
+        memoryManager = std::make_shared<MemoryManager>(maxOverallMem, maxMemPerProc, memPerFrame);
         // std::cout << "[Functions] Memory manager initialized with " << maxOverallMem 
-        //          << " bytes total, " << memPerProc << " bytes per process" << std::endl;
+        //          << " bytes total, " << maxMemPerProc << " bytes per process" << std::endl;
     }
 }
 
@@ -452,4 +496,61 @@ void Functions::generateMemorySnapshot() {
         memoryManager->setQuantumCycle(globalClock->cycle.load());
         memoryManager->generateSnapshotFile();
     }
+}
+
+void Functions::processSMI() {
+    std::cout << "\n===== process-smi (Memory/Process Summary) =====\n";
+    if (!memoryManager) {
+        std::cout << "No memory manager initialized.\n";
+        return;
+    }
+    int totalMem = memoryManager->getTotalMemory();
+    int usedMem = 0;
+    int freeMem = 0;
+    std::vector<std::string> usedBlocks;
+    for (const auto& block : memoryManager->getMemoryBlocks()) {
+        if (block.isAllocated) {
+            usedMem += block.size;
+            usedBlocks.push_back(block.processName + " (" + std::to_string(block.size) + " bytes)");
+        } else {
+            freeMem += block.size;
+        }
+    }
+    std::cout << "Total Memory: " << totalMem << " bytes\n";
+    std::cout << "Used Memory:  " << usedMem << " bytes\n";
+    std::cout << "Free Memory:  " << freeMem << " bytes\n";
+    std::cout << "\nProcesses in memory:\n";
+    for (const auto& name : usedBlocks) {
+        std::cout << "  " << name << "\n";
+    }
+    std::cout << "\nAll Processes:\n";
+    for (const auto& p : allProcesses) {
+        std::cout << "  " << p->processName << (p->isMemoryAllocated() ? " [IN MEMORY]" : " [NOT IN MEMORY]") << (p->isFinished ? " [FINISHED]" : "") << "\n";
+    }
+    std::cout << "===============================================\n";
+}
+
+void Functions::vmstat() {
+    std::cout << "\n===== vmstat (Detailed VM/Process/Page Stats) =====\n";
+    if (!memoryManager) {
+        std::cout << "No memory manager initialized.\n";
+        return;
+    }
+    int totalMem = memoryManager->getTotalMemory();
+    int usedMem = 0;
+    int freeMem = 0;
+    for (const auto& block : memoryManager->getMemoryBlocks()) {
+        if (block.isAllocated) usedMem += block.size;
+        else freeMem += block.size;
+    }
+    // CPU ticks: idle, active, total
+    std::cout << "Total Memory: " << totalMem << " bytes\n";
+    std::cout << "Used Memory:  " << usedMem << " bytes\n";
+    std::cout << "Free Memory:  " << freeMem << " bytes\n";
+    std::cout << "Idle cpu ticks:   " << idleCpuTicks << "\n";
+    std::cout << "Active cpu ticks: " << activeCpuTicks << "\n";
+    std::cout << "Total cpu ticks:  " << totalCpuTicks << "\n";
+    std::cout << "Num paged in:     " << memoryManager->pageInCount << "\n";
+    std::cout << "Num paged out:    " << memoryManager->pageOutCount << "\n";
+    std::cout << "===============================================\n";
 }

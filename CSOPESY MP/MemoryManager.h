@@ -30,6 +30,7 @@ struct Frame {
     int pageNumber; // Virtual page number
     bool isOccupied;
     bool dirty;
+    Frame() : frameNumber(-1), processName(""), pageNumber(-1), isOccupied(false), dirty(false) {} // <-- Add this
     Frame(int num) : frameNumber(num), processName(""), pageNumber(-1), isOccupied(false), dirty(false) {}
 };
 
@@ -59,6 +60,8 @@ private:
     std::deque<int> frameQueue; // FIFO for page replacement
     std::string backingStoreFile = "csopesy-backing-store.txt";
 
+
+
     void initializeMemory();
     void generateMemorySnapshot();
     int calculateExternalFragmentation();
@@ -75,6 +78,10 @@ private:
     void handlePageFault(const std::string& processName, int pageNumber);
 
 public:
+    // Counters for vmstat reporting
+    int pageInCount = 0; // Number of pages paged in
+    int pageOutCount = 0; // Number of pages paged out
+
     MemoryManager(int totalMem, int memPerProc, int memPerFrame);
 
     bool allocateMemory(std::shared_ptr<Process> process);
@@ -87,6 +94,15 @@ public:
     void accessMemory(const std::string& processName, int virtualAddress, bool isWrite);
     void contextSwitchOut(const std::string& processName);
     void contextSwitchIn(const std::string& processName);
+
+    // Expose read-only accessors for summary/statistics
+    int getTotalMemory() const { return totalMemory; }
+    int getNumFrames() const { return numFrames; }
+    const std::vector<MemoryBlock>& getMemoryBlocks() const { return memoryBlocks; }
+    const std::vector<Frame>& getFrames() const { return frames; }
+    const std::unordered_map<std::string, std::unordered_map<int, PageTableEntry>>& getPageTables() const { return pageTables; }
+    // int getPageInCount() const { return pageInCount; }
+    // int getPageOutCount() const { return pageOutCount; }
 };
 
-#endif // MEMORYMANAGER_H 
+#endif // MEMORYMANAGER_H
