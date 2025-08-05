@@ -1,0 +1,14 @@
+CPU Utilization: 0.00%
+Cores used: 0
+Cores available: 2
+
+--------------------------------------------------------
+Running processes (in memory & assigned to a core):
+
+Waiting for memory (not in memory):
+
+In memory but not running (waiting for core):
+
+Finished processes:
+P1 Core: - 100/100
+lucy Core: - 6/6
