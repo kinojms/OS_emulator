@@ -90,7 +90,7 @@ void consoleLayout::controller(std::string initializer) {
                 firstRun = false;
 
 				// Initialize scheduler
-                if (num_cpu > 0 && quantum_Cycles > 0 && !scheduler.empty()) {
+                if (num_cpu > 0 && quantum_Cycles >= 0 && !scheduler.empty()) {
                     fun.runScheduler(num_cpu, quantum_Cycles, min_ins, max_ins, batch_Process_Freq, delay_Per_Exec, scheduler);
                 }
                 else {

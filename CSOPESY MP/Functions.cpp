@@ -267,23 +267,23 @@ void Functions::writeScreenReport(std::ostream& out) {
         }
     }
 
-    out << "\nWaiting for memory (not in memory):\n";
-    for (const auto& p : allProcesses) {
-        if (!p->isFinished && !p->isMemoryAllocated()) {
-            out << p->processName << " Core: - "
-                << p->currentInstruction << "/"
-                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
-        }
-    }
+    //out << "\nWaiting for memory (not in memory):\n";
+    //for (const auto& p : allProcesses) {
+    //    if (!p->isFinished && !p->isMemoryAllocated()) {
+    //        out << p->processName << " Core: - "
+    //            << p->currentInstruction << "/"
+    //            << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+    //    }
+    //}
 
-    out << "\nIn memory but not running (waiting for core):\n";
-    for (const auto& p : allProcesses) {
-        if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore == -1) {
-            out << p->processName << " Core: - "
-                << p->currentInstruction << "/"
-                << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
-        }
-    }
+    //out << "\nIn memory but not running (waiting for core):\n";
+    //for (const auto& p : allProcesses) {
+    //    if (!p->isFinished && p->isMemoryAllocated() && p->assignedCore == -1) {
+    //        out << p->processName << " Core: - "
+    //            << p->currentInstruction << "/"
+    //            << (p->totalInstructions == 0 ? "-" : std::to_string(p->totalInstructions)) << "\n";
+    //    }
+    //}
 
     out << "\nFinished processes:\n";
     for (const auto& p : allProcesses) {
