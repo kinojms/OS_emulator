@@ -36,7 +36,7 @@ public:
 
     // Control
     void schedulerStop();
-    void startProcessGenerator(int min_ins, int max_ins, int batch_process_freq = 1); // Start background process generator
+    void startProcessGenerator(int min_ins, int max_ins, int batch_process_freq = 1, int min_mem_per_proc = 0, int max_mem_per_proc = 0, int mem_per_frame = 0); // Start background process generator
     void stopProcessGenerator(); // Stop background process generator
 
     // Monitoring
@@ -52,7 +52,7 @@ public:
     void switchScreen(const std::string& name);
 
     // Memory management
-    void initializeMemoryManager(int maxOverallMem, int memPerProc, int memPerFrame);
+    void initializeMemoryManager(int maxOverallMem, int maxMemPerProc, int memPerFrame);
     void generateMemorySnapshot();
 };
 

@@ -1,6 +1,8 @@
 #include "Functions.h"
 #include "Display.h"
 #include "Clock.h"
+#include "MemoryManager.h"
+
 #include <iostream>
 #include <random>
 #include <fstream>
@@ -414,12 +416,12 @@ void Functions::switchScreen(const std::string& name) {
     }
 }
 
-void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_process_freq) {
+void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_process_freq, int min_mem_per_proc, int max_mem_per_proc, int mem_per_frame) {
 
     std::cout << "Process generation started. Use screen-ls to check the progress.\n";
 
     processGenRunning = true;
-    processGenThread = std::thread([this, min_ins, max_ins, batch_process_freq]() {
+    processGenThread = std::thread([this, min_ins, max_ins, batch_process_freq, min_mem_per_proc, max_mem_per_proc, mem_per_frame]() {
         int lastCycle = globalClock ? globalClock->cycle.load() : 0;
         while (processGenRunning) {
             if (!globalClock) {
@@ -433,7 +435,13 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             }
             if (!processGenRunning) break;
             int pid = static_cast<int>(allProcesses.size());
-            auto p = std::make_shared<Process>(pid);
+
+            // Random memory size between min and max
+            int mem_size = min_mem_per_proc + (rand() % (max_mem_per_proc - min_mem_per_proc + 1));
+            // Compute number of pages
+            int num_pages = mem_per_frame > 0 ? (mem_size + mem_per_frame - 1) / mem_per_frame : 0;
+
+            auto p = std::make_shared<Process>(pid, "", mem_size);
             p->InstructionCode(pid);
             int num_instructions = min_ins + (rand() % (max_ins - min_ins + 1));
             for (int j = 0; j < num_instructions; ++j) {
@@ -444,9 +452,10 @@ void Functions::startProcessGenerator(int min_ins, int max_ins, int batch_proces
             if (scheduler) {
                 scheduler->addProcess(p);
             }
-            // std::cout << "[Process Generator] New random process created: " << p->processName << std::endl;
+            // Optional: log memory/page info
+            // std::cout << "[Process Generator] New process: mem=" << mem_size << " bytes, pages=" << num_pages << std::endl;
         }
-        });
+    });
 }
 
 void Functions::stopProcessGenerator() {
@@ -456,11 +465,11 @@ void Functions::stopProcessGenerator() {
     }
 }
 
-void Functions::initializeMemoryManager(int maxOverallMem, int memPerProc, int memPerFrame) {
+void Functions::initializeMemoryManager(int maxOverallMem, int maxMemPerProc, int memPerFrame) {
     if (!memoryManager) {
-        memoryManager = std::make_shared<MemoryManager>(maxOverallMem, memPerProc, memPerFrame);
+        memoryManager = std::make_shared<MemoryManager>(maxOverallMem, maxMemPerProc, memPerFrame);
         // std::cout << "[Functions] Memory manager initialized with " << maxOverallMem 
-        //          << " bytes total, " << memPerProc << " bytes per process" << std::endl;
+        //          << " bytes total, " << maxMemPerProc << " bytes per process" << std::endl;
     }
 }
 

@@ -234,6 +234,8 @@ void MemoryManager::handlePageFault(const std::string& processName, int pageNumb
     loadPageFromBackingStore(processName, pageNumber, frameNumber);
 
     pageInCount++; // Increment page in count
+    std::cout << "[MemoryManager] Page In Count: " << pageInCount << std::endl;
+    std::cout << "[MemoryManager] Page Out Count: " << pageOutCount << std::endl;
 
     // Update frame and page table
     Frame& frame = frames[frameNumber];

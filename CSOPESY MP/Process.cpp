@@ -130,7 +130,7 @@ uint16_t Process::READ(const std::string& var, const std::string& addressHex) {
 
     uint16_t value = emulatedMemory.count(addr) ? emulatedMemory[addr] : 0;
     DECLARE(var, value);
-    logs.push_back(getCurrentTimestamp() + " WRITE " + std::to_string(value) + " to " + addressHex);
+    logs.push_back(getCurrentTimestamp() + " READ " + std::to_string(value) + " to " + addressHex);
     return value;
 }
 
