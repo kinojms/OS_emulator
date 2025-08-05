@@ -212,22 +212,76 @@ int MemoryManager::selectVictimFrame() {
 
 // Stub for page fault handler (to be implemented in next phase)
 void MemoryManager::handlePageFault(const std::string& processName, int pageNumber) {
-    // To be implemented in Phase 4
+    int frameNumber = findFreeFrame();
+    if (frameNumber == -1) {
+        // No free frame, need to evict
+        frameNumber = selectVictimFrame();
+        Frame& victim = frames[frameNumber];
+        // Write victim to backing store if dirty
+        if (victim.isOccupied) {
+            writePageToBackingStore(victim.processName, victim.pageNumber, frameNumber);
+            // Update victim's page table
+            auto& victimPT = pageTables[victim.processName];
+            if (victimPT.count(victim.pageNumber)) {
+                victimPT[victim.pageNumber].inMemory = false;
+                victimPT[victim.pageNumber].frameNumber = -1;
+            }
+        }
+    }
+    // Load the required page into the frame
+    loadPageFromBackingStore(processName, pageNumber, frameNumber);
+    // Update frame and page table
+    Frame& frame = frames[frameNumber];
+    frame.isOccupied = true;
+    frame.processName = processName;
+    frame.pageNumber = pageNumber;
+    frame.dirty = false;
+    pageTables[processName][pageNumber] = { frameNumber, true, false };
+    // Add to FIFO queue
+    frameQueue.push_back(frameNumber);
 }
 
 // Stub for memory access (to be implemented in next phase)
 void MemoryManager::accessMemory(const std::string& processName, int virtualAddress, bool isWrite) {
-    // To be implemented in Phase 4
+    int pageNumber = virtualAddress / pageSize;
+    auto& pt = pageTables[processName];
+    if (pt.find(pageNumber) == pt.end() || !pt[pageNumber].inMemory) {
+        // Page fault
+        handlePageFault(processName, pageNumber);
+    }
+    // Mark as dirty if write
+    if (isWrite) {
+        pt[pageNumber].dirty = true;
+        int frameNumber = pt[pageNumber].frameNumber;
+        if (frameNumber >= 0 && frameNumber < (int)frames.size()) {
+            frames[frameNumber].dirty = true;
+        }
+    }
 }
 
 // Stub for context switch out (to be implemented in Phase 5)
 void MemoryManager::contextSwitchOut(const std::string& processName) {
-    // To be implemented in Phase 5
+    std::lock_guard<std::mutex> lock(memoryMutex);
+    auto& pt = pageTables[processName];
+    for (auto& [pageNumber, entry] : pt) {
+        if (entry.inMemory && entry.frameNumber >= 0 && entry.frameNumber < (int)frames.size()) {
+            writePageToBackingStore(processName, pageNumber, entry.frameNumber);
+            frames[entry.frameNumber].isOccupied = false;
+            frames[entry.frameNumber].processName = "";
+            frames[entry.frameNumber].pageNumber = -1;
+            frames[entry.frameNumber].dirty = false;
+            // Remove from FIFO queue
+            frameQueue.erase(std::remove(frameQueue.begin(), frameQueue.end(), entry.frameNumber), frameQueue.end());
+            entry.inMemory = false;
+            entry.frameNumber = -1;
+            entry.dirty = false;
+        }
+    }
 }
 
 // Stub for context switch in (to be implemented in Phase 5)
 void MemoryManager::contextSwitchIn(const std::string& processName) {
-    // To be implemented in Phase 5
+    // No-op for demand paging: pages will be loaded on demand
 }
 
 // Write a page to the backing store (append or update)

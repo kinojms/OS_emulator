@@ -39,6 +39,7 @@ struct PageTableEntry {
     bool inMemory;
     bool dirty;
     PageTableEntry() : frameNumber(-1), inMemory(false), dirty(false) {}
+    PageTableEntry(int frame, bool inMem, bool isDirty) : frameNumber(frame), inMemory(inMem), dirty(isDirty) {}
 };
 
 class MemoryManager {

@@ -1,8 +1,35 @@
 ﻿  CPUCore.cpp
-  Display.cpp
   Functions.cpp
   MainConsole.cpp
   MemoryManager.cpp
   Scheduler.cpp
+  main.cpp
   Generating Code...
-  CSOPESY MP.vcxproj -> C:\Users\Justin Sacdalan\Documents\College Files\3rd Year\3rd Sem\CSOPESY\Github_MP\x64\Debug\CSOPESY MP.exe
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(472,14): error C2672: 'std::construct_at': no matching overloaded function found
+  (compiling source file 'main.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(461,16):
+      could be '_Ty *std::construct_at(_Ty *const ,_Types ...) noexcept(<expr>)'
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(472,14):
+          the associated constraints are not satisfied
+              C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(459,50):
+              'Process::Process': no appropriate default constructor available
+                  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(459,50):
+                  while trying to match the argument list '()'
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(472,14):
+      the template instantiation context (the oldest one first) is
+          C:\Users\Justin Sacdalan\Documents\College Files\3rd Year\3rd Sem\CSOPESY\Github_MP\CSOPESY MP\main.cpp(22,23):
+          see reference to function template instantiation 'std::shared_ptr<Process> std::make_shared<Process,>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<Process>::_Ref_count_obj2<>(void)' being compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,>(_Ty &) noexcept(false)' being compiled
+          with
+          [
+              _Ty=Process
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61): error C2512: 'Process::Process': no appropriate default constructor available
+  (compiling source file 'main.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,61):
+      while trying to match the argument list '()'
+  

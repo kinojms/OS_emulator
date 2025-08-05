@@ -4,6 +4,11 @@
 #include <algorithm>
 #include <unordered_map>
 
+// testing
+#include <memory>
+#include "MemoryManager.h"
+#include "Process.h"
+
 #include "consoleLayout.h"
 #include "Display.h"
 
